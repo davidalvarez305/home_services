@@ -24,7 +24,7 @@ const UserWrapper: React.FC<Props> = ({
     <div className={"container-center-horizontal"}>
       <div className={styles["registration-sign-in"]}>
         <div className={styles["flex-col"]}>
-          <h1 className={styles["registration-title-heading"]}>{h1Text}</h1>
+          <h1 className={styles["registration-title-heading" + " heading--h1"]}>{h1Text}</h1>
           <p
             className={
               typeof h1Subtext === "string" ? styles["form-subtext"] : undefined
@@ -45,7 +45,7 @@ const UserWrapper: React.FC<Props> = ({
         <div className={styles["right-side-container"]}>
           <div className={styles["cta"]}>
             <div className={styles["promo"]}>
-              <div className={styles["sub-heading-text"]}>
+              <div className={styles["sub-heading-text" + " heading--h4"]}>
                 The latest financial insights and analysis to keep you up to
                 date and ahead of the curve.
               </div>
@@ -54,8 +54,8 @@ const UserWrapper: React.FC<Props> = ({
                 <div className={styles["oval"]}></div>
                 <div className={styles["oval"]}></div>
               </div>
-              <div className={styles["bottom-text-heading"]}>Waiapi Karaka</div>
-              <div className={styles["bottom-text-paragraph"]}>
+              <div className={styles["bottom-text-heading" + " heading--h6"]}>Waiapi Karaka</div>
+              <div className={styles["bottom-text-paragraph" + " x14px--regular"]}>
                 Financial Officer
               </div>
             </div>
