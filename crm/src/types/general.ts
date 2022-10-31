@@ -6,6 +6,6 @@ export type User = {
   password: string;
   email: string;
   profile_image: string;
-  created_at: string;
-  credit_cards?: CreditCard[];
+  created_at: number;
+  api_token: string;
 };
