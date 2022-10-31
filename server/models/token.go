@@ -5,5 +5,5 @@ type Token struct {
 	UUID      string `gorm:"unique;not null" json:"uuid"`
 	UserID    int    `json:"user_id"`
 	User      *Users `gorm:"not null;column:user_id;foreignKey:UserID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
-	CreatedAt int64  `gorm:"not null;column:created_at" json:"createdAt"`
+	CreatedAt int64  `gorm:"not null;column:created_at" json:"created_at"`
 }
