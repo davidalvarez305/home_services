@@ -1,4 +1,4 @@
-.rate {
+.rate-element {
     align-items: flex-start;
     border: 0px none;
     display: flex;
@@ -8,7 +8,7 @@
     width: 42px;
 }
 
-.blocked-2 {
+.blocked {
     color: var(--x000000primary);
     font-weight: 700;
     line-height: 21px;
@@ -16,7 +16,7 @@
     white-space: nowrap;
 }
 
-.blocked-title-1 {
+.blocked-title {
     color: var(--x747a80);
     font-weight: 400;
     line-height: 21px;

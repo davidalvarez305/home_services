@@ -1,6 +1,5 @@
 import React, { InputHTMLAttributes } from "react";
 import { useField } from "formik";
-import styles from "./PrimaryInput.module.css";
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   label: string;

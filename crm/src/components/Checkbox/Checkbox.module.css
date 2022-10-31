@@ -1,11 +1,11 @@
-.forms-general-checkbox-restingon-light {
+.general-checkbox {
     align-items: center;
     border: 0px none;
     display: flex;
     min-width: 309px;
 }
 
-.rectangle-3 {
+.rectangle {
     background-color: var(--ebf0f0primary);
     border: 0px none;
     border-radius: 4px;

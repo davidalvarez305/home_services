@@ -9,8 +9,12 @@ type Props = ButtonProps & {
 
 const TagElement: React.FC<Props> = ({ tag, handleClick, ...props }) => {
   return (
-    <div className={`element-tags-f5-f5-fa-on-light-2`}>
-      <Button {...props} onClick={handleClick} className="tag-3 x12px--bold">
+    <div className={styles["tag-element"]}>
+      <Button
+        {...props}
+        onClick={handleClick}
+        className={styles["tag" + " x12px--bold"]}
+      >
         {tag}
       </Button>
     </div>

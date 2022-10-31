@@ -11,16 +11,16 @@ interface Props {
 
 const PrimaryLayout: React.FC<Props> = ({ children, screenName }) => {
   return (
-    <div className="container-center-horizontal">
-      <div className="accounts-empty">
+    <div className={"container-center-horizontal"}>
+      <div className={styles["accounts-empty"]}>
         <Sidebar />
-        <div className="flex-col">
+        <div className={styles["flex-col"]}>
           <TopNavigation
             screenName={screenName}
             searchIcon={<SearchIcon />}
             handleNavigationSubmit={(values) => console.log(values)}
           />
-          <div className="overlap-group1">{children}</div>
+          <div className={styles["overlap-group"]}>{children}</div>
           <Footer />
         </div>
       </div>

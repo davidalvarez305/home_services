@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "../styles/styleguide.css";
 import type { AppProps } from "next/app";
 import UserProvider from "../context/UserContext";
 import { ChakraProvider } from '@chakra-ui/react';

@@ -1,4 +1,4 @@
-.navigation-web-top-bar-on-light {
+.top-navigation {
     align-items: flex-start;
     border: 0px none;
     display: flex;
@@ -18,7 +18,7 @@
     position: relative;
 }
 
-.title-2 {
+.navigation-header {
     align-self: center;
     color: var(--x000000primary);
     font-weight: 800;
@@ -59,7 +59,7 @@
     white-space: nowrap;
 }
 
-.img-2 {
+.top-navigation-image {
     background-position: 50% 50%;
     background-size: cover;
     height: 40px;

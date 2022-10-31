@@ -23,9 +23,9 @@ const ProfileSettingsElement: React.FC<Props> = ({
   loadingText,
 }) => {
   return (
-    <div className={`account-web-item-v2-2 account-web-item-v2-1`}>
+    <div className={styles["settings-element"]}>
       <div className={"options"}>
-        <div className="icon-5">{icon}</div>
+        <div className="icon">{icon}</div>
         <TextWithHeader primaryHeader={primaryHeader} subHeader={subHeader} />
       </div>
       <TagElement

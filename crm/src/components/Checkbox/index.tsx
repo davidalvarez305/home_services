@@ -7,9 +7,9 @@ interface Props {
 
 const Checkbox: React.FC<Props> = ({ children }) => {
   return (
-    <div className="forms-general-checkbox-restingon-light">
-      <div className="rectangle-3"></div>
-      <div className="title x12px--bold">{children}</div>
+    <div className={styles["general-checkbox"]}>
+      <div className={styles["rectangle"]}></div>
+      <div className={styles["title"] + " x12px--bold"}>{children}</div>
     </div>
   );
 };

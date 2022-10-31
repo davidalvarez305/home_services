@@ -1,4 +1,4 @@
-.navigation-web-footer-on-light {
+.footer-navigation {
     align-items: center;
     border: 0px none;
     display: flex;
@@ -43,7 +43,7 @@
     width: fit-content;
 }
 
-.x2022-all-rights-re {
+.footer-rights-text {
     color: var(--x747a80);
     font-weight: 500;
     line-height: 18px;

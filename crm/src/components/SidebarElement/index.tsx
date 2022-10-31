@@ -10,16 +10,16 @@ interface Props {
 const SidebarElement: React.FC<Props> = ({ link, icon, handleClick }) => {
   const [isHovering, setIsHovering] = useState(false);
   return (
-    <div className="navigation-web-sideb-10">
+    <div className={styles["navigation-element"]}>
       <div
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
         style={{ cursor: isHovering ? "pointer" : undefined }}
-        className="label"
+        className={styles["label"]}
         onClick={(e) => handleClick(e)}
       >
-        <div className="buttons-logo-flag-usd">{icon}</div>
-        <div className="link-3 label--14px">{link}</div>
+        <div className={styles["flag-button"]}>{icon}</div>
+        <div className={styles["link" + " label--14px"]}>{link}</div>
       </div>
     </div>
   );

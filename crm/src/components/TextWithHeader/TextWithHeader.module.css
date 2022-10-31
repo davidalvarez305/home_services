@@ -1,4 +1,4 @@
-.account-1 {
+.header-container {
     align-items: flex-start;
     border: 0px none;
     display: flex;
@@ -8,7 +8,7 @@
     width: 134px;
 }
 
-.deposit-name {
+.header-paragraph {
     color: var(--x000000primary);
     font-weight: 700;
     line-height: 21px;
@@ -16,7 +16,7 @@
     white-space: nowrap;
 }
 
-.account-title-1 {
+.subheader {
     color: var(--x747a80);
     font-weight: 400;
     line-height: 21px;

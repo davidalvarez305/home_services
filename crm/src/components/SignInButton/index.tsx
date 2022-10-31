@@ -9,12 +9,12 @@ type Props = {
 
 const SignInButton: React.FC<Props> = ({ children, isLoading }) => {
   return (
-    <div className="buttons-label-filled-active-on-light">
+    <div className={styles["filled-button"]}>
       <ChakraButton
         isLoading={isLoading}
         loadingText="Submitting"
         type="submit"
-        className="overlap-group2"
+        className={styles["overlap-group"]}
         sx={{
           alignItems: "flex-start",
           backgroundColor: "var(--x0052ffsoft3)",
@@ -27,7 +27,7 @@ const SignInButton: React.FC<Props> = ({ children, isLoading }) => {
           padding: "16px 195px",
         }}
       >
-        <div className="label label--14px">{children}</div>
+        <div className={styles["label"] + " label--14px"}>{children}</div>
       </ChakraButton>
     </div>
   );

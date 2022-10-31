@@ -9,12 +9,12 @@ interface Props {
 
 const SecondaryButton: React.FC<Props> = ({ children, icon, label }) => {
   return (
-    <div className="buttons-icon-label-o">
-      <div className="link">
-        <div className="icon-2 materialiconsoutlined-regular-normal-black-18px">
+    <div className={styles["secondary-button"]}>
+      <div className={styles["link"]}>
+        <div className={styles["icon" + " materialiconsoutlined-regular-normal-black-18px"]}>
           {icon}
         </div>
-        <p className="label-1 lable--14px">{label}</p>
+        <p className={styles["label" + " label--14px"]}>{label}</p>
       </div>
     </div>
   );

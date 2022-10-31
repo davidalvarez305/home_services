@@ -8,6 +8,7 @@ type Props = ButtonProps & {
 
 const Button: React.FC<Props> = ({ children, className, ...props }) => {
   const [isHovering, setIsHovering] = useState(false);
+
   const buttonOptions = {
     Dark: "button-dark",
     Light: "button-light",
@@ -30,9 +31,9 @@ const Button: React.FC<Props> = ({ children, className, ...props }) => {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       {...props}
-      className={buttonOptions[className]}
+      className={styles[buttonOptions[className]]}
     >
-      <div className={labelOptions[className]}>{children}</div>
+      <div className={styles[labelOptions[className]]}>{children}</div>
     </ChakraButton>
   );
 };

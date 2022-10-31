@@ -1,4 +1,4 @@
-.buttons-label-filled-active-on-light {
+.filled-button {
     align-items: flex-start;
     border: 0px none;
     display: flex;
@@ -8,7 +8,7 @@
     min-width: 437px;
 }
 
-.overlap-group2 {
+.overlap-group {
     align-items: flex-start;
     background-color: var(--x0052ffsoft3);
     border-radius: 8px;

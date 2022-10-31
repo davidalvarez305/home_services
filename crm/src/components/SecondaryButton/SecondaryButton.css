@@ -1,4 +1,4 @@
-.buttons-icon-label-o {
+.secondary-button {
     align-items: flex-start;
     border: 1px solid;
     border-color: var(--cfdbd5outline-onlight2);
@@ -19,13 +19,13 @@
     width: fit-content;
 }
 
-.icon-2 {
+.icon {
     letter-spacing: 0;
     text-align: center;
     width: fit-content;
 }
 
-.label-1 {
+.label {
     color: var(--x000000primary);
     font-weight: 700;
     line-height: 21px;

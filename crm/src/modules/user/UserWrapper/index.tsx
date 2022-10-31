@@ -21,7 +21,7 @@ const UserWrapper: React.FC<Props> = ({
   bottomLinkDestination,
 }) => {
   return (
-    <div className={styles["container-center-horizontal"]}>
+    <div className={"container-center-horizontal"}>
       <div className={styles["registration-sign-in"]}>
         <div className={styles["flex-col"]}>
           <h1 className={styles["registration-title-heading"]}>{h1Text}</h1>

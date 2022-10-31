@@ -1,4 +1,4 @@
-.navigation-web-sideb-10 {
+.navigation-element {
   align-items: center;
   border: 0px none;
   display: flex;
@@ -17,7 +17,7 @@
   width: fit-content;
 }
 
-.link-3 {
+.link {
   color: var(--x747a80);
   font-weight: 700;
   line-height: 21px;
@@ -26,7 +26,7 @@
   width: fit-content;
 }
 
-.buttons-logo-flag-usd {
+.flag-button {
   letter-spacing: 0;
   min-height: 22px;
   min-width: 22px;

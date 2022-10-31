@@ -8,9 +8,9 @@ interface Props {
 
 const RateElement: React.FC<Props> = ({ blocked, className }) => {
   return (
-    <div className={`rate ${className || ""}`}>
-      <div className="blocked-2 lable--14px">{blocked}</div>
-      <div className="blocked-title-1 x14px--regular">Rate</div>
+    <div className={styles["rate-element" + ` ${className || ""}`]}>
+      <div className={styles["blocked" + " label--14px"]}>{blocked}</div>
+      <div className={styles["blocked-title" + " x14px--regular"]}>Rate</div>
     </div>
   );
 };

@@ -27,15 +27,16 @@ const TopNavigation: React.FC<Props> = ({
 }) => {
   const ctx = useContext(UserContext);
   const USER_IMAGE = `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_image}`;
+
   function NavigationInputField() {
     return (
       <Formik initialValues={{ search: "" }} onSubmit={handleNavigationSubmit}>
         <Form>
-          <div className="search-icon">{searchIcon}</div>
+          <div className={styles["search-icon"]}>{searchIcon}</div>
           <PrimaryInput
             label={""}
             name={"search"}
-            className="type-to-search x12px--medium"
+            className={styles["type-to-search" + " x12px--medium"]}
           />
         </Form>
       </Formik>
@@ -43,17 +44,19 @@ const TopNavigation: React.FC<Props> = ({
   }
 
   return (
-    <div className="navigation-web-top-bar-on-light">
-      <div className="overlap-group">
-        <div className="title-2 heading--h6">{screenName}</div>
-        <div className="search">
+    <div className={styles["top-navigation"]}>
+      <div className={styles["overlap-group"]}>
+        <div className={styles["navigation-header" + " heading--h6"]}>
+          {screenName}
+        </div>
+        <div className={styles["search"]}>
           <NavigationInputField />
         </div>
         <IconButton>
           <NotificationBell />
         </IconButton>
         <div
-          className="img-2"
+          className={styles["top-navigation-image"]}
           style={{ backgroundImage: `url(${USER_IMAGE})` }}
         ></div>
       </div>

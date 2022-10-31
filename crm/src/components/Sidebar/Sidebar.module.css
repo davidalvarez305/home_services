@@ -1,4 +1,4 @@
-.navigation-web-sidebar-menu-on-light {
+.sidebar-navigation {
     align-items: flex-start;
     background-color: var(--ebf0f0soft-onlight);
     border: 0px none;
@@ -27,7 +27,7 @@
     width: 256px;
 }
 
-.navigation-1,
+.navigation-text,
 .balances {
     color: var(--x747a80);
     font-weight: 300;
