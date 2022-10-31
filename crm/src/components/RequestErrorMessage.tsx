@@ -7,7 +7,7 @@ interface Props {
 const RequestErrorMessage: React.FC<Props> = ({ message }) => {
   return (
     <React.Fragment>
-      {message.length > 0 && (
+      {message && message.length > 0 && (
         <div
           style={{
             display: "flex",

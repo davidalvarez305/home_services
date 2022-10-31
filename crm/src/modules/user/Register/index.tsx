@@ -19,6 +19,13 @@ const Register: React.FC = () => {
     email: string;
     password: string;
   }) {
+    if (
+      values.username === "" ||
+      values.password === "" ||
+      values.email === ""
+    ) {
+      return;
+    }
     makeRequest(
       {
         url: USER_ROUTE,
@@ -69,7 +76,7 @@ const Register: React.FC = () => {
               </div>
             </div>
             <SignInButton isLoading={isLoading}>Sign up</SignInButton>
-            {error.message.length > 0 && <RequestErrorMessage {...error} />}
+            <RequestErrorMessage {...error} />
           </div>
         </Form>
       </Formik>

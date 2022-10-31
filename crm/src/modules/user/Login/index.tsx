@@ -63,7 +63,7 @@ const Login: React.FC = () => {
               </div>
             </div>
             <SignInButton isLoading={isLoading}>Sign in</SignInButton>
-            {error.message.length > 0 && <RequestErrorMessage {...error} />}
+            <RequestErrorMessage {...error} />
           </div>
         </Form>
       </Formik>

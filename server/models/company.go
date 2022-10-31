@@ -1,6 +1,6 @@
 package models
 
-type Users struct {
+type Company struct {
 	ID           int    `json:"id"`
 	Username     string `gorm:"unique;not null" json:"username"`
 	Password     string `gorm:"not null" json:"password"`

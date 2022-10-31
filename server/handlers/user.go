@@ -105,7 +105,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	err = user.GetUserFromSession(c)
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": err.Error(),
 		})
 	}
@@ -113,7 +113,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	err = user.UpdateUser(body)
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": err.Error(),
 		})
 	}
@@ -129,7 +129,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	err := user.GetUserFromSession(c)
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": err.Error(),
 		})
 	}
@@ -137,7 +137,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	err = user.Delete()
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": err.Error(),
 		})
 	}
@@ -145,7 +145,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	err = user.Logout(c)
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": err.Error(),
 		})
 	}
@@ -186,7 +186,7 @@ func ChangePassword(c *fiber.Ctx) error {
 	err = user.GetUserFromSession(c)
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": err.Error(),
 		})
 	}
@@ -213,7 +213,7 @@ func ChangePassword(c *fiber.Ctx) error {
 	err = user.ChangePassword(body.NewPassword)
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": err.Error(),
 		})
 	}
@@ -222,7 +222,7 @@ func ChangePassword(c *fiber.Ctx) error {
 	err = token.DeleteToken()
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": err.Error(),
 		})
 	}
@@ -238,7 +238,7 @@ func RequestChangePasswordCode(c *fiber.Ctx) error {
 	err := user.GetUserFromSession(c)
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": err.Error(),
 		})
 	}
@@ -246,7 +246,7 @@ func RequestChangePasswordCode(c *fiber.Ctx) error {
 	err = user.RequestChangePasswordCode()
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": err.Error(),
 		})
 	}
@@ -276,7 +276,7 @@ func ChangeProfilePicture(c *fiber.Ctx) error {
 	err = user.ChangeProfilePicture(file)
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": err.Error(),
 		})
 	}

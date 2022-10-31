@@ -32,7 +32,7 @@ func (token *Token) GenerateToken(user *Users) error {
 	return result.Error
 }
 
-func (token *Token) GetToken(uuid string, userId uint) error {
+func (token *Token) GetToken(uuid string, userId int) error {
 	result := database.DB.Where("uuid = ? AND user_id = ?", uuid, userId).First(&token)
 	return result.Error
 }
