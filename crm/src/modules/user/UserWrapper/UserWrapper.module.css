@@ -1,0 +1,258 @@
+.registration-sign-in {
+    align-items: flex-start;
+    background-color: var(--ffffffsoft);
+    border: 0px none;
+    display: flex;
+    width: 1440px;
+}
+
+.flex-col {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    margin-left: 149px;
+    margin-top: 40px;
+    min-height: 812px;
+    position: relative;
+    width: 437px;
+}
+
+.title-1 {
+    color: var(--x000000primary);
+    font-weight: 800;
+    margin-top: 60px;
+    min-height: 51px;
+}
+
+.enter-your-account-d {
+    color: var(--x747a80);
+    font-weight: 400;
+    line-height: 21px;
+    margin-top: 5px;
+    min-height: 21px;
+    white-space: nowrap;
+}
+
+.form {
+    align-items: center;
+    border: 0px none;
+    display: flex;
+    flex-direction: column;
+    max-height: 459px;
+    margin-top: 47px;
+    position: relative;
+    width: 437px;
+}
+
+.flex-row {
+    align-items: center;
+    display: flex;
+    height: 20px;
+    margin-top: 28px;
+    min-width: 437px;
+    position: relative;
+}
+
+.recover-password {
+    color: var(--x000000primary);
+    font-weight: 700;
+    line-height: 18px;
+    margin-left: 19px;
+    min-height: 18px;
+    min-width: 109px;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.or {
+    align-items: center;
+    border: 0px none;
+    display: flex;
+    height: 21px;
+    margin-left: 1.0px;
+    margin-top: 28px;
+    width: 306px;
+}
+
+.line-2 {
+    height: 1px;
+    margin-top: 4.0px;
+    width: 132px;
+}
+
+.or-1 {
+    color: var(--x747a80);
+    font-weight: 400;
+    line-height: 21px;
+    margin-left: 14px;
+    min-height: 21px;
+    min-width: 14px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.line-2-copy {
+    height: 1px;
+    margin-left: 14px;
+    margin-top: 4.0px;
+    width: 132px;
+}
+
+.link-1 {
+    align-items: flex-start;
+    border: 0px none;
+    display: flex;
+    height: 21px;
+    margin-left: 0.05px;
+    margin-top: 104px;
+    width: 316px;
+}
+
+.you-dont-have-an-ac {
+    color: var(--x000000primary);
+    font-weight: 400;
+    line-height: 21px;
+    min-height: 21px;
+    min-width: 182px;
+    white-space: nowrap;
+}
+
+.create-an-account {
+    color: var(--x0052ffsoft3);
+    font-weight: 700;
+    line-height: 21px;
+    margin-left: 8px;
+    min-height: 21px;
+    white-space: nowrap;
+}
+
+.overlap-group4 {
+    height: 900px;
+    margin-left: 150px;
+    position: relative;
+    width: 704px;
+}
+
+.cta {
+    align-items: flex-end;
+    background-image: url(https://anima-uploads.s3.amazonaws.com/projects/631ef96c30c5be89e49afb9c/releases/631ef971190c8b852614ea0e/img/bg@1x.svg);
+    background-size: 100% 100%;
+    display: flex;
+    height: 900px;
+    left: 0;
+    min-width: 704px;
+    padding: 48px 129.5px;
+    position: absolute;
+    top: 0;
+}
+
+.promo {
+    align-items: center;
+    border: 0px none;
+    display: flex;
+    flex-direction: column;
+    height: 231px;
+    width: 444px;
+}
+
+.the-latest-financial {
+    color: var(--ffffffsoft);
+    font-weight: 800;
+    margin-top: 7px;
+    min-height: 87px;
+    text-align: center;
+    width: 444px;
+}
+
+.slider {
+    align-items: flex-start;
+    display: flex;
+    height: 6px;
+    justify-content: center;
+    margin-left: 1.0px;
+    margin-top: 44px;
+    min-width: 42px;
+}
+
+.rectangle {
+    background-color: var(--ffffffsoft);
+    border: 0px none;
+    border-radius: 4px;
+    height: 8px;
+    margin-top: -1px;
+    width: 20px;
+}
+
+.oval {
+    background-color: var(--ffffffsoft);
+    border: 0px none;
+    border-radius: 4px;
+    height: 8px;
+    margin-left: 4px;
+    margin-top: -1px;
+    width: 8px;
+}
+
+.waiapi-karaka {
+    color: var(--ffffffsoft);
+    font-weight: 800;
+    line-height: 24px;
+    margin-left: 1.0px;
+    margin-top: 41px;
+    min-height: 24px;
+    min-width: 127px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.financial-officer {
+    color: var(--ffffffsoft);
+    font-weight: 400;
+    line-height: 21px;
+    margin-left: 1.0px;
+    margin-top: 1px;
+    min-height: 21px;
+    min-width: 108px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.overlap-group3 {
+    height: 422px;
+    left: 91px;
+    position: absolute;
+    top: 141px;
+    width: 552px;
+}
+
+.rectangle-1 {
+    height: 407px;
+    left: 83px;
+    position: absolute;
+    top: 0;
+    width: 357px;
+}
+
+.widget {
+    height: 117px;
+    left: 256px;
+    position: absolute;
+    top: 60px;
+    width: 252px;
+}
+
+.widget-copy {
+    height: 128px;
+    left: 267px;
+    position: absolute;
+    top: 294px;
+    width: 285px;
+}
+
+.widget-1 {
+    height: 119px;
+    left: 0;
+    position: absolute;
+    top: 196px;
+    width: 266px;
+}

@@ -1,0 +1,26 @@
+.rate {
+    align-items: flex-start;
+    border: 0px none;
+    display: flex;
+    flex-direction: column;
+    margin-left: 103px;
+    min-height: 47px;
+    width: 42px;
+}
+
+.blocked-2 {
+    color: var(--x000000primary);
+    font-weight: 700;
+    line-height: 21px;
+    min-height: 21px;
+    white-space: nowrap;
+}
+
+.blocked-title-1 {
+    color: var(--x747a80);
+    font-weight: 400;
+    line-height: 21px;
+    margin-top: 5px;
+    min-height: 21px;
+    white-space: nowrap;
+}

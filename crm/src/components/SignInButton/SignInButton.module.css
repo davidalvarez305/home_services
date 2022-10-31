@@ -1,0 +1,31 @@
+.buttons-label-filled-active-on-light {
+    align-items: flex-start;
+    border: 0px none;
+    display: flex;
+    height: 52px;
+    justify-content: center;
+    margin-top: 28px;
+    min-width: 437px;
+}
+
+.overlap-group2 {
+    align-items: flex-start;
+    background-color: var(--x0052ffsoft3);
+    border-radius: 8px;
+    display: flex;
+    height: 54px;
+    justify-content: flex-end;
+    margin-top: -1px;
+    min-width: 439px;
+    padding: 16px 195px;
+}
+
+.label {
+    color: var(--ffffffsoft);
+    font-weight: 700;
+    line-height: 21px;
+    min-height: 21px;
+    min-width: 47px;
+    text-align: center;
+    white-space: nowrap;
+}

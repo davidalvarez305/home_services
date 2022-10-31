@@ -1,0 +1,14 @@
+.settings-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.img-2 {
+    background-position: 50% 50%;
+    background-size: cover;
+    height: 40px;
+    margin-left: 16px;
+    width: 40px;
+}

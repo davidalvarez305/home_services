@@ -1,0 +1,26 @@
+.buttons-icon-outline-resting-on-light {
+    align-items: flex-start;
+    border: 1px solid;
+    border-color: var(--cfdbd5outline-onlight2);
+    border-radius: 8px;
+    display: flex;
+    height: 40px;
+    margin-left: 8px;
+    min-width: 40px;
+    padding: 10px;
+}
+
+.icon-2 {
+    letter-spacing: 0;
+    min-height: 18px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.buttons-icon-outline-resting-on-light.buttons-icon-outline-resting-on-light-1 {
+    align-self: flex-end;
+    height: 46px;
+    margin-left: 18px;
+    min-width: 46px;
+    padding: 13px;
+}

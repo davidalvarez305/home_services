@@ -1,0 +1,42 @@
+.account-web-item-v2-2 {
+    align-items: flex-start;
+    border: 1px solid;
+    border-color: var(--cfdbd5outline-onlight2);
+    border-radius: 8px;
+    display: flex;
+    height: 80px;
+    justify-content: flex-end;
+    margin-top: 14px;
+    min-width: 1024px;
+    padding: 15px 21px;
+    position: relative;
+}
+
+.icon-5 {
+    align-self: center;
+    text-align: center;
+    letter-spacing: 0;
+    margin-bottom: 2.0px;
+    min-height: 20px;
+    min-width: 20px;
+}
+
+.account-web-item-v2-2.account-web-item-v2-1 {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    border: 1px solid;
+    border-color: var(--cfdbd5outline-onlight2);
+    border-radius: 8px;
+    height: 80px;
+    margin-top: 10px;
+    min-width: 1024px;
+    padding: 15px 21px;
+    position: relative;
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+}
