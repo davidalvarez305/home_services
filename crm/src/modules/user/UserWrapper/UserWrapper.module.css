@@ -1,3 +1,11 @@
+.registration-container-center-horizontal {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    pointer-events: none;
+    width: 100%;
+}
+
 .registration-sign-in {
     align-items: flex-start;
     background-color: var(--ffffffsoft);
@@ -17,14 +25,23 @@
     width: 437px;
 }
 
-.title-1 {
+.flex-row {
+    align-items: center;
+    display: flex;
+    height: 20px;
+    margin-top: 28px;
+    min-width: 437px;
+    position: relative;
+}
+
+.registration-title-heading {
     color: var(--x000000primary);
     font-weight: 800;
     margin-top: 60px;
     min-height: 51px;
 }
 
-.enter-your-account-d {
+.form-subtext {
     color: var(--x747a80);
     font-weight: 400;
     line-height: 21px;
@@ -44,61 +61,8 @@
     width: 437px;
 }
 
-.flex-row {
-    align-items: center;
-    display: flex;
-    height: 20px;
-    margin-top: 28px;
-    min-width: 437px;
-    position: relative;
-}
 
-.recover-password {
-    color: var(--x000000primary);
-    font-weight: 700;
-    line-height: 18px;
-    margin-left: 19px;
-    min-height: 18px;
-    min-width: 109px;
-    text-align: right;
-    white-space: nowrap;
-}
-
-.or {
-    align-items: center;
-    border: 0px none;
-    display: flex;
-    height: 21px;
-    margin-left: 1.0px;
-    margin-top: 28px;
-    width: 306px;
-}
-
-.line-2 {
-    height: 1px;
-    margin-top: 4.0px;
-    width: 132px;
-}
-
-.or-1 {
-    color: var(--x747a80);
-    font-weight: 400;
-    line-height: 21px;
-    margin-left: 14px;
-    min-height: 21px;
-    min-width: 14px;
-    text-align: center;
-    white-space: nowrap;
-}
-
-.line-2-copy {
-    height: 1px;
-    margin-left: 14px;
-    margin-top: 4.0px;
-    width: 132px;
-}
-
-.link-1 {
+.register-account {
     align-items: flex-start;
     border: 0px none;
     display: flex;
@@ -108,7 +72,7 @@
     width: 316px;
 }
 
-.you-dont-have-an-ac {
+.register-account-paragraph {
     color: var(--x000000primary);
     font-weight: 400;
     line-height: 21px;
@@ -126,7 +90,7 @@
     white-space: nowrap;
 }
 
-.overlap-group4 {
+.right-side-container {
     height: 900px;
     margin-left: 150px;
     position: relative;
@@ -155,7 +119,7 @@
     width: 444px;
 }
 
-.the-latest-financial {
+.sub-heading-text {
     color: var(--ffffffsoft);
     font-weight: 800;
     margin-top: 7px;
@@ -193,7 +157,7 @@
     width: 8px;
 }
 
-.waiapi-karaka {
+.bottom-text-heading {
     color: var(--ffffffsoft);
     font-weight: 800;
     line-height: 24px;
@@ -205,7 +169,7 @@
     white-space: nowrap;
 }
 
-.financial-officer {
+.bottom-text-paragraph {
     color: var(--ffffffsoft);
     font-weight: 400;
     line-height: 21px;
@@ -217,7 +181,7 @@
     white-space: nowrap;
 }
 
-.overlap-group3 {
+.image-section {
     height: 422px;
     left: 91px;
     position: absolute;
@@ -225,7 +189,7 @@
     width: 552px;
 }
 
-.rectangle-1 {
+.image-rectangle {
     height: 407px;
     left: 83px;
     position: absolute;
@@ -241,7 +205,7 @@
     width: 252px;
 }
 
-.widget-copy {
+.second-widget {
     height: 128px;
     left: 267px;
     position: absolute;
@@ -249,7 +213,7 @@
     width: 285px;
 }
 
-.widget-1 {
+.third-widget {
     height: 119px;
     left: 0;
     position: absolute;

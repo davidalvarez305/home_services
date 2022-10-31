@@ -34,7 +34,7 @@ const ChangePassword = () => {
     <PrimaryLayout screenName={"Change Password"}>
       <Formik initialValues={{ newPassword: "" }} onSubmit={handleSubmit}>
         <Form>
-          <div className="main-container">
+          <div className={styles["main-container"]}>
             <PrimaryInput label={"New Password"} name={"newPassword"} />
             <Button isLoading={isLoading} className="Dark" type="submit">
               Submit

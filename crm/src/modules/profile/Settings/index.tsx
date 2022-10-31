@@ -10,12 +10,15 @@ import { useRouter } from "next/router";
 import useFetch from "../../../hooks/useFetch";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { useToast } from "@chakra-ui/react";
+import Image from "next/image";
 
 const ProfileSettings: React.FC = () => {
   const router = useRouter();
   useLoginRequired();
   const ctx = useContext(UserContext);
-  const USER_IMAGE = `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_image}`;
+  const USER_IMAGE = ctx?.user.profile_image
+    ? `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_image}`
+    : "";
   const { makeRequest, isLoading, error } = useFetch();
   const toast = useToast();
 
@@ -51,7 +54,15 @@ const ProfileSettings: React.FC = () => {
       loadingText: "Submitting",
     },
     {
-      icon: <img className="img-2" src={ctx?.user.profile_image && USER_IMAGE} alt="Me" width={500} height={500} />,
+      icon: (
+        <Image
+          style={{ objectFit: "contain" }}
+          fill={true}
+          className={styles["image"]}
+          src={USER_IMAGE}
+          alt="Me"
+        />
+      ),
       primaryHeader: "Change Profile Picture",
       subHeader: "Get a new look",
       handleClick: () => {
@@ -63,7 +74,7 @@ const ProfileSettings: React.FC = () => {
 
   return (
     <PrimaryLayout screenName="Profile Settings">
-      <div className="settings-container">
+      <div className={styles["settings-container"]}>
         {settings.map((setting) => (
           <div key={setting.primaryHeader}>
             <ProfileSettingsElement {...setting} />

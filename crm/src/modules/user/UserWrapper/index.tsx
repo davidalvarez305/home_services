@@ -21,74 +21,72 @@ const UserWrapper: React.FC<Props> = ({
   bottomLinkDestination,
 }) => {
   return (
-    <div className="container-center-horizontal">
-      <div className="registration-sign-in screen">
-        <div className="flex-col">
-          <h1 className="title-1 heading--h1">{h1Text}</h1>
+    <div className={styles["container-center-horizontal"]}>
+      <div className={styles["registration-sign-in"]}>
+        <div className={styles["flex-col"]}>
+          <h1 className={styles["registration-title-heading"]}>{h1Text}</h1>
           <p
             className={
-              typeof h1Subtext === "string"
-                ? "enter-your-account-d x14px--regular"
-                : undefined
+              typeof h1Subtext === "string" ? styles["form-subtext"] : undefined
             }
           >
             {h1Subtext}
           </p>
           {children}
-          <div className="link-1">
-            <p className="you-dont-have-an-ac x14px--regular">
+          <div className={styles["register-account"]}>
+            <p className={styles["register-account-paragraph"]}>
               {bottomTextOne}
             </p>
-            <div className="create-an-account label--14px">
+            <div className={styles["create-an-account"]}>
               <Link href={"/" + bottomLinkDestination}>{bottomLinkText}</Link>
             </div>
           </div>
         </div>
-        <div className="overlap-group4">
-          <div className="cta">
-            <div className="promo">
-              <div className="the-latest-financial heading--h4">
+        <div className={styles["right-side-container"]}>
+          <div className={styles["cta"]}>
+            <div className={styles["promo"]}>
+              <div className={styles["sub-heading-text"]}>
                 The latest financial insights and analysis to keep you up to
                 date and ahead of the curve.
               </div>
-              <div className="slider">
-                <div className="rectangle"></div>
-                <div className="oval"></div>
-                <div className="oval"></div>
+              <div className={styles["slider"]}>
+                <div className={styles["rectangle"]}></div>
+                <div className={styles["oval"]}></div>
+                <div className={styles["oval"]}></div>
               </div>
-              <div className="waiapi-karaka heading--h6">Waiapi Karaka</div>
-              <div className="financial-officer x14px--regular">
+              <div className={styles["bottom-text-heading"]}>Waiapi Karaka</div>
+              <div className={styles["bottom-text-paragraph"]}>
                 Financial Officer
               </div>
             </div>
           </div>
-          <div className="overlap-group3">
+          <div className={styles["image-section"]}>
             <Image
+              style={{ objectFit: "contain" }}
+              fill={true}
               alt=""
-              width={500}
-              height={500}
-              className="rectangle-1"
+              className={styles["image-rectangle"]}
               src="https://anima-uploads.s3.amazonaws.com/projects/631ef96c30c5be89e49afb9c/releases/631ef971190c8b852614ea0e/img/rectangle@2x.png"
             />
             <Image
+              style={{ objectFit: "contain" }}
+              fill={true}
               alt=""
-              width={500}
-              height={500}
-              className="widget"
+              className={styles["widget"]}
               src="https://anima-uploads.s3.amazonaws.com/projects/631ef96c30c5be89e49afb9c/releases/631ef971190c8b852614ea0e/img/widget@2x.svg"
             />
             <Image
+              style={{ objectFit: "contain" }}
+              fill={true}
               alt=""
-              width={500}
-              height={500}
-              className="widget-copy"
+              className={styles["second-widget"]}
               src="https://anima-uploads.s3.amazonaws.com/projects/631ef96c30c5be89e49afb9c/releases/631ef971190c8b852614ea0e/img/widget-copy@2x.svg"
             />
             <Image
+              style={{ objectFit: "contain" }}
+              fill={true}
               alt=""
-              width={500}
-              height={500}
-              className="widget-1"
+              className={styles["third-widget"]}
               src="https://anima-uploads.s3.amazonaws.com/projects/631ef96c30c5be89e49afb9c/releases/631ef971190c8b852614ea0e/img/widget-1@2x.svg"
             />
           </div>

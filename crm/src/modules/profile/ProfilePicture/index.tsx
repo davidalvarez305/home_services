@@ -53,7 +53,7 @@ const ProfilePicture = () => {
     }
   }
 
-  const styles = {
+  const inlineStyles = {
     buttonDarkLabel: {
       alignItems: "flex-start",
       backgroundColor: "#000000",
@@ -75,15 +75,15 @@ const ProfilePicture = () => {
 
   return (
     <PrimaryLayout screenName="Change Profile Picture">
-      <div className="form-container">
+      <div className={styles["form-container"]}>
         <Formik initialValues={{ image: "" }} onSubmit={handleSubmit}>
           <Form>
-            <div className="form-subcontainer">
+            <div className={styles["form-subcontainer"]}>
               <label
                 htmlFor="image"
                 style={{
-                  ...styles.buttonDarkLabel,
-                  ...styles.label,
+                  ...inlineStyles.buttonDarkLabel,
+                  ...inlineStyles.label,
                   cursor: isHovering ? "pointer" : undefined,
                 }}
                 onMouseEnter={() => setIsHovering(true)}
@@ -103,9 +103,9 @@ const ProfilePicture = () => {
                   type={"submit"}
                   isLoading={isLoading}
                   loadingText={"Uploading"}
-                  className="LightBlue"
+                  className={"LightBlue"} // Global CSS
                 >
-                  <div className="upload-button">
+                  <div className={styles["upload-button"]}>
                     Upload
                     <FiSend />
                   </div>
@@ -120,7 +120,7 @@ const ProfilePicture = () => {
           </Form>
         </Formik>
         {image && (
-          <div className="close-button">
+          <div className={styles["close-button"]}>
             {image.name}{" "}
             <div
               onClick={() => setImage(undefined)}
