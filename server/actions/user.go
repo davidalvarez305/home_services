@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"mime/multipart"
 	"os"
 
 	"github.com/davidalvarez305/home_services/server/database"
@@ -54,7 +55,7 @@ func (user *Users) CreateUser() error {
 	}
 
 	user.Password = string(hashedPassword)
-	user.Token = utils.GenerateAPIToken(user.Email + user.Password)
+	user.APIToken = utils.GenerateAPIToken(user.Email + user.Password)
 
 	err = user.Save()
 	return err
@@ -64,7 +65,7 @@ func (user *Users) UpdateUser(body Users) error {
 
 	user.Username = body.Username
 	user.Email = body.Email
-	user.Token = utils.GenerateAPIToken(user.Email + user.Password)
+	user.APIToken = utils.GenerateAPIToken(user.Email + user.Password)
 
 	err := user.Save()
 
@@ -169,7 +170,7 @@ func (user *Users) ChangePassword(password string) error {
 		return err
 	}
 	user.Password = string(hashedPassword)
-	user.Token = utils.GenerateAPIToken(user.Email + user.Password)
+	user.APIToken = utils.GenerateAPIToken(user.Email + user.Password)
 
 	err = user.Save()
 
@@ -228,6 +229,25 @@ func (user *Users) SendGmail(uuidCode string) error {
 	gMessage := &gmail.Message{Raw: base64.URLEncoding.EncodeToString(msg)}
 
 	_, err = srv.Users.Messages.Send("me", gMessage).Do()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (user *Users) ChangeProfilePicture(file *multipart.FileHeader) error {
+
+	fileName, err := utils.UploadImageToS3(file)
+
+	if err != nil {
+		return err
+	}
+
+	user.ProfileImage = fileName
+
+	err = user.Save()
 
 	if err != nil {
 		return err

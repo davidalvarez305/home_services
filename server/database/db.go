@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/davidalvarez305/home_services/server/models"
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -25,11 +24,6 @@ type connection struct {
 }
 
 func Connect() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading env file")
-	}
-
 	conn := connection{
 		Host:     os.Getenv("POSTGRES_HOST"),
 		Port:     os.Getenv("POSTGRES_PORT"),

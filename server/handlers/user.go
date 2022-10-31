@@ -255,3 +255,33 @@ func RequestChangePasswordCode(c *fiber.Ctx) error {
 		"data": user,
 	})
 }
+
+func ChangeProfilePicture(c *fiber.Ctx) error {
+	user := &actions.Users{}
+
+	file, err := c.FormFile("image")
+
+	if err != nil {
+		return err
+	}
+
+	err = user.GetUserFromSession(c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "User was not found.",
+		})
+	}
+
+	err = user.ChangeProfilePicture(file)
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"data": err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": user,
+	})
+}
