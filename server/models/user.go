@@ -7,6 +7,6 @@ type Users struct {
 	Email        string `gorm:"unique;not null" json:"email"`
 	APIToken     string `gorm:"column:api_token;unique;not null" json:"api_token"`
 	ProfileImage string `gorm:"column:profile_picture" json:"profile_picture"`
-	CreatedAt    int64  `gorm:"column:created_at" json:"created_at"`
-	UpdatedAt    int64  `gorm:"column:updated_at" json:"updated_at"`
+	CreatedAt    int64  `gorm:"not null;column:created_at" json:"created_at"`
+	UpdatedAt    int64  `gorm:"not null;column:updated_at" json:"updated_at"`
 }
