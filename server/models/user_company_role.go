@@ -1,6 +1,6 @@
 package models
 
-type CompanyUserRole struct {
+type UserCompanyRole struct {
 	ID        int      `json:"id"`
 	UserID    int      `json:"user_id"`
 	User      *Users   `gorm:"not null;column:user_id;foreignKey:UserID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
