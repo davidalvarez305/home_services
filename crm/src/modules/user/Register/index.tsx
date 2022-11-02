@@ -28,7 +28,7 @@ const Register: React.FC = () => {
     }
     makeRequest(
       {
-        url: USER_ROUTE,
+        url: USER_ROUTE + "/register",
         method: "POST",
         data: values,
       },

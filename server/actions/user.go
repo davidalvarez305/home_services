@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"os"
+	"time"
 
 	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
@@ -56,6 +57,8 @@ func (user *Users) CreateUser() error {
 
 	user.Password = string(hashedPassword)
 	user.APIToken = utils.GenerateAPIToken(user.Email + user.Password)
+	user.CreatedAt = time.Now().Unix()
+	user.UpdatedAt = time.Now().Unix()
 
 	err = user.Save()
 	return err
@@ -66,6 +69,7 @@ func (user *Users) UpdateUser(body Users) error {
 	user.Username = body.Username
 	user.Email = body.Email
 	user.APIToken = utils.GenerateAPIToken(user.Email + user.Password)
+	user.UpdatedAt = time.Now().Unix()
 
 	err := user.Save()
 
@@ -119,7 +123,7 @@ func (user *Users) GetUserFromSession(c *fiber.Ctx) error {
 
 func (user *Users) Login(c *fiber.Ctx) error {
 	userPassword := user.Password
-	result := database.DB.Where("username = ?", user.Username).First(&user)
+	result := database.DB.Where("email = ?", user.Email).First(&user)
 
 	if result.Error != nil {
 		return errors.New("incorrect username")
@@ -171,6 +175,7 @@ func (user *Users) ChangePassword(password string) error {
 	}
 	user.Password = string(hashedPassword)
 	user.APIToken = utils.GenerateAPIToken(user.Email + user.Password)
+	user.UpdatedAt = time.Now().Unix()
 
 	err = user.Save()
 
@@ -246,6 +251,7 @@ func (user *Users) ChangeProfilePicture(file *multipart.FileHeader) error {
 	}
 
 	user.ProfileImage = fileName
+	user.UpdatedAt = time.Now().Unix()
 
 	err = user.Save()
 

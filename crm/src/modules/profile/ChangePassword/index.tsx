@@ -11,7 +11,7 @@ import PrimaryLayout from "../../../layout/Primary";
 import styles from "./ChangePassword.module.css";
 
 const ChangePassword = () => {
-  useLoginRequired();
+  // useLoginRequired();
   const ctx = useContext(UserContext);
   const { isLoading, makeRequest, error } = useFetch();
 

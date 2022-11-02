@@ -14,7 +14,7 @@ import Image from "next/image";
 
 const ProfileSettings: React.FC = () => {
   const router = useRouter();
-  useLoginRequired();
+  // useLoginRequired();
   const ctx = useContext(UserContext);
   const USER_IMAGE = ctx?.user.profile_image
     ? `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_image}`

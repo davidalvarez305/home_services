@@ -14,7 +14,7 @@ import { useToast } from "@chakra-ui/react";
 
 const ProfilePicture = () => {
   const toast = useToast();
-  useLoginRequired();
+  // useLoginRequired();
   const [isHovering, setIsHovering] = useState(false);
   const [image, setImage] = useState<File>();
   const ctx = useContext(UserContext);
@@ -34,7 +34,7 @@ const ProfilePicture = () => {
 
       makeRequest(
         {
-          url: USER_ROUTE + "/picture",
+          url: USER_ROUTE + "/change-picture",
           method: "PUT",
           data: fd,
         },
