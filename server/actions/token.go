@@ -12,7 +12,7 @@ type Token struct {
 	*models.Token
 }
 
-func (token *Token) GenerateToken(user *Users) error {
+func (token *Token) GenerateToken(user *User) error {
 
 	// Create UUID for Token
 	uuid := uuid.New().String()
