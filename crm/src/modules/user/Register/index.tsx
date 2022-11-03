@@ -9,6 +9,7 @@ import useFetch from "../../../hooks/useFetch";
 import { USER_ROUTE } from "../../../constants";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import LoginOrRegister from "../UserWrapper";
+import styles from "./Register.module.css";
 
 const Register: React.FC = () => {
   const { makeRequest, isLoading, error } = useFetch();
@@ -51,7 +52,7 @@ const Register: React.FC = () => {
         onSubmit={handleSubmit}
       >
         <Form>
-          <div className="form">
+          <div className={styles["form"]}>
             <PrimaryInput
               label="Username"
               name="username"
@@ -69,9 +70,9 @@ const Register: React.FC = () => {
               placeholder="Password..."
               type="password"
             />
-            <div className="flex-row">
+            <div className={styles["flex-row"]}>
               <Checkbox>Remember me</Checkbox>
-              <div className="recover-password x12px--bold">
+              <div className={styles["recover-password" + " x12px--bold"]}>
                 <Link href={"/forgot-password"}>Forgot Password</Link>
               </div>
             </div>

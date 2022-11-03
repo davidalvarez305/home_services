@@ -10,6 +10,7 @@ import { LOGIN_ROUTE } from "../../../constants";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import LoginOrRegister from "../UserWrapper";
 import { UserContext } from "../../../context/UserContext";
+import styles from "./Login.module.css";
 
 const Login: React.FC = () => {
   const { makeRequest, isLoading, error } = useFetch();
@@ -43,7 +44,7 @@ const Login: React.FC = () => {
         onSubmit={handleSubmit}
       >
         <Form>
-          <div className="form">
+          <div className={styles["form"]}>
             <PrimaryInput
               label="Email"
               name="email"
@@ -56,9 +57,9 @@ const Login: React.FC = () => {
               placeholder="Password..."
               type="password"
             />
-            <div className="flex-row">
+            <div className={styles["flex-row"]}>
               <Checkbox>Remember me</Checkbox>
-              <div className="recover-password x12px--bold">
+              <div className={styles["recover-password" + " x12px--bold"]}>
                 <Link href={"/forgot-password"}>Forgot Password</Link>
               </div>
             </div>

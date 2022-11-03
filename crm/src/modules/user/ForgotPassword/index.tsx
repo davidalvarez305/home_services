@@ -8,6 +8,7 @@ import useFetch from "../../../hooks/useFetch";
 import { LOGIN_ROUTE } from "../../../constants";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import LoginOrRegister from "../UserWrapper";
+import styles from "./ForgotPassword.module.css";
 
 const ForgotPassword: React.FC = () => {
   const { makeRequest, isLoading, error } = useFetch();
@@ -29,9 +30,11 @@ const ForgotPassword: React.FC = () => {
     <LoginOrRegister
       h1Text="Forgot Password?"
       h1Subtext={
-        <p className="enter-your-account-d x14px--regular">
-          Enter your email below, you will receive an email with instructions <br />
-          on how to reset your password in a few minutes. You can also set a new <br />
+        <p className={styles["enter-your-account"]}>
+          Enter your email below, you will receive an email with instructions{" "}
+          <br />
+          on how to reset your password in a few minutes. You can also set a new{" "}
+          <br />
           password if you’ve never set one before.
         </p>
       }
@@ -41,16 +44,16 @@ const ForgotPassword: React.FC = () => {
     >
       <Formik initialValues={{ email: "" }} onSubmit={handleSubmit}>
         <Form>
-          <div className="form">
+          <div className={styles["form"]}>
             <PrimaryInput
               label="Email"
               name="email"
               placeholder="Email..."
               type="email"
             />
-            <div className="flex-row">
+            <div className={styles["flex-row"]}>
               <Checkbox>Remember me</Checkbox>
-              <div className="recover-password x12px--bold">
+              <div className={styles["recover-password" + " x12px--bold"]}>
                 <Link href={"/forgot-password"}>Forgot Password</Link>
               </div>
             </div>

@@ -1,0 +1,30 @@
+.form {
+    align-items: center;
+    border: 0px none;
+    display: flex;
+    flex-direction: column;
+    max-height: 459px;
+    margin-top: 47px;
+    position: relative;
+    width: 437px;
+}
+
+.flex-row {
+    align-items: center;
+    display: flex;
+    height: 20px;
+    margin-top: 28px;
+    min-width: 437px;
+    position: relative;
+}
+
+.recover-password {
+    color: var(--x000000primary);
+    font-weight: 700;
+    line-height: 18px;
+    margin-left: 19px;
+    min-height: 18px;
+    min-width: 109px;
+    text-align: right;
+    white-space: nowrap;
+}
