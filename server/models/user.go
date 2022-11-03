@@ -10,4 +10,6 @@ type User struct {
 	CreatedAt     int64            `gorm:"not null;column:created_at" json:"created_at"`
 	UpdatedAt     int64            `gorm:"not null;column:updated_at" json:"updated_at"`
 	AccountStatus []*AccountStatus `gorm:"many2many:user_account_status" json:"-"`
+	Company       []*Company       `gorm:"many2many:user_company_role" json:"-"`
+	Role          []*Role          `gorm:"many2many:user_company_role" json:"-"`
 }
