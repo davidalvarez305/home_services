@@ -24,12 +24,14 @@ type User struct {
 	*models.User
 }
 
+// Persist user to database.
 func (user *User) Save() error {
 	result := database.DB.Save(&user).First(&user)
 
 	return result.Error
 }
 
+// Destroy session.
 func (user *User) Logout(c *fiber.Ctx) error {
 	sess, err := sessions.Sessions.Get(c)
 
@@ -42,12 +44,14 @@ func (user *User) Logout(c *fiber.Ctx) error {
 	return err
 }
 
+// Delete user.
 func (user *User) Delete() error {
 	result := database.DB.Delete(&user)
 
 	return result.Error
 }
 
+// Create new user and set default account status to inactive.
 func (user *User) CreateUser() error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 
@@ -61,18 +65,21 @@ func (user *User) CreateUser() error {
 	user.CreatedAt = time.Now().Unix()
 	user.UpdatedAt = time.Now().Unix()
 
-	// Create with default account status being inactive.
-	user.UserAccountStatus = append(user.UserAccountStatus, &models.UserAccountStatus{
-		UserID:          user.ID,
-		AccountStatusID: 2,
-		CreatedAt:       time.Now().Unix(),
-		UpdatedAt:       time.Now().Unix(),
-	})
-
 	err = user.Save()
+
+	if err != nil {
+		return err
+	}
+
+	// Create with default account status being inactive.
+	accountStatus := &UserAccountStatus{}
+
+	err = accountStatus.CreateUserAccountStatus(user)
+
 	return err
 }
 
+// Update and return updated user.
 func (user *User) UpdateUser(body User) error {
 
 	user.Username = body.Username
@@ -85,12 +92,14 @@ func (user *User) UpdateUser(body User) error {
 	return err
 }
 
+// Takes user ID as string value and returns the user from the database.
 func (user *User) GetUserById(userId string) error {
 	result := database.DB.Where("id = ?", userId).First(&user)
 
 	return result.Error
 }
 
+// Grabs the current user's ID from the session store ('database = fiber')
 func GetUserIdFromSession(c *fiber.Ctx) (string, error) {
 	var userId string
 	sess, err := sessions.Sessions.Get(c)
@@ -110,6 +119,7 @@ func GetUserIdFromSession(c *fiber.Ctx) (string, error) {
 	return userId, nil
 }
 
+// Grabs userId from session, and then performs select query from the database.
 func (user *User) GetUserFromSession(c *fiber.Ctx) error {
 	sess, err := sessions.Sessions.Get(c)
 
@@ -130,6 +140,7 @@ func (user *User) GetUserFromSession(c *fiber.Ctx) error {
 	return err
 }
 
+// Create new session with user.
 func (user *User) Login(c *fiber.Ctx) error {
 	userPassword := user.Password
 	result := database.DB.Where("email = ?", user.Email).First(&user)
@@ -157,6 +168,7 @@ func (user *User) Login(c *fiber.Ctx) error {
 	return err
 }
 
+// Generates new token to ensure that user at least has access to the user's e-mail.
 func (user *User) RequestChangePasswordCode() error {
 	var token Token
 
@@ -175,6 +187,7 @@ func (user *User) RequestChangePasswordCode() error {
 	return nil
 }
 
+// Verifies that user clicked the generated token with 5 minutes, and then saves the password sent from client.
 func (user *User) ChangePassword(password string) error {
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -191,6 +204,7 @@ func (user *User) ChangePassword(password string) error {
 	return err
 }
 
+// Sends generate token e-mail using the Gmail API.
 func (user *User) SendGmail(uuidCode string) error {
 
 	// Load & Read Credentials From Credentials JSON File
@@ -251,6 +265,7 @@ func (user *User) SendGmail(uuidCode string) error {
 	return nil
 }
 
+// Takes form data from the client, and sends it to S3 bucket using AWS SDK v2.
 func (user *User) ChangeProfilePicture(file *multipart.FileHeader) error {
 
 	fileName, err := utils.UploadImageToS3(file)
