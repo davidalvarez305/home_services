@@ -1,3 +1,3 @@
-import ChangePassword from "../modules/profile/ChangePassword";
+import ChangePassword from "../modules/user/ChangePassword";
 
 export default ChangePassword;
