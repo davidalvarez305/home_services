@@ -178,7 +178,7 @@ func ChangePassword(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": err.Error(),
+			"data": "Invalid input.",
 		})
 	}
 
@@ -187,7 +187,7 @@ func ChangePassword(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": err.Error(),
+			"data": "User was not found.",
 		})
 	}
 
@@ -196,7 +196,7 @@ func ChangePassword(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": err.Error(),
+			"data": "Token was not found.",
 		})
 	}
 
@@ -214,7 +214,7 @@ func ChangePassword(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": err.Error(),
+			"data": "Could not change password.",
 		})
 	}
 
@@ -223,7 +223,7 @@ func ChangePassword(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": err.Error(),
+			"data": "Could not delete token.",
 		})
 	}
 

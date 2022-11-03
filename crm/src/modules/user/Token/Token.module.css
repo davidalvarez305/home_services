@@ -1,0 +1,26 @@
+.form {
+    align-items: center;
+    border: 0px none;
+    display: flex;
+    flex-direction: column;
+    max-height: 459px;
+    margin-top: 47px;
+    position: relative;
+    width: 437px;
+}
+
+.recover-password-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.enter-your-account {
+    color: var(--x747a80);
+    font-weight: 400;
+    line-height: 21px;
+    margin-top: 5px;
+    min-height: 21px;
+    white-space: nowrap;
+}

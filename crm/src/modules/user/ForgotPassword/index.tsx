@@ -33,11 +33,9 @@ const ForgotPassword: React.FC = () => {
       h1Subtext={
         msg.length === 0 ? (
           <p className={styles["enter-your-account"]}>
-            Enter your email below, you will receive an email with instructions{" "}
+            Enter your email below, you will receive an email with a code.{" "}
             <br />
-            on how to reset your password in a few minutes. You can also set a
-            new <br />
-            password if you’ve never set one before.
+            Make sure to use the link to change your password within 5 minutes.
           </p>
         ) : (
           <div className={styles["recover-password-message"]}>{msg}</div>
