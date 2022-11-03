@@ -99,6 +99,13 @@ func (user *User) GetUserById(userId string) error {
 	return result.Error
 }
 
+// Takes user email as string value and returns the user from the database.
+func (user *User) GetUserByEmail(email string) error {
+	result := database.DB.Where("email = ?", email).First(&user)
+
+	return result.Error
+}
+
 // Grabs the current user's ID from the session store ('database = fiber')
 func GetUserIdFromSession(c *fiber.Ctx) (string, error) {
 	var userId string

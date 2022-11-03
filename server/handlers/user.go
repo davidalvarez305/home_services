@@ -256,6 +256,44 @@ func RequestChangePasswordCode(c *fiber.Ctx) error {
 	})
 }
 
+func ForgotPassword(c *fiber.Ctx) error {
+
+	// Get input from the client
+	type ForgotPasswordInput struct {
+		Email string `json:"email"`
+	}
+	var body ForgotPasswordInput
+
+	err := c.BodyParser(&body)
+
+	if err != nil {
+		return err
+	}
+
+	// Initialize user & attempt to fetch from DB by using client input email.
+	user := &actions.User{}
+
+	err = user.GetUserByEmail(body.Email)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Couldn't find user using that e-mail.",
+		})
+	}
+
+	err = user.RequestChangePasswordCode()
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": user,
+	})
+}
+
 func ChangeProfilePicture(c *fiber.Ctx) error {
 	user := &actions.User{}
 

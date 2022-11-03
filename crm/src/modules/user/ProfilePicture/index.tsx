@@ -111,11 +111,7 @@ const ProfilePicture = () => {
                   </div>
                 </Button>
               )}
-              {error && (
-                <div>
-                  <RequestErrorMessage {...error} />
-                </div>
-              )}
+              <RequestErrorMessage {...error} />
             </div>
           </Form>
         </Formik>

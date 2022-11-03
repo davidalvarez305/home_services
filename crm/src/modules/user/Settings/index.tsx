@@ -81,7 +81,8 @@ const ProfileSettings: React.FC = () => {
           </div>
         ))}
       </div>
-      {error.message.length > 0 &&
+      {error.message &&
+        error.message.length > 0 &&
         toast({
           title: "Error deleting account.",
           description: error.message,

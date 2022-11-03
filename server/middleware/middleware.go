@@ -10,7 +10,7 @@ import (
 func AuthMiddleware(c *fiber.Ctx) error {
 	url := c.OriginalURL()
 
-	if strings.Contains(url, "/login") || strings.Contains(url, "/register") {
+	if strings.Contains(url, "/login") || strings.Contains(url, "/register") || strings.Contains(url, "/forgot-password") {
 		return c.Next()
 	}
 

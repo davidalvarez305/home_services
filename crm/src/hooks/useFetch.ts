@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
 export default function useFetch() {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,9 +30,16 @@ export default function useFetch() {
           setIsLoading(false);
           callback(response);
         })
-        .catch((error) => {
+        .catch((error: AxiosError) => {
           if (error?.response?.data) {
-            setError({ message: error.response.data.data });
+            const serverResponse: any = error?.response?.data;
+
+            // if the server rejects the request, serverResponse.data will be undefined
+            if (serverResponse.data) {
+              setError({ message: serverResponse.data });
+            } else {
+              setError({ message: serverResponse });
+            }
           } else {
             setError({ message: error.message });
           }
