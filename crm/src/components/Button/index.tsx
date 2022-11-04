@@ -1,39 +1,83 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button as ChakraButton, ButtonProps } from "@chakra-ui/react";
-import styles from "./Button.module.css";
 
 type Props = ButtonProps & {
   className: "Dark" | "Light" | "Blue" | "LightBlue";
 };
 
 const Button: React.FC<Props> = ({ children, className, ...props }) => {
-  const [isHovering, setIsHovering] = useState(false);
+  const buttonStyles = {
+    "button-dark": {
+      alignItems: "flex-start",
+      backgroundColor: "black",
+      border: "1px solid",
+      borderRadius: "8px",
+      display: "flex",
+      height: "56px",
+      minWidth: "124px",
+      padding: "17px 43px",
+    },
+    "label-dark": {
+      color: "white",
+      fontWeight: "700",
+      lineHeight: "21px",
+      minHeight: "21px",
+      minWidth: "38px",
+      fontSize: "16px",
+    },
+    "button-light": {
+      alignItems: "flex-start",
+      border: "1px solid",
+      borderColor: "var(--cfdbd5outline-onlight2)",
+      backgroundColor: "white",
+      borderRadius: "8px",
+      display: "flex",
+      height: "58px",
+      marginTop: "-1px",
+      minWidth: "126px",
+      padding: "17px 43px",
+    },
+    "label-light": {
+      color: "var(--x0052ffsoft)",
+      fontWeight: "700",
+      lineHeight: "21px",
+      minHeight: "21px",
+      minWidth: "38px",
+      fontSize: "16px",
+    },
+    "button-blue": {
+      alignItems: "flex-start",
+      backgroundColor: "var(--x0052ffsoft)",
+      border: "1px solid",
+      borderColor: "var(--x0052ffsoft)",
+      borderRadius: "8px",
+      display: "flex",
+      height: "56px",
+      minWidth: "124px",
+      padding: "17px 43px",
+    },
+  };
 
   const buttonOptions = {
-    Dark: "button-dark",
-    Light: "button-light",
-    Blue: "button-blue",
-    LightBlue: "button-light",
+    Dark: buttonStyles["button-dark"],
+    Light: buttonStyles["button-light"],
+    Blue: buttonStyles["button-blue"],
+    LightBlue: buttonStyles["button-light"],
   };
 
   const labelOptions = {
-    Dark: "label-dark",
-    Light: "label-light",
-    Blue: "label-dark",
-    LightBlue: "label-light",
+    Dark: buttonStyles["label-dark"],
+    Light: buttonStyles["label-light"],
+    Blue: buttonStyles["label-dark"],
+    LightBlue: buttonStyles["label-light"],
   };
 
   return (
     <ChakraButton
-      sx={{
-        cursor: isHovering ? "pointer" : undefined,
-      }}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
+      style={{ ...buttonOptions[className] }}
       {...props}
-      className={styles[buttonOptions[className]]}
     >
-      <div className={styles[labelOptions[className]]}>{children}</div>
+      <div style={{ ...labelOptions[className] }}>{children}</div>
     </ChakraButton>
   );
 };

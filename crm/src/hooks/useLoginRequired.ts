@@ -9,7 +9,6 @@ export default function useLoginRequired() {
   const ctx = useContext(UserContext);
 
   const fetchData = useCallback(() => {
-    console.log("yo");
     axios
       .get(USER_ROUTE, {
         withCredentials: true,

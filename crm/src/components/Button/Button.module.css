@@ -1,6 +1,6 @@
 .button-dark {
     align-items: flex-start;
-    background-color: var(--x000000primary);
+    background-color: black;
     border: 1px solid;
     border-radius: 8px;
     display: flex;
@@ -10,7 +10,7 @@
 }
 
 .label-dark {
-    color: var(--ffffff--primary);
+    color: white;
     font-weight: 700;
     line-height: 21px;
     min-height: 21px;

@@ -56,7 +56,7 @@ const ForgotPassword: React.FC = () => {
             />
             <div className={styles["flex-row"]}>
               <Checkbox>Remember me</Checkbox>
-              <div className={styles["recover-password" + " x12px--bold"]}>
+              <div className={styles["recover-password"]}>
                 <Link href={"/login"}>Login</Link>
               </div>
             </div>
