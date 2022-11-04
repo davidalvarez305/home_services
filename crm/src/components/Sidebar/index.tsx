@@ -15,15 +15,15 @@ function Sidebar() {
   const navLinks = [
     {
       icon: <CreditCardIcon />,
-      link: "Credit Cards",
+      link: "Billing",
     },
     {
       icon: <BarsIcon />,
-      link: "Estimates",
+      link: "Leads",
     },
     {
       icon: <ReportsIcon />,
-      link: "Recommendations",
+      link: "Company",
     },
   ];
 
@@ -65,7 +65,7 @@ function Sidebar() {
         ))}
       </div>
       <div className={styles["balance"]}>
-        <div className={styles["balances"]}>{"Budgets"}</div>
+        <div className={styles["balances"]}>{"Traffic"}</div>
         {balances.map((balance) => (
           <React.Fragment key={balance.link}>
             <SidebarElement
