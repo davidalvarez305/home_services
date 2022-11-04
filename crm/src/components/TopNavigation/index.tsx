@@ -3,7 +3,7 @@ import PrimaryInput from "../PrimaryInput";
 import IconButton from "../IconButton";
 import styles from "./TopNavigation.module.css";
 import { NotificationBell } from "../../assets/NotificationBell";
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import { BUCKET_URL } from "../../constants";
 
@@ -28,7 +28,7 @@ const TopNavigation: React.FC<Props> = ({
   const ctx = useContext(UserContext);
   const USER_IMAGE = `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_picture}`;
 
-  function NavigationInputField() {
+  const NavigationInputField = useCallback(() => {
     return (
       <Formik initialValues={{ search: "" }} onSubmit={handleNavigationSubmit}>
         <Form>
@@ -41,7 +41,7 @@ const TopNavigation: React.FC<Props> = ({
         </Form>
       </Formik>
     );
-  }
+  }, [handleNavigationSubmit, searchIcon]);
 
   return (
     <div className={styles["top-navigation"]}>

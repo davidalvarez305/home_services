@@ -10,6 +10,7 @@ interface Props {
 }
 
 const PrimaryLayout: React.FC<Props> = ({ children, screenName }) => {
+  console.log("rendering");
   return (
     <div className={"container-center-horizontal"}>
       <div className={styles["accounts-empty"]}>

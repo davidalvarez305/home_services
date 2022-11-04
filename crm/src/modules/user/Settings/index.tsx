@@ -16,11 +16,9 @@ const ProfileSettings: React.FC = () => {
   const router = useRouter();
   useLoginRequired();
   const ctx = useContext(UserContext);
-  const USER_IMAGE = ctx?.user.profile_picture
-    ? `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_picture}`
-    : "";
   const { makeRequest, isLoading, error } = useFetch();
   const toast = useToast();
+  const USER_IMAGE = `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_picture}`;
 
   function handleDeleteProfile() {
     makeRequest(
@@ -56,11 +54,11 @@ const ProfileSettings: React.FC = () => {
     {
       icon: (
         <Image
-          style={{ objectFit: "contain" }}
-          fill={true}
           className={styles["image"]}
           src={USER_IMAGE}
           alt="Me"
+          height={200}
+          width={200}
         />
       ),
       primaryHeader: "Change Profile Picture",
