@@ -18,7 +18,7 @@ func CreateCompany(c *fiber.Ctx) error {
 	err = company.CreateCompany()
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": "Could not create that company.",
 		})
 	}
@@ -54,7 +54,7 @@ func UpdateCompany(c *fiber.Ctx) error {
 func GetCompanyDetails(c *fiber.Ctx) error {
 	company := &actions.Company{}
 
-	err := company.UpdateCompany()
+	err := company.GetCompany()
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
@@ -62,7 +62,7 @@ func GetCompanyDetails(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(201).JSON(fiber.Map{
+	return c.Status(200).JSON(fiber.Map{
 		"data": company,
 	})
 }

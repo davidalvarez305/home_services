@@ -23,7 +23,7 @@ func (c *Company) UpdateCompany() error {
 	return result.Error
 }
 
-// Create and return company model.
+// Get company model.
 func (c *Company) GetCompany() error {
 	result := database.DB.First(&c)
 
