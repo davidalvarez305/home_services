@@ -26,7 +26,7 @@ const TopNavigation: React.FC<Props> = ({
   handleNavigationSubmit,
 }) => {
   const ctx = useContext(UserContext);
-  const USER_IMAGE = `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_image}`;
+  const USER_IMAGE = `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_picture}`;
 
   function NavigationInputField() {
     return (

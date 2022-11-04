@@ -16,8 +16,8 @@ const ProfileSettings: React.FC = () => {
   const router = useRouter();
   useLoginRequired();
   const ctx = useContext(UserContext);
-  const USER_IMAGE = ctx?.user.profile_image
-    ? `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_image}`
+  const USER_IMAGE = ctx?.user.profile_picture
+    ? `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_picture}`
     : "";
   const { makeRequest, isLoading, error } = useFetch();
   const toast = useToast();

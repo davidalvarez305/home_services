@@ -10,7 +10,7 @@ export default function useAuth() {
     username: "",
     password: "",
     email: "",
-    profile_image: "",
+    profile_picture: "",
     created_at: 0,
     updated_at: 0,
     api_token: "",
