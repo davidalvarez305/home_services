@@ -13,3 +13,11 @@ II. Go Backend
 III. AWS EC2 Instance
 IV. PostgreSQL Database
 V. Nginx Web Server
+
+Server Structure
+
+I. Controller
+II. Handlers
+III. Actions
+IV. Models
+V. Database ORM
