@@ -14,7 +14,7 @@ import { useToast } from "@chakra-ui/react";
 
 const ProfilePicture = () => {
   const toast = useToast();
-  // useLoginRequired();
+  useLoginRequired();
   const [isHovering, setIsHovering] = useState(false);
   const [image, setImage] = useState<File>();
   const ctx = useContext(UserContext);
@@ -39,7 +39,7 @@ const ProfilePicture = () => {
           data: fd,
         },
         (res) => {
-          ctx?.Login(res.data.data);
+          ctx?.SetUser(res.data.data);
         }
       );
     } else {

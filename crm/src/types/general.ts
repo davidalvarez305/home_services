@@ -8,4 +8,5 @@ export type User = {
   profile_image: string;
   created_at: number;
   api_token: string;
+  updated_at: number;
 };

@@ -1,5 +1,4 @@
 import { Form, Formik } from "formik";
-import { useRouter } from "next/router";
 import { useContext } from "react";
 import Button from "../../../components/Button";
 import PrimaryInput from "../../../components/PrimaryInput";
@@ -12,10 +11,9 @@ import PrimaryLayout from "../../../layout/Primary";
 import styles from "./ChangePassword.module.css";
 
 const ChangePassword = () => {
-  // useLoginRequired();
+  useLoginRequired();
   const ctx = useContext(UserContext);
   const { isLoading, makeRequest, error } = useFetch();
-  const router = useRouter();
 
   function handleSubmit(values: { newPassword: string }) {
     if (!ctx?.user.id) {

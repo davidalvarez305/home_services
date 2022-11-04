@@ -13,7 +13,7 @@ const TagElement: React.FC<Props> = ({ tag, handleClick, ...props }) => {
       <Button
         {...props}
         onClick={handleClick}
-        className={styles["tag" + " x12px--bold"]}
+        className={styles["tag"]}
       >
         {tag}
       </Button>

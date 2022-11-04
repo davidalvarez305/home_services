@@ -25,7 +25,7 @@ const Login: React.FC = () => {
         data: values,
       },
       (res) => {
-        ctx?.Login(res.data.data);
+        ctx?.SetUser(res.data.data);
         router.push("/");
       }
     );

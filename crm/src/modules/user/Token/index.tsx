@@ -1,9 +1,5 @@
-import { Checkbox } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
-import Button from "../../../components/Button";
 import PrimaryInput from "../../../components/PrimaryInput";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import SignInButton from "../../../components/SignInButton";
@@ -17,7 +13,6 @@ const Token = () => {
   const router = useRouter();
 
   function handleSubmit(values: { newPassword: string }) {
-    console.log(router.query.code);
     makeRequest(
       {
         url: USER_ROUTE + "/change-password/" + router.query.code,

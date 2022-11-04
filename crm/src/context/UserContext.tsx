@@ -3,7 +3,7 @@ import useAuth from "../hooks/useAuth";
 import { User } from "../types/general";
 
 interface ContextValue {
-  Login: (user: User) => void;
+  SetUser: (user: User) => void;
   Logout: () => void;
   user: User;
 }
@@ -15,9 +15,9 @@ interface ProviderProps {
 }
 
 const UserProvider: React.FC<ProviderProps> = ({ children }) => {
-  const { Login, Logout, user } = useAuth();
+  const { SetUser, Logout, user } = useAuth();
   return (
-    <UserContext.Provider value={{ Login, Logout, user }}>
+    <UserContext.Provider value={{ SetUser, Logout, user }}>
       {children}
     </UserContext.Provider>
   );

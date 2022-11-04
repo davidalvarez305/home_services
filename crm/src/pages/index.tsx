@@ -1,7 +1,7 @@
+import useLoginRequired from "../hooks/useLoginRequired";
+import PrimaryLayout from "../layout/Primary";
+
 export default function Home() {
-  return (
-    <div>
-      Hi there!
-    </div>
-  )
+  useLoginRequired();
+  return <PrimaryLayout screenName="Home">Hi!</PrimaryLayout>;
 }

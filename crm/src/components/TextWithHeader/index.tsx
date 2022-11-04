@@ -9,10 +9,10 @@ interface Props {
 const TextWithHeader: React.FC<Props> = ({ primaryHeader, subHeader }) => {
   return (
     <div className={styles[`header-container`]}>
-      <div className={styles["header-paragraph" + " label--14px"]}>
+      <div className={styles["header-paragraph"]}>
         {primaryHeader}
       </div>
-      <div className={styles["subheader" + " x14px--regular"]}>
+      <div className={styles["subheader"]}>
         {subHeader}
       </div>
     </div>

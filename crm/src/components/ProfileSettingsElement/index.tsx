@@ -24,8 +24,8 @@ const ProfileSettingsElement: React.FC<Props> = ({
 }) => {
   return (
     <div className={styles["settings-element"]}>
-      <div className={"options"}>
-        <div className="icon">{icon}</div>
+      <div className={styles["options"]}>
+        <div className={styles["icon"]}>{icon}</div>
         <TextWithHeader primaryHeader={primaryHeader} subHeader={subHeader} />
       </div>
       <TagElement

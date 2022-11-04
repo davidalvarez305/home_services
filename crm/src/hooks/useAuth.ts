@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { LOGOUT_ROUTE, USER_ROUTE } from "../constants";
+import { useCallback, useState } from "react";
+import { LOGOUT_ROUTE } from "../constants";
 import { User } from "../types/general";
 import useFetch from "./useFetch";
 
@@ -11,13 +11,15 @@ export default function useAuth() {
     password: "",
     email: "",
     profile_image: "",
-    created_at: "",
+    created_at: 0,
+    updated_at: 0,
+    api_token: "",
   };
   const [user, setUser] = useState(userProps);
 
-  function Login(user: User) {
+  const SetUser = useCallback((user: User) => {
     setUser(user);
-  }
+  }, []);
 
   function Logout() {
     makeRequest(
@@ -33,19 +35,5 @@ export default function useAuth() {
     );
   }
 
-  useEffect(() => {
-    makeRequest(
-      {
-        url: `${USER_ROUTE}`,
-        method: "GET",
-      },
-      (res) => {
-        if (res.data.data.user) {
-          setUser(res.data.data.user);
-        }
-      }
-    );
-  }, [makeRequest]);
-
-  return { Login, Logout, user };
+  return { SetUser, Logout, user };
 }
