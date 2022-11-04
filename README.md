@@ -4,6 +4,7 @@ Under construction 🚧
 
 Technology Stack
 
+```
 I. React/Next.js Frontend
 II. Go Backend
     IIa. AWS SDK for S3
@@ -13,11 +14,14 @@ II. Go Backend
 III. AWS EC2 Instance
 IV. PostgreSQL Database
 V. Nginx Web Server
+```
 
 Server Structure
 
+```
 I. Controller
 II. Handlers
 III. Actions
 IV. Models
 V. Database ORM
+```
