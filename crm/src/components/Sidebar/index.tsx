@@ -52,7 +52,7 @@ function Sidebar() {
         src="https://anima-uploads.s3.amazonaws.com/projects/631ef96c30c5be89e49afb9c/releases/63206d2ef3e0a49cce9c0cb4/img/-element--logo---hidden@2x.svg"
       />
       <div className={styles["navigation"]}>
-        <div className={styles["navigation-text" + " x14px--light"]}>
+        <div className={styles["navigation-text"]}>
           Navigation
         </div>
         {navLinks.map((link) => (
@@ -65,7 +65,7 @@ function Sidebar() {
         ))}
       </div>
       <div className={styles["balance"]}>
-        <div className={styles["balances" + " x14px--light"]}>{"Budgets"}</div>
+        <div className={styles["balances"]}>{"Budgets"}</div>
         {balances.map((balance) => (
           <React.Fragment key={balance.link}>
             <SidebarElement
