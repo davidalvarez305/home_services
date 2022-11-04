@@ -19,7 +19,7 @@ const SidebarElement: React.FC<Props> = ({ link, icon, handleClick }) => {
         onClick={(e) => handleClick(e)}
       >
         <div className={styles["flag-button"]}>{icon}</div>
-        <div className={styles["link" + " label--14px"]}>{link}</div>
+        <div className={styles["link"]}>{link}</div>
       </div>
     </div>
   );

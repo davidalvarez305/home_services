@@ -36,10 +36,10 @@ const Footer: React.FC = () => {
         <div className={styles["links"]}>
           {footerLinks.map(({ link, path }) => (
             <Link key={path} href={path}>
-              <div className={styles["links-item" + " x12px--bold"]}>{link}</div>
+              <div className={styles["links-item"]}>{link}</div>
             </Link>
           ))}
-          <p className={styles["footer-rights-text" + " x12px--medium"]}>
+          <p className={styles["footer-rights-text"]}>
             {CURRENT_YEAR + " All Rights Reserved"}
           </p>
         </div>
