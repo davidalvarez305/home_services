@@ -48,51 +48,59 @@ const CreateCompany = () => {
           street_address_line_1: "",
           street_address_line_2: "",
           street_address_line_3: "",
+          city: "",
+          state: "",
           services: [""],
-          locations: [""],
+          zip_codes: [""],
         }}
         onSubmit={handleSubmit}
       >
         <Form>
-          <div className={styles["form"]}>
-            <FormInput
-              label="Company Name"
-              name="name"
-              placeholder="Company, Inc"
-            />
-            <FormInput
-              label="Company Logo"
-              name="logo"
-              placeholder="Logo URL"
-              type="url"
-            />
-            <FormInput
-              label="Street Address Line 1"
-              name="street_address_line_1"
-              placeholder="Address Line 1..."
-            />
-            <FormInput
-              label="Street Address Line 2"
-              name="street_address_line_2"
-              placeholder="Address Line 2..."
-            />
-            <FormInput
-              label="Street Address Line 3"
-              name="street_address_line_3"
-              placeholder="Address Line 3..."
-            />
-            <FormSelect
-              name="services"
-              options={["home remodeling", "kitchen remodeling"]}
-            />
-            <MultiFormSelect
-              name="locations"
-              options={["home remodeling", "kitchen remodeling"]}
-            />
+          <div className={styles["form-container"]}>
+            <div className={styles["form"]}>
+              <FormInput
+                label="Company Name"
+                name="name"
+                placeholder="Company, Inc"
+              />
+              <FormInput
+                label="Company Logo"
+                name="logo"
+                placeholder="Logo URL"
+                type="url"
+              />
+              <FormInput
+                label="Street Address Line 1"
+                name="street_address_line_1"
+                placeholder="Address Line 1..."
+              />
+              <FormInput
+                label="Street Address Line 2"
+                name="street_address_line_2"
+                placeholder="Address Line 2..."
+              />
+              <FormInput
+                label="Street Address Line 3"
+                name="street_address_line_3"
+                placeholder="Address Line 3..."
+              />
+              <RequestErrorMessage {...error} />
+            </div>
+            <div className={styles["form"]}>
+              <MultiFormSelect
+                name="services"
+                options={["home remodeling", "kitchen remodeling"]}
+              />
+              <MultiFormSelect name="zip_codes" options={["33015", "33012"]} />
+              <FormSelect name="city" options={["miami", "hialeah"]} />
+              <FormSelect name="state" options={["florida", "georgia"]} />
+              <RequestErrorMessage {...error} />
+            </div>
+          </div>
+          <div className={styles["button-container"]}>
             <Button className={"Dark"} type={"submit"} isLoading={isLoading}>
               Submit
             </Button>
-            <RequestErrorMessage {...error} />
           </div>
         </Form>
       </Formik>

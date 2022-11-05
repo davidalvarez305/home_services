@@ -17,6 +17,8 @@ export type CreateCompanyInput = {
   street_address_line_1: string;
   street_address_line_2: string;
   street_address_line_3: string;
+  city: string;
+  state: string;
+  zip_codes: string[];
   services: string[];
-  locations: string[];
 };
