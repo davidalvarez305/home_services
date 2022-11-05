@@ -19,7 +19,7 @@ func CreateCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	// Create New Company
+	// Create New Company With Default Status as 'Pending Approval'
 	co := &actions.Company{}
 	company := models.Company{
 		Name:            input.Name,
