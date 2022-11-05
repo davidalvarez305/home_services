@@ -52,28 +52,6 @@ func CreateCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	userId, err := actions.GetUserIdFromSession(c)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not retrieve user from session.",
-		})
-	}
-
-	// Save User As Company Owner
-	userRole := &actions.UserCompanyRole{}
-	userRole.CompanyID = company.ID
-	userRole.UserID = userId
-	userRole.RoleID = 1
-
-	err = userRole.CreateUserCompanyRole()
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not retrieve user from session.",
-		})
-	}
-
 	// Set Company Status to Pending Approval
 	companyStatus := &actions.CompanyAccountStatus{}
 	companyStatus.AccountStatusID = 2

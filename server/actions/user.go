@@ -65,17 +65,13 @@ func (user *User) CreateUser() error {
 	user.APIToken = utils.GenerateAPIToken(user.Email + user.Password)
 	user.CreatedAt = time.Now().Unix()
 	user.UpdatedAt = time.Now().Unix()
+	user.AccountStatusID = 2
 
 	err = user.Save()
 
 	if err != nil {
 		return err
 	}
-
-	// Create with default account status being inactive.
-	accountStatus := &UserAccountStatus{}
-
-	err = accountStatus.CreateUserAccountStatus(user)
 
 	return err
 }

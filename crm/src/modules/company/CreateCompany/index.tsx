@@ -3,8 +3,8 @@ import { useState } from "react";
 import Button from "../../../components/Button";
 import FormInput from "../../../components/FormInput";
 import FormSelect from "../../../components/FormSelect";
-import MultiFormSelect from "../../../components/MultiFormSelect";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
+import { COMPANY_ROUTE } from "../../../constants";
 import useFetch from "../../../hooks/useFetch";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import PrimaryLayout from "../../../layout/Primary";
@@ -17,30 +17,30 @@ const CreateCompany = () => {
   const { isLoading, makeRequest, error } = useFetch();
 
   function handleSubmit(values: CreateCompanyInput) {
-    console.log(values);
+    if (
+      values.name === "" ||
+      values.street_address_line_1 == "" ||
+      values.city === 0 ||
+      values.state === 0 ||
+      values.zip_code === 0
+    ) {
+      return;
+    }
 
-    /* makeRequest(
+    makeRequest(
       {
-        url: USER_ROUTE + "/forgot-password",
+        url: COMPANY_ROUTE,
         method: "POST",
         data: values,
       },
       (_) => {
         setMsg("Use the link sent to your inbox within the next 5 minutes.");
       }
-    ); */
-  }
-
-  if (msg.length > 0) {
-    return (
-      <PrimaryLayout screenName={"Change Password"}>
-        <div>{msg}</div>
-      </PrimaryLayout>
     );
   }
 
   return (
-    <PrimaryLayout screenName={"Change Password"}>
+    <PrimaryLayout screenName={"Create Company"}>
       <Formik
         initialValues={{
           name: "",
@@ -48,10 +48,9 @@ const CreateCompany = () => {
           street_address_line_1: "",
           street_address_line_2: "",
           street_address_line_3: "",
-          city: "",
-          state: "",
-          services: [""],
-          zip_codes: [""],
+          city: 0,
+          state: 0,
+          zip_code: 0,
         }}
         onSubmit={handleSubmit}
       >
@@ -87,15 +86,8 @@ const CreateCompany = () => {
               <RequestErrorMessage {...error} />
             </div>
             <div className={styles["form"]}>
-              <MultiFormSelect
-                name="services"
-                options={[
-                  { label: "home remodeling", value: 1 },
-                  { label: "kitchen remodeling", value: 2 },
-                ]}
-              />
-              <MultiFormSelect
-                name="zip_codes"
+              <FormSelect
+                name="zip_code"
                 options={[
                   { label: "33015", value: 1 },
                   { label: "33012", value: 2 },

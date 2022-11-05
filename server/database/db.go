@@ -62,8 +62,6 @@ func Connect() {
 		&models.Role{},
 		&models.Service{},
 		&models.State{},
-		&models.UserAccountStatus{},
-		&models.UserCompanyRole{},
 		&models.Token{},
 		&models.User{},
 		&models.ZipCode{},
