@@ -1,5 +1,5 @@
 import { Form, Formik, FormikHelpers } from "formik";
-import PrimaryInput from "../PrimaryInput";
+import PrimaryInput from "../FormInput";
 import IconButton from "../IconButton";
 import styles from "./TopNavigation.module.css";
 import { NotificationBell } from "../../assets/NotificationBell";

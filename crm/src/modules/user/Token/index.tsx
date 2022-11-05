@@ -1,6 +1,6 @@
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
-import PrimaryInput from "../../../components/PrimaryInput";
+import PrimaryInput from "../../../components/FormInput";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import SignInButton from "../../../components/SignInButton";
 import { USER_ROUTE } from "../../../constants";

@@ -2,7 +2,7 @@ import { Form, Formik } from "formik";
 import React, { useContext } from "react";
 import Checkbox from "../../../components/Checkbox";
 import SignInButton from "../../../components/SignInButton";
-import PrimaryInput from "../../../components/PrimaryInput";
+import PrimaryInput from "../../../components/FormInput";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import useFetch from "../../../hooks/useFetch";

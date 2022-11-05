@@ -75,9 +75,9 @@ function Sidebar() {
           </React.Fragment>
         ))}
         <SidebarElement
-          handleClick={() => router.push("/budgets")}
+          handleClick={() => router.push("/create-company")}
           icon={<PlusIcon />}
-          link={"Create A Budget"}
+          link={"Create A Company"}
         />
       </div>
       <SidebarElement

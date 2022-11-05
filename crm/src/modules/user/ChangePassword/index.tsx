@@ -1,7 +1,7 @@
 import { Form, Formik } from "formik";
 import { useState } from "react";
 import Button from "../../../components/Button";
-import PrimaryInput from "../../../components/PrimaryInput";
+import PrimaryInput from "../../../components/FormInput";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import { USER_ROUTE } from "../../../constants";
 import useFetch from "../../../hooks/useFetch";
