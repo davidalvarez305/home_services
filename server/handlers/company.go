@@ -9,7 +9,6 @@ import (
 )
 
 func CreateCompany(c *fiber.Ctx) error {
-	company := &actions.Company{}
 	input := &types.CreateCompanyInput{}
 	err := c.BodyParser(&input)
 
@@ -20,6 +19,7 @@ func CreateCompany(c *fiber.Ctx) error {
 	}
 
 	// Create New Company
+	company := &actions.Company{}
 	company.Name = input.Name
 	company.Logo = input.Logo
 	company.CreatedAt = time.Now().Unix()
@@ -65,7 +65,22 @@ func CreateCompany(c *fiber.Ctx) error {
 	userRole.CompanyID = company.ID
 	userRole.UserID = userId
 	userRole.RoleID = 1
-	userRole.CreateUserCompanyRole()
+
+	err = userRole.CreateUserCompanyRole()
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not retrieve user from session.",
+		})
+	}
+
+	// Set Company Status to Pending Approval
+	companyStatus := &actions.CompanyAccountStatus{}
+	companyStatus.AccountStatusID = 2
+	companyStatus.CompanyID = company.ID
+	companyStatus.CreatedAt = time.Now().Unix()
+	companyStatus.UpdatedAt = time.Now().Unix()
+	companyStatus.CreateCompanyAccountStatus()
 
 	return c.Status(201).JSON(fiber.Map{
 		"data": company,
