@@ -10,6 +10,6 @@ func Company(router fiber.Router) {
 	company := router.Group("company")
 
 	company.Get("/", handlers.GetCompanyDetails)
-	company.Put("/", handlers.UpdateCompany)
 	company.Post("/", handlers.CreateCompany)
+	company.Put("/", handlers.UpdateCompany)
 }

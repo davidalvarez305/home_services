@@ -9,12 +9,9 @@ export type User = {
   created_at: number;
   api_token: string;
   updated_at: number;
-  company?: Company;
-};
-
-export type Company = {
-  id: number;
-  logo: string;
+  account_status_id: number;
+  company_id?: number;
+  role_id?: number;
 };
 
 export type CreateCompanyInput = {

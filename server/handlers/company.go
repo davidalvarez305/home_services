@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/actions"
+	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/gofiber/fiber/v2"
 )
@@ -19,13 +20,17 @@ func CreateCompany(c *fiber.Ctx) error {
 	}
 
 	// Create New Company
-	company := &actions.Company{}
-	company.Name = input.Name
-	company.Logo = input.Logo
-	company.CreatedAt = time.Now().Unix()
-	company.UpdatedAt = time.Now().Unix()
+	co := &actions.Company{}
+	company := models.Company{
+		Name:            input.Name,
+		Logo:            input.Logo,
+		AccountStatusID: 2,
+		CreatedAt:       time.Now().Unix(),
+		UpdatedAt:       time.Now().Unix(),
+	}
+	co.Company = &company
 
-	err = company.CreateCompany()
+	err = co.CreateCompany()
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -35,35 +40,23 @@ func CreateCompany(c *fiber.Ctx) error {
 
 	// Insert Company Address
 	address := &actions.Address{}
-	address.CityID = input.City
-	address.StateID = input.State
-	address.CountryID = 1
-	address.StreetAddressLine1 = input.StreetAddressLine1
-	address.StreetAddressLine2 = input.StreetAddressLine2
-	address.StreetAddressLine3 = input.StreetAddressLine3
-	address.ZipCodeID = input.ZipCode
-	address.CompanyID = company.ID
+	addr := models.Address{
+		CityID:             input.City,
+		StateID:            input.State,
+		ZipCodeID:          input.ZipCode,
+		CountryID:          1,
+		StreetAddressLine1: input.StreetAddressLine1,
+		StreetAddressLine2: input.StreetAddressLine2,
+		StreetAddressLine3: input.StreetAddressLine3,
+		CompanyID:          co.ID,
+	}
+	address.Address = &addr
 
 	err = address.CreateAddress()
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Could not save address.",
-		})
-	}
-
-	// Set Company Status to Pending Approval
-	companyStatus := &actions.CompanyAccountStatus{}
-	companyStatus.AccountStatusID = 2
-	companyStatus.CompanyID = company.ID
-	companyStatus.CreatedAt = time.Now().Unix()
-	companyStatus.UpdatedAt = time.Now().Unix()
-
-	err = companyStatus.CreateCompanyAccountStatus()
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not create company account status.",
 		})
 	}
 

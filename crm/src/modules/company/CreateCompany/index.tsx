@@ -13,7 +13,6 @@ import styles from "./CreateCompany.module.css";
 
 const CreateCompany = () => {
   useLoginRequired();
-  const [msg, setMsg] = useState("");
   const { isLoading, makeRequest, error } = useFetch();
 
   function handleSubmit(values: CreateCompanyInput) {
@@ -33,8 +32,8 @@ const CreateCompany = () => {
         method: "POST",
         data: values,
       },
-      (_) => {
-        setMsg("Use the link sent to your inbox within the next 5 minutes.");
+      (res) => {
+        console.log(res.data.data);
       }
     );
   }
@@ -83,7 +82,6 @@ const CreateCompany = () => {
                 name="street_address_line_3"
                 placeholder="Address Line 3..."
               />
-              <RequestErrorMessage {...error} />
             </div>
             <div className={styles["form"]}>
               <FormSelect
@@ -107,10 +105,10 @@ const CreateCompany = () => {
                   { label: "georgia", value: 2 },
                 ]}
               />
-              <RequestErrorMessage {...error} />
             </div>
           </div>
           <div className={styles["button-container"]}>
+            <RequestErrorMessage {...error} />
             <Button className={"Dark"} type={"submit"} isLoading={isLoading}>
               Submit
             </Button>
