@@ -89,9 +89,18 @@ const CreateCompany = () => {
             <div className={styles["form"]}>
               <MultiFormSelect
                 name="services"
-                options={["home remodeling", "kitchen remodeling"]}
+                options={[
+                  { label: "home remodeling", value: 1 },
+                  { label: "kitchen remodeling", value: 2 },
+                ]}
               />
-              <MultiFormSelect name="zip_codes" options={["33015", "33012"]} />
+              <MultiFormSelect
+                name="zip_codes"
+                options={[
+                  { label: "33015", value: 1 },
+                  { label: "33012", value: 2 },
+                ]}
+              />
               <FormSelect
                 name="city"
                 options={[
