@@ -3,8 +3,8 @@ import { useState } from "react";
 import Button from "../../../components/Button";
 import FormInput from "../../../components/FormInput";
 import FormSelect from "../../../components/FormSelect";
+import MultiFormSelect from "../../../components/MultiFormSelect";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
-import { USER_ROUTE } from "../../../constants";
 import useFetch from "../../../hooks/useFetch";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import PrimaryLayout from "../../../layout/Primary";
@@ -81,11 +81,13 @@ const CreateCompany = () => {
               name="street_address_line_3"
               placeholder="Address Line 3..."
             />
-            <FormInput label="Services" name="services" />
             <FormSelect
-              name="areas_served"
+              name="services"
               options={["home remodeling", "kitchen remodeling"]}
-              isMulti={true}
+            />
+            <MultiFormSelect
+              name="locations"
+              options={["home remodeling", "kitchen remodeling"]}
             />
             <Button className={"Dark"} type={"submit"} isLoading={isLoading}>
               Submit

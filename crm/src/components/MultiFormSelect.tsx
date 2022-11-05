@@ -5,7 +5,7 @@ import {
   FormErrorMessage,
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
-import ReactSelect from "react-select";
+import ReactSelect, { MultiValue } from "react-select";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import { useField, useFormikContext } from "formik";
 
@@ -29,9 +29,9 @@ const FormSelect: React.FC<Props> = ({ options, name }) => {
 
   const [field, meta] = useField(name);
 
-  const [selectedValue, setSelectedValue] = useState<null | SelectType>(
-    initialProps
-  );
+  const [selectedValue, setSelectedValue] = useState<MultiValue<SelectType>>([
+    initialProps,
+  ]);
 
   useEffect(() => {
     if ((values as any).word === "") {
@@ -66,7 +66,7 @@ const FormSelect: React.FC<Props> = ({ options, name }) => {
           value={selectedValue}
           onChange={(e) => {
             setSelectedValue(e);
-            setFieldValue(field.name, e?.value);
+            setFieldValue(field.name, e);
           }}
           options={options.map((op) => {
             return {
@@ -74,6 +74,7 @@ const FormSelect: React.FC<Props> = ({ options, name }) => {
               label: capitalizeFirstLetter(op),
             };
           })}
+          isMulti={true}
         />
         {meta.error && meta.touched && (
           <FormErrorMessage>{meta.error}</FormErrorMessage>
