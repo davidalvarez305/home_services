@@ -1,6 +1,6 @@
 package models
 
-type Marketing struct {
+type LeadMarketing struct {
 	ID           int    `json:"id"`
 	Campaign     string `gorm:"unique;not null" json:"campaign"`
 	Source       string `json:"source"`

@@ -44,7 +44,32 @@ func Connect() {
 
 	fmt.Printf("Connected to Database.\n")
 
-	db.AutoMigrate(&models.User{}, &models.Token{}, &models.AccountStatus{}, &models.UserAccountStatus{}, &models.Company{}, &models.CompanyAccountStatus{}, &models.CompanyInvoices{}, &models.CompanyServicesLocations{}, &models.UserCompanyRole{})
+	db.AutoMigrate(&models.AccountStatus{},
+		&models.City{},
+		&models.CompanyAccountStatus{},
+		&models.CompanyInvoices{},
+		&models.CompanyServicesLocations{},
+		&models.Company{}, &models.DMA{},
+		&models.InvoiceLeads{},
+		&models.Invoice{},
+		&models.LeadLog{},
+		&models.LeadMarketing{},
+		&models.LeadPhotos{},
+		&models.LeadQuotes{},
+		&models.Lead{},
+		&models.PaymentStatus{},
+		&models.Quote{},
+		&models.Role{},
+		&models.Service{},
+		&models.State{},
+		&models.UserAccountStatus{},
+		&models.UserCompanyRole{},
+		&models.Token{},
+		&models.User{},
+		&models.ZipCode{},
+		&models.Country{},
+		&models.Address{},
+	)
 
 	DB = db
 }

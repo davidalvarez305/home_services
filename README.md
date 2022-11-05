@@ -11,6 +11,7 @@ II. Go Backend
     IIb. GCP for Gmail API
     IIc. Twilio for SMS API
     IId. Stripe for Financial Services API
+    IIc. GetResponse API
 III. AWS EC2 Instance
 IV. PostgreSQL Database
 V. Nginx Web Server
