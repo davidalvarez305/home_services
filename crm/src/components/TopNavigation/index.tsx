@@ -6,25 +6,17 @@ import { NotificationBell } from "../../assets/NotificationBell";
 import { useCallback, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import { BUCKET_URL } from "../../constants";
+import { SearchIcon } from "../../assets/SearchIcon";
 
 interface Props {
   screenName: string;
-  searchIcon: React.ReactNode;
-  handleNavigationSubmit: (
-    values: {
-      search: string;
-    },
-    formikHelpers: FormikHelpers<{
-      search: string;
-    }>
-  ) => void;
 }
 
-const TopNavigation: React.FC<Props> = ({
-  screenName,
-  searchIcon,
-  handleNavigationSubmit,
-}) => {
+const TopNavigation: React.FC<Props> = ({ screenName }) => {
+  const handleNavigationSubmit = useCallback((values: { search: string }) => {
+    console.log("topNav: ", values);
+  }, []);
+
   const ctx = useContext(UserContext);
   const USER_IMAGE = `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_picture}`;
 
@@ -32,7 +24,9 @@ const TopNavigation: React.FC<Props> = ({
     return (
       <Formik initialValues={{ search: "" }} onSubmit={handleNavigationSubmit}>
         <Form>
-          <div className={styles["search-icon"]}>{searchIcon}</div>
+          <div className={styles["search-icon"]}>
+            <SearchIcon />
+          </div>
           <PrimaryInput
             label={""}
             name={"search"}
@@ -41,7 +35,7 @@ const TopNavigation: React.FC<Props> = ({
         </Form>
       </Formik>
     );
-  }, [handleNavigationSubmit, searchIcon]);
+  }, [handleNavigationSubmit]);
 
   return (
     <div className={styles["top-navigation"]}>
