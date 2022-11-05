@@ -80,6 +80,7 @@ func CreateCompany(c *fiber.Ctx) error {
 	companyStatus.CompanyID = company.ID
 	companyStatus.CreatedAt = time.Now().Unix()
 	companyStatus.UpdatedAt = time.Now().Unix()
+
 	companyStatus.CreateCompanyAccountStatus()
 
 	return c.Status(201).JSON(fiber.Map{

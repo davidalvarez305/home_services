@@ -3,9 +3,9 @@ package models
 type UserCompanyRole struct {
 	ID        int      `json:"id"`
 	UserID    int      `json:"user_id"`
-	User      *User    `gorm:"unique;not null;column:user_id;foreignKey:UserID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
+	User      *User    `gorm:"primaryKey;column:user_id;foreignKey:UserID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 	CompanyID int      `json:"company_id"`
-	Company   *Company `gorm:"not null;column:company_id;foreignKey:CompanyID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
+	Company   *Company `gorm:"primaryKey;column:company_id;foreignKey:CompanyID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 	RoleID    int      `json:"role_id"`
-	Role      *Role    `gorm:"not null;column:role_id;foreignKey:RoleID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
+	Role      *Role    `gorm:"primaryKey;column:role_id;foreignKey:RoleID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 }
