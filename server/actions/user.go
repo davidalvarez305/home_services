@@ -25,6 +25,10 @@ type User struct {
 	*models.User
 }
 
+type UserCompanyRole struct {
+	*models.UserCompanyRole
+}
+
 // Persist user to database.
 func (user *User) Save() error {
 	result := database.DB.Save(&user).First(&user)
@@ -294,4 +298,9 @@ func (user *User) ChangeProfilePicture(file *multipart.FileHeader) error {
 	}
 
 	return nil
+}
+
+// Assign a user to a company and a role.
+func (u *UserCompanyRole) SaveUserCompanyRole() error {
+	return database.DB.Save(&u).First(&u).Error
 }
