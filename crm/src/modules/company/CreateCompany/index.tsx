@@ -92,8 +92,20 @@ const CreateCompany = () => {
                 options={["home remodeling", "kitchen remodeling"]}
               />
               <MultiFormSelect name="zip_codes" options={["33015", "33012"]} />
-              <FormSelect name="city" options={["miami", "hialeah"]} />
-              <FormSelect name="state" options={["florida", "georgia"]} />
+              <FormSelect
+                name="city"
+                options={[
+                  { label: "miami", value: 1 },
+                  { label: "hialeah", value: 2 },
+                ]}
+              />
+              <FormSelect
+                name="state"
+                options={[
+                  { label: "florida", value: 1 },
+                  { label: "georgia", value: 2 },
+                ]}
+              />
               <RequestErrorMessage {...error} />
             </div>
           </div>

@@ -9,10 +9,10 @@ import ReactSelect from "react-select";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import { useField, useFormikContext } from "formik";
 
-type SelectType = { value: string; label: string };
+type SelectType = { value: string | number; label: string };
 
 type Props = {
-  options: string[];
+  options: SelectType[];
   name: string;
 };
 
@@ -70,8 +70,8 @@ const FormSelect: React.FC<Props> = ({ options, name }) => {
           }}
           options={options.map((op) => {
             return {
-              value: op,
-              label: capitalizeFirstLetter(op),
+              value: op.value,
+              label: capitalizeFirstLetter(op.label),
             };
           })}
         />
