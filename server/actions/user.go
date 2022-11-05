@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/database"
@@ -107,8 +108,8 @@ func (user *User) GetUserByEmail(email string) error {
 }
 
 // Grabs the current user's ID from the session store ('database = fiber')
-func GetUserIdFromSession(c *fiber.Ctx) (string, error) {
-	var userId string
+func GetUserIdFromSession(c *fiber.Ctx) (int, error) {
+	var userId int
 	sess, err := sessions.Sessions.Get(c)
 
 	if err != nil {
@@ -121,7 +122,13 @@ func GetUserIdFromSession(c *fiber.Ctx) (string, error) {
 		return userId, errors.New("user not found")
 	}
 
-	userId = fmt.Sprintf("%v", uId)
+	user := fmt.Sprintf("%v", uId)
+
+	userId, err = strconv.Atoi(user)
+
+	if err != nil {
+		return userId, err
+	}
 
 	return userId, nil
 }

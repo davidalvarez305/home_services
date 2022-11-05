@@ -16,7 +16,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 
 	userId, err := actions.GetUserIdFromSession(c)
 
-	if err != nil || len(userId) == 0 {
+	if err != nil || userId == 0 {
 		return c.Status(401).JSON(fiber.Map{
 			"data": "Unauthorized.",
 		})
