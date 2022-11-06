@@ -36,19 +36,26 @@
 }
 
 .name {
+    font-family: var(--font-family-inter);
     color: var(--x000000primary);
     font-weight: 700;
     line-height: 21px;
-    margin-top: -1px;
+    min-width: 199px;
     white-space: nowrap;
-    width: fit-content;
 }
 
-.icon-button {
-    color: var(--x000000primary);
-    font-weight: 700;
-    line-height: 21px;
-    min-width: 91px;
-    text-align: right;
+.line {
+    height: 1px;
+    margin-left: -0.5px;
+    object-fit: cover;
+    width: 501px;
+    color: #000;
+}
+
+.date {
+    color: var(--x747a80);
+    font-weight: 500;
+    line-height: 18px;
     white-space: nowrap;
+    width: fit-content;
 }

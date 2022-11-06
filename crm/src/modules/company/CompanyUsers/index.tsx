@@ -52,8 +52,7 @@ const CompanyUsers: React.FC = () => {
                       values.friends.map((friend, index) => (
                         <div key={index}>
                           <SmallTableElement
-                            plusButton={() => console.log("plusButton")}
-                            minusButton={() => console.log("minusButton")}
+                            minusButton={() => arrayHelpers.remove(index)}
                           >
                             <Field name={`friends.${index}`} />
                           </SmallTableElement>
