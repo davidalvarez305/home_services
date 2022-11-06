@@ -1,6 +1,6 @@
 import { MouseEventHandler } from "react";
 import styles from "./SmallTableElement.module.css";
-import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
+import { GrClose } from "react-icons/gr";
 import { IconButton } from "@chakra-ui/react";
 
 interface Props {
@@ -20,7 +20,9 @@ const SmallTableElement: React.FC<Props> = ({ children, minusButton }) => {
         </div>
         <IconButton
           aria-label={"removeUsers"}
-          icon={<AiOutlineMinus size={20} onClick={minusButton} />}
+          icon={<GrClose size={20} onClick={minusButton} />}
+          variant={"outline"}
+          colorScheme={"red"}
         />
       </div>
       <div className={styles["line"]} />

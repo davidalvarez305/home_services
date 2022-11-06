@@ -3,14 +3,13 @@ import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { User } from "../../../types/general";
 import useFetch from "../../../hooks/useFetch";
-import { Heading } from "@chakra-ui/react";
 import { USER_ROUTE } from "../../../constants";
 import styles from "./CompanyUsers.module.css";
-import { useRouter } from "next/router";
-import SubNavigationElement from "../../../components/SubNavigationElement";
 import SubNavigation from "../../../components/SubNavigation";
 import { Formik, Form, FieldArray, Field } from "formik";
 import SmallTableElement from "../../../components/SmallTableElement";
+import Button from "../../../components/Button";
+import SmallTable from "../../../components/SmallTable";
 
 const CompanyUsers: React.FC = () => {
   useLoginRequired();
@@ -47,7 +46,7 @@ const CompanyUsers: React.FC = () => {
               <FieldArray
                 name="friends"
                 render={(arrayHelpers) => (
-                  <div>
+                  <SmallTable>
                     {values.friends && values.friends.length > 0 ? (
                       values.friends.map((friend, index) => (
                         <div key={index}>
@@ -67,9 +66,11 @@ const CompanyUsers: React.FC = () => {
                       </button>
                     )}
                     <div>
-                      <button type="submit">Submit</button>
+                      <Button className={"Dark"} type="submit">
+                        Save Changes
+                      </Button>
                     </div>
-                  </div>
+                  </SmallTable>
                 )}
               />
             </Form>
