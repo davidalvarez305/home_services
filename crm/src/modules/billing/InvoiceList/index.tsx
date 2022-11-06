@@ -2,13 +2,13 @@ import React from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 
-const CompanyBilling: React.FC = () => {
+const InvoiceList: React.FC = () => {
   useLoginRequired();
 
   return (
-    <PrimaryLayout screenName="CompanyBilling">
-      <div>CompanyBilling</div>
+    <PrimaryLayout screenName="Invoices">
+      <div>Invoices</div>
     </PrimaryLayout>
   );
 };
-export default CompanyBilling;
+export default InvoiceList;

@@ -1,3 +1,3 @@
-import CompanyBilling from "../modules/company/CompanyBilling";
+import BillingSettings from "../modules/billing/BillingSettings";
 
-export default CompanyBilling;
+export default BillingSettings;
