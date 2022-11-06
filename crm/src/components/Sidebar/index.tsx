@@ -25,8 +25,8 @@ function Sidebar() {
     },
     {
       icon: <ReportsIcon />,
-      link: "Earnings",
-      label: "Earnings",
+      link: "calculator",
+      label: "Calculator",
     },
     {
       icon: <ReportsIcon />,

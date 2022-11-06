@@ -24,7 +24,7 @@ const CompanySettings: React.FC = () => {
       primaryHeader: "Manage Billing",
       subHeader: "Change your billing information, or handle your invoices.",
       handleClick: () => {
-        router.push("/company-settings");
+        router.push("/company-billing");
       },
       tagText: "Select",
     },

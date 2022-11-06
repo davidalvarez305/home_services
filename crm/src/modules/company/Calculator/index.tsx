@@ -2,13 +2,13 @@ import React from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 
-const CompanyInvoices: React.FC = () => {
+const Calculator: React.FC = () => {
   useLoginRequired();
 
   return (
-    <PrimaryLayout screenName="Company Invoices">
-      <div>company invoices</div>
+    <PrimaryLayout screenName="Calculator">
+      <div>Calculator</div>
     </PrimaryLayout>
   );
 };
-export default CompanyInvoices;
+export default Calculator;
