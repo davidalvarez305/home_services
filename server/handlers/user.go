@@ -315,11 +315,36 @@ func ChangeProfilePicture(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": err.Error(),
+			"data": "Could not change profile picture.",
 		})
 	}
 
 	return c.Status(200).JSON(fiber.Map{
 		"data": user,
+	})
+}
+
+func GetUsersByCompany(c *fiber.Ctx) error {
+	users := &actions.Users{}
+	var usersByCompany actions.UserCompanyRoles
+
+	company := c.Query("company")
+
+	if company == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "No company in query string.",
+		})
+	}
+
+	err := usersByCompany.GetUsersByCompany(company)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not find users by that company.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": users,
 	})
 }

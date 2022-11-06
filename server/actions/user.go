@@ -25,6 +25,10 @@ type User struct {
 	*models.User
 }
 
+type Users []*models.User
+
+type UserCompanyRoles []*models.UserCompanyRole
+
 type UserCompanyRole struct {
 	*models.UserCompanyRole
 }
@@ -303,4 +307,9 @@ func (user *User) ChangeProfilePicture(file *multipart.FileHeader) error {
 // Assign a user to a company and a role.
 func (u *UserCompanyRole) SaveUserCompanyRole() error {
 	return database.DB.Save(&u).First(&u).Error
+}
+
+// Get all users that belong to a company
+func (users *UserCompanyRoles) GetUsersByCompany(company string) error {
+	return database.DB.Where("company_id = ?", company).Find(&users).Error
 }
