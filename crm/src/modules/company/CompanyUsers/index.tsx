@@ -36,7 +36,9 @@ const CompanyUsers: React.FC = () => {
     return (
       <PrimaryLayout screenName="Users">
         <div className={styles["main-container"]}>
-          <SubNavigation elements={["View Users", "Add Users"]} />
+          <div>
+            <SubNavigation elements={["View Users", "Add Users"]} />
+          </div>
           <Heading>No users.</Heading>
         </div>
       </PrimaryLayout>

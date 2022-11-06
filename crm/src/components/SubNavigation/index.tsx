@@ -15,8 +15,8 @@ const SubNavigation: React.FC<Props> = ({ elements }) => {
             <SubNavigationElement label={el} />
           </React.Fragment>
         ))}
-        <div className={styles["line"]} />
       </div>
+      <div className={styles["line"]} />
     </div>
   );
 };

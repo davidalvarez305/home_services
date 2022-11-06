@@ -1,12 +1,3 @@
-.bar-container {
-    display: flex;
-    align-items: flex-start;
-    gap: 330px;
-    height: 52px;
-    margin-right: 1.0px;
-    min-width: 1024px;
-}
-
 .list {
     display: flex;
     align-items: flex-start;
@@ -14,10 +5,12 @@
     border: 1px none;
     gap: 24px;
     width: fit-content;
+    height: 52px;
 }
 
 .line {
     height: 1px;
     margin-right: 1.0px;
-    width: 1184px;
+    width: 100%;
+    background-color: var(--cfdbd5outline-onlight2);
 }
