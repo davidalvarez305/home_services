@@ -15,7 +15,7 @@ function Sidebar() {
   const navLinks = [
     {
       icon: <BarsIcon />,
-      link: "company-leads",
+      link: "leads",
       label: "Leads",
     },
     {
