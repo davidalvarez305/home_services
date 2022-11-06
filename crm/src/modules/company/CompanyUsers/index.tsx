@@ -52,33 +52,32 @@ const CompanyUsers: React.FC = () => {
                       ))}
                     </Thead>
                     <Tbody>
-                      {values.friends && values.friends.length > 0 ? (
-                        values.friends.map((friend, index) => (
-                          <Tr key={friend}>
-                            <Td>
-                              <SmallTableElement>
-                                <Field name={`friends.${index}`} />
-                              </SmallTableElement>
-                            </Td>
-                            <Td>
-                              <DeleteButton
-                                minusButton={() => arrayHelpers.remove(index)}
-                              />
-                            </Td>
-                          </Tr>
-                        ))
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => arrayHelpers.push("")}
-                        >
-                          Add a friend
-                        </button>
-                      )}
+                      {values.friends.map((friend, index) => (
+                        <Tr key={friend}>
+                          <Td>
+                            <SmallTableElement>
+                              <Field name={`friends.${index}`} />
+                            </SmallTableElement>
+                          </Td>
+                          <Td>
+                            <DeleteButton
+                              minusButton={() => arrayHelpers.remove(index)}
+                            />
+                          </Td>
+                        </Tr>
+                      ))}
                     </Tbody>
-                    <div>
+                    <div className={styles["save-change-button"]}>
                       <Button className={"Dark"} type="submit">
                         Save Changes
+                      </Button>
+                      <Button
+                        onClick={() =>
+                          arrayHelpers.insert(values.friends.length, "")
+                        }
+                        className={"Light"}
+                      >
+                        Add User
                       </Button>
                     </div>
                   </Table>
