@@ -5,11 +5,16 @@ import { User } from "../../../types/general";
 import useFetch from "../../../hooks/useFetch";
 import { Heading } from "@chakra-ui/react";
 import { USER_ROUTE } from "../../../constants";
+import styles from "./CompanyUsers.module.css";
+import { useRouter } from "next/router";
+import SubNavigationElement from "../../../components/SubNavigationElement";
+import SubNavigation from "../../../components/SubNavigation";
 
 const CompanyUsers: React.FC = () => {
   useLoginRequired();
   const [users, setUsers] = useState<User[]>([]);
   const { makeRequest, isLoading, error, cancelToken } = useFetch();
+  const [seeAddUsers, setSeeAddUsers] = useState(false);
 
   useEffect(() => {
     makeRequest(
@@ -30,7 +35,10 @@ const CompanyUsers: React.FC = () => {
   if (users.length === 0) {
     return (
       <PrimaryLayout screenName="Users">
-        <Heading>No users.</Heading>
+        <div className={styles["main-container"]}>
+          <SubNavigation elements={["View Users", "Add Users"]} />
+          <Heading>No users.</Heading>
+        </div>
       </PrimaryLayout>
     );
   }
