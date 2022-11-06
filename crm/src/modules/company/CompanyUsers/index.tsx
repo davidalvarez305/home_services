@@ -9,7 +9,8 @@ import SubNavigation from "../../../components/SubNavigation";
 import { Formik, Form, FieldArray, Field } from "formik";
 import SmallTableElement from "../../../components/SmallTableElement";
 import Button from "../../../components/Button";
-import SmallTable from "../../../components/SmallTable";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import DeleteButton from "../../../components/DeleteIconButton";
 
 const CompanyUsers: React.FC = () => {
   useLoginRequired();
@@ -36,8 +37,6 @@ const CompanyUsers: React.FC = () => {
   const AddUsers = useCallback(
     () => (
       <div>
-        <h1>Friend List</h1>
-
         <Formik
           initialValues={{ friends: ["jared", "ian", "brent"] }}
           onSubmit={(values) => console.log(JSON.stringify(values, null, 2))}
@@ -46,31 +45,43 @@ const CompanyUsers: React.FC = () => {
               <FieldArray
                 name="friends"
                 render={(arrayHelpers) => (
-                  <SmallTable>
-                    {values.friends && values.friends.length > 0 ? (
-                      values.friends.map((friend, index) => (
-                        <div key={index}>
-                          <SmallTableElement
-                            minusButton={() => arrayHelpers.remove(index)}
-                          >
-                            <Field name={`friends.${index}`} />
-                          </SmallTableElement>
-                        </div>
-                      ))
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => arrayHelpers.push("")}
-                      >
-                        Add a friend
-                      </button>
-                    )}
+                  <Table>
+                    <Thead>
+                      {["Friends", "Actions"].map((header) => (
+                        <Th key={header}>{header}</Th>
+                      ))}
+                    </Thead>
+                    <Tbody>
+                      {values.friends && values.friends.length > 0 ? (
+                        values.friends.map((friend, index) => (
+                          <Tr key={friend}>
+                            <Td>
+                              <SmallTableElement>
+                                <Field name={`friends.${index}`} />
+                              </SmallTableElement>
+                            </Td>
+                            <Td>
+                              <DeleteButton
+                                minusButton={() => arrayHelpers.remove(index)}
+                              />
+                            </Td>
+                          </Tr>
+                        ))
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => arrayHelpers.push("")}
+                        >
+                          Add a friend
+                        </button>
+                      )}
+                    </Tbody>
                     <div>
                       <Button className={"Dark"} type="submit">
                         Save Changes
                       </Button>
                     </div>
-                  </SmallTable>
+                  </Table>
                 )}
               />
             </Form>

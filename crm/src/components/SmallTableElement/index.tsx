@@ -1,14 +1,11 @@
 import { MouseEventHandler } from "react";
 import styles from "./SmallTableElement.module.css";
-import { GrClose } from "react-icons/gr";
-import { IconButton } from "@chakra-ui/react";
 
 interface Props {
   children: React.ReactNode;
-  minusButton: MouseEventHandler<SVGElement>;
 }
 
-const SmallTableElement: React.FC<Props> = ({ children, minusButton }) => {
+const SmallTableElement: React.FC<Props> = ({ children }) => {
   return (
     <div className={styles["table-element-container"]}>
       <div className={styles["flex-row"]}>
@@ -18,12 +15,6 @@ const SmallTableElement: React.FC<Props> = ({ children, minusButton }) => {
             <div className={styles["date"]}>{"lastUpdated"}</div>
           </div>
         </div>
-        <IconButton
-          aria-label={"removeUsers"}
-          icon={<GrClose size={20} onClick={minusButton} />}
-          variant={"outline"}
-          colorScheme={"red"}
-        />
       </div>
       <div className={styles["line"]} />
     </div>
