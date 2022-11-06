@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./ProfileSettingsElement.module.css";
+import styles from "./SettingsElement.module.css";
 import TextWithHeader from "../TextWithHeader";
 import TagElement from "../TagElement";
 
@@ -13,7 +13,7 @@ interface Props {
   loadingText?: string;
 }
 
-const ProfileSettingsElement: React.FC<Props> = ({
+const SettingsElement: React.FC<Props> = ({
   icon,
   primaryHeader,
   subHeader,
@@ -38,4 +38,4 @@ const ProfileSettingsElement: React.FC<Props> = ({
   );
 };
 
-export default ProfileSettingsElement;
+export default SettingsElement;

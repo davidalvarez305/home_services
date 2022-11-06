@@ -14,20 +14,24 @@ function Sidebar() {
   const router = useRouter();
   const navLinks = [
     {
-      icon: <CreditCardIcon />,
-      link: "Billing",
-    },
-    {
       icon: <BarsIcon />,
-      link: "Leads",
+      link: "company-leads",
+      label: "Leads",
     },
     {
       icon: <ReportsIcon />,
-      link: "Company",
+      link: "company",
+      label: "Dashboard",
     },
     {
       icon: <ReportsIcon />,
       link: "Earnings",
+      label: "Earnings",
+    },
+    {
+      icon: <ReportsIcon />,
+      link: "company-settings",
+      label: "Company Settings",
     },
   ];
 
@@ -35,14 +39,17 @@ function Sidebar() {
     {
       icon: <USDFlagIcon />,
       link: "100,050.75 USD",
+      label: "100,050.75 USD",
     },
     {
       icon: <USDFlagIcon />,
       link: "2310.40 EUR",
+      label: "100,050.75 USD",
     },
     {
       icon: <USDFlagIcon />,
       link: "9455.50 GBP",
+      label: "100,050.75 USD",
     },
   ];
 
@@ -79,13 +86,15 @@ function Sidebar() {
         <SidebarElement
           handleClick={() => router.push("/create-company")}
           icon={<PlusIcon />}
-          link={"Create A Company"}
+          label={"Create A Company"}
+          link={"create-company"}
         />
       </div>
       <SidebarElement
         handleClick={() => router.push("/profile-settings")}
         icon={<SettingsIcon />}
-        link={"Profile Settings"}
+        link={"profile-settings"}
+        label={"Profile Settings"}
       />
     </div>
   );

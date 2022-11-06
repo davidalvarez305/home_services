@@ -4,10 +4,11 @@ import styles from "./SidebarElement.module.css";
 interface Props {
   link: string;
   icon: React.ReactNode;
+  label: string;
   handleClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
-const SidebarElement: React.FC<Props> = ({ link, icon, handleClick }) => {
+const SidebarElement: React.FC<Props> = ({ link, icon, label, handleClick }) => {
   const [isHovering, setIsHovering] = useState(false);
   return (
     <div className={styles["navigation-element"]}>
@@ -19,7 +20,7 @@ const SidebarElement: React.FC<Props> = ({ link, icon, handleClick }) => {
         onClick={(e) => handleClick(e)}
       >
         <div className={styles["flag-button"]}>{icon}</div>
-        <div className={styles["link"]}>{link}</div>
+        <div className={styles["link"]}>{label}</div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import styles from "./Settings.module.css";
 import { SettingsIcon } from "../../../assets/SettingsIcon";
-import ProfileSettingsElement from "../../../components/ProfileSettingsElement";
+import ProfileSettingsElement from "../../../components/SettingsElement";
 import PrimaryLayout from "../../../layout/Primary";
 import { UserContext } from "../../../context/UserContext";
 import { BUCKET_URL, USER_ROUTE } from "../../../constants";
