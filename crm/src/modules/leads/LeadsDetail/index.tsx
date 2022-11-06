@@ -2,13 +2,13 @@ import React from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 
-const CompanyLeads: React.FC = () => {
+const LeadsDetail: React.FC = () => {
   useLoginRequired();
 
   return (
-    <PrimaryLayout screenName="Company Leads">
-      <div>company leads</div>
+    <PrimaryLayout screenName="LeadsDetail">
+      <div>LeadsDetail</div>
     </PrimaryLayout>
   );
 };
-export default CompanyLeads;
+export default LeadsDetail;
