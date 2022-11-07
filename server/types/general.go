@@ -10,3 +10,11 @@ type CreateCompanyInput struct {
 	State              int    `json:"state"`
 	ZipCode            int    `json:"zip_code"`
 }
+
+type UsersByCompany struct {
+	Username  string `json:"username"`
+	Email     string `json:"email"`
+	CompanyID int    `json:"company_id"`
+	UserID    int    `json:"user_id"`
+	RoleID    int    `json:"role_id"`
+}

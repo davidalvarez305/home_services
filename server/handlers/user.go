@@ -326,9 +326,6 @@ func ChangeProfilePicture(c *fiber.Ctx) error {
 }
 
 func GetUsersByCompany(c *fiber.Ctx) error {
-	users := &actions.Users{}
-	var usersByCompany actions.UserCompanyRoles
-
 	company := c.Query("company")
 
 	if company == "" {
@@ -337,7 +334,7 @@ func GetUsersByCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err := usersByCompany.GetUsersByCompany(company)
+	usersByCompany, err := actions.GetUsersByCompany(company)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -346,7 +343,7 @@ func GetUsersByCompany(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{
-		"data": users,
+		"data": usersByCompany,
 	})
 }
 
