@@ -349,7 +349,7 @@ func GetUsersByCompany(c *fiber.Ctx) error {
 	})
 }
 
-func InviteUser(c *fiber.Ctx) error {
+func AddUserToCompany(c *fiber.Ctx) error {
 
 	type InviteUserInput struct {
 		Email string `json:"email"`

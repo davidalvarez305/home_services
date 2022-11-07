@@ -37,7 +37,7 @@ const CompanyUsers: React.FC = () => {
     makeRequest(
       {
         url: USER_ROUTE,
-        method: "POST" + "/invite-user",
+        method: "POST" + "/add-user",
         data: { email },
       },
       (res) => {
