@@ -348,3 +348,60 @@ func GetUsersByCompany(c *fiber.Ctx) error {
 		"data": users,
 	})
 }
+
+func InviteUser(c *fiber.Ctx) error {
+
+	type InviteUserInput struct {
+		Email string `json:"email"`
+	}
+
+	var input InviteUserInput
+
+	err := c.BodyParser(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Bad input.",
+		})
+	}
+
+	userId, err := actions.GetUserIdFromSession(c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not identify you.",
+		})
+	}
+
+	originalUser := &actions.UserCompanyRole{}
+
+	err = originalUser.GetUserCompanyRole(userId)
+
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Could not identify you.",
+		})
+	}
+
+	user := &actions.User{}
+
+	err = user.GetUserByEmail(input.Email)
+
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "User not found.",
+		})
+	}
+
+	userCompany := &actions.UserCompanyRole{}
+
+	userCompany.CompanyID = originalUser.CompanyID
+	userCompany.RoleID = 2 // Role 2 is "employee."
+	userCompany.UserID = user.ID
+
+	userCompany.SaveUserCompanyRole()
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": user,
+	})
+}

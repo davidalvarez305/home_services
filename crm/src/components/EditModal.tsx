@@ -10,15 +10,13 @@ import {
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React, { useRef } from "react";
-import ModalTextArea from "../ModalTextArea";
+import ModalTextArea from "./ModalTextArea";
 
 interface Props {
   handleSubmit: (values: { input: string }) => void;
   setEditModal: React.Dispatch<React.SetStateAction<boolean>>;
   editModal: boolean;
   editingItem: string;
-  isLoading: boolean;
-  selectComponent?: React.ReactElement;
 }
 
 const EditModal: React.FC<Props> = ({
@@ -26,8 +24,6 @@ const EditModal: React.FC<Props> = ({
   setEditModal,
   editModal,
   editingItem,
-  isLoading,
-  selectComponent,
 }) => {
   const finalRef: React.RefObject<any> = useRef(null);
   return (
@@ -45,15 +41,12 @@ const EditModal: React.FC<Props> = ({
               <ModalHeader>{`Editing...`}</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                {selectComponent}
                 <ModalTextArea label={"Create Edits"} name={"input"} />
               </ModalBody>
               <ModalFooter>
                 <Button
                   colorScheme="blue"
                   mr={3}
-                  loadingText="Submitting"
-                  isLoading={isLoading}
                   type="submit"
                   onClick={submitForm}
                 >

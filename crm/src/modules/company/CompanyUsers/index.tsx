@@ -1,22 +1,23 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { User } from "../../../types/general";
 import useFetch from "../../../hooks/useFetch";
 import { USER_ROUTE } from "../../../constants";
 import styles from "./CompanyUsers.module.css";
-import SubNavigation from "../../../components/SubNavigation";
-import { Formik, Form, FieldArray, Field } from "formik";
+import { Formik, Form, Field } from "formik";
 import SmallTableElement from "../../../components/SmallTableElement";
 import Button from "../../../components/Button";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import DeleteButton from "../../../components/DeleteIconButton";
+import EditModal from "../../../components/EditModal";
 
 const CompanyUsers: React.FC = () => {
   useLoginRequired();
   const [users, setUsers] = useState<User[]>([]);
   const { makeRequest, isLoading, error, cancelToken } = useFetch();
-  const [seeAddUsers, setSeeAddUsers] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [editingItem, setEditingItem] = useState("");
 
   useEffect(() => {
     makeRequest(
@@ -24,9 +25,7 @@ const CompanyUsers: React.FC = () => {
         url: USER_ROUTE,
       },
       (res) => {
-        console.log("fetching");
-        console.log([...res.data.data]);
-        setUsers([...res.data.data]);
+        setUsers((prev) => [...prev, res.data.data]);
       }
     );
     return () => {
@@ -34,17 +33,32 @@ const CompanyUsers: React.FC = () => {
     };
   }, [cancelToken, makeRequest]);
 
-  const AddUsers = useCallback(
-    () => (
-      <div>
-        <Formik
-          initialValues={{ friends: ["jared", "ian", "brent"] }}
-          onSubmit={(values) => console.log(JSON.stringify(values, null, 2))}
-          render={({ values }) => (
-            <Form>
-              <FieldArray
-                name="friends"
-                render={(arrayHelpers) => (
+  function handleSubmit(email: string) {
+    makeRequest(
+      {
+        url: USER_ROUTE,
+        method: "POST" + "/invite-user",
+        data: { email },
+      },
+      (res) => {
+        console.log("res: ", res);
+      }
+    );
+  }
+
+  if (users.length === 0) {
+    return (
+      <PrimaryLayout screenName="Users">
+        <div className={styles["main-container"]}>
+          <div>
+            <div>
+              <Formik
+                initialValues={{ users }}
+                onSubmit={(values) =>
+                  console.log(JSON.stringify(values, null, 2))
+                }
+              >
+                <Form>
                   <Table>
                     <Thead>
                       {["Friends", "Actions"].map((header) => (
@@ -52,8 +66,8 @@ const CompanyUsers: React.FC = () => {
                       ))}
                     </Thead>
                     <Tbody>
-                      {values.friends.map((friend, index) => (
-                        <Tr key={friend}>
+                      {users.map((user, index) => (
+                        <Tr key={user.id}>
                           <Td>
                             <SmallTableElement>
                               <Field name={`friends.${index}`} />
@@ -61,45 +75,42 @@ const CompanyUsers: React.FC = () => {
                           </Td>
                           <Td>
                             <DeleteButton
-                              minusButton={() => arrayHelpers.remove(index)}
+                              minusButton={() => console.log("removed ")}
                             />
                           </Td>
                         </Tr>
                       ))}
                     </Tbody>
-                    <div className={styles["save-change-button"]}>
-                      <Button className={"Dark"} type="submit">
-                        Save Changes
-                      </Button>
-                      <Button
-                        onClick={() =>
-                          arrayHelpers.insert(values.friends.length, "")
-                        }
-                        className={"Light"}
-                      >
-                        Add User
-                      </Button>
-                    </div>
                   </Table>
-                )}
-              />
-            </Form>
-          )}
-        />
-      </div>
-    ),
-    []
-  );
-
-  if (users.length === 0) {
-    return (
-      <PrimaryLayout screenName="Users">
-        <div className={styles["main-container"]}>
-          <div>
-            <SubNavigation elements={["View Users", "Add Users"]} />
-            <AddUsers />
+                </Form>
+              </Formik>
+            </div>
+          </div>
+          <div className={styles["save-change-button"]}>
+            <Button className={"Dark"} type="submit">
+              Save Changes
+            </Button>
+            <Button
+              onClick={() => {
+                setEditModal(true);
+              }}
+              className={"Light"}
+            >
+              Add User
+            </Button>
           </div>
         </div>
+        {editModal && (
+          <EditModal
+            handleSubmit={(values) => {
+              handleSubmit(values.input);
+              setEditModal(false);
+            }}
+            editModal={editModal}
+            setEditModal={setEditModal}
+            editingItem={editingItem}
+          />
+        )}
       </PrimaryLayout>
     );
   }
