@@ -103,7 +103,7 @@ const ProfilePicture = () => {
                   type={"submit"}
                   isLoading={isLoading}
                   loadingText={"Uploading"}
-                  className={"LightBlue"} // Global CSS
+                  className={"LightBlue"}
                 >
                   <div className={styles["upload-button"]}>
                     Upload

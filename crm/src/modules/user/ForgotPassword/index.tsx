@@ -9,6 +9,7 @@ import { USER_ROUTE } from "../../../constants";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import LoginOrRegister from "../UserWrapper";
 import styles from "./ForgotPassword.module.css";
+import Button from "../../../components/Button";
 
 const ForgotPassword: React.FC = () => {
   const { makeRequest, isLoading, error } = useFetch();
@@ -60,7 +61,9 @@ const ForgotPassword: React.FC = () => {
                 <Link href={"/login"}>Login</Link>
               </div>
             </div>
-            <SignInButton isLoading={isLoading}>Start Recovery</SignInButton>
+            <Button className={"Blue"} isLoading={isLoading}>
+              Start Recovery
+            </Button>
             <RequestErrorMessage {...error} />
           </div>
         </Form>

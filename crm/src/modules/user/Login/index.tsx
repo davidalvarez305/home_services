@@ -11,6 +11,7 @@ import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import LoginOrRegister from "../UserWrapper";
 import { UserContext } from "../../../context/UserContext";
 import styles from "./Login.module.css";
+import Button from "../../../components/Button";
 
 const Login: React.FC = () => {
   const { makeRequest, isLoading, error } = useFetch();
@@ -63,7 +64,9 @@ const Login: React.FC = () => {
                 <Link href={"/forgot-password"}>Forgot Password</Link>
               </div>
             </div>
-            <SignInButton isLoading={isLoading}>Sign in</SignInButton>
+            <Button className={"Blue"} isLoading={isLoading}>
+              Sign in
+            </Button>
             <RequestErrorMessage {...error} />
           </div>
         </Form>

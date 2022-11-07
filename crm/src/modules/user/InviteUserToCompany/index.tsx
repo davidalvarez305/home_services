@@ -1,19 +1,16 @@
 import { Form, Formik } from "formik";
-import React from "react";
-import Checkbox from "../../../components/Checkbox";
-import SignInButton from "../../../components/SignInButton";
-import PrimaryInput from "../../../components/FormInput";
 import { useRouter } from "next/router";
-import Link from "next/link";
-import useFetch from "../../../hooks/useFetch";
-import { USER_ROUTE } from "../../../constants";
-import RequestErrorMessage from "../../../components/RequestErrorMessage";
-import LoginOrRegister from "../UserWrapper";
-import styles from "./Register.module.css";
 import Button from "../../../components/Button";
+import PrimaryInput from "../../../components/FormInput";
+import RequestErrorMessage from "../../../components/RequestErrorMessage";
+import { USER_ROUTE } from "../../../constants";
+import useFetch from "../../../hooks/useFetch";
+import PrimaryLayout from "../../../layout/Primary";
+import UserWrapper from "../UserWrapper";
+import styles from "./InviteUserToCompany.module.css";
 
-const Register: React.FC = () => {
-  const { makeRequest, isLoading, error } = useFetch();
+const InviteUserToCompany = () => {
+  const { isLoading, makeRequest, error } = useFetch();
   const router = useRouter();
 
   function handleSubmit(values: {
@@ -21,27 +18,22 @@ const Register: React.FC = () => {
     email: string;
     password: string;
   }) {
-    if (
-      values.username === "" ||
-      values.password === "" ||
-      values.email === ""
-    ) {
-      return;
-    }
     makeRequest(
       {
-        url: USER_ROUTE + "/register",
-        method: "POST",
+        url: USER_ROUTE + "/change-password/" + router.query.code,
+        method: "PUT",
         data: values,
       },
-      (_) => {
-        router.push("/login");
+      (res) => {
+        if (res.statusText === "OK") {
+          router.push("/login");
+        }
       }
     );
   }
 
   return (
-    <LoginOrRegister
+    <UserWrapper
       h1Text="Sign Up"
       h1Subtext="Create your account by entering your details."
       bottomTextOne="Already have an account?"
@@ -60,7 +52,7 @@ const Register: React.FC = () => {
               placeholder="Username..."
             />
             <PrimaryInput
-              label="Email"
+              label="Username"
               name="email"
               placeholder="Email..."
               type="email"
@@ -71,21 +63,15 @@ const Register: React.FC = () => {
               placeholder="Password..."
               type="password"
             />
-            <div className={styles["flex-row"]}>
-              <Checkbox>Remember me</Checkbox>
-              <div className={styles["recover-password" + " x12px--bold"]}>
-                <Link href={"/forgot-password"}>Forgot Password</Link>
-              </div>
-            </div>
-            <Button className={"Blue"} isLoading={isLoading}>
-              Sign up
+            <Button className={"Blue"} type={"submit"} isLoading={isLoading}>
+              Submit
             </Button>
             <RequestErrorMessage {...error} />
           </div>
         </Form>
       </Formik>
-    </LoginOrRegister>
+    </UserWrapper>
   );
 };
 
-export default Register;
+export default InviteUserToCompany;

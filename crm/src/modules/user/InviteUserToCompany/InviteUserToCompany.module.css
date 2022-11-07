@@ -1,0 +1,10 @@
+.form {
+    align-items: center;
+    border: 0px none;
+    display: flex;
+    flex-direction: column;
+    max-height: 459px;
+    margin-top: 47px;
+    position: relative;
+    width: 437px;
+}
