@@ -8,7 +8,7 @@ import styles from "./CompanyUsers.module.css";
 import { Formik, Form, Field } from "formik";
 import SmallTableElement from "../../../components/SmallTableElement";
 import Button from "../../../components/Button";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Table, Tbody, Td, Th, Thead, Tr, useToast } from "@chakra-ui/react";
 import DeleteButton from "../../../components/DeleteIconButton";
 import EditModal from "../../../components/EditModal";
 
@@ -18,6 +18,7 @@ const CompanyUsers: React.FC = () => {
   const { makeRequest, isLoading, error, cancelToken } = useFetch();
   const [editModal, setEditModal] = useState(false);
   const [editingItem, setEditingItem] = useState("");
+  const toast = useToast();
 
   useEffect(() => {
     makeRequest(
@@ -36,12 +37,18 @@ const CompanyUsers: React.FC = () => {
   function handleSubmit(email: string) {
     makeRequest(
       {
-        url: USER_ROUTE,
-        method: "POST" + "/add-user",
+        url: USER_ROUTE + "/invite",
+        method: "POST",
         data: { email },
       },
       (res) => {
-        console.log("res: ", res);
+        toast({
+          title: "Success!",
+          description: "User has been invited.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     );
   }

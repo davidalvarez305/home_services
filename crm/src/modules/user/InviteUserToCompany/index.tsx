@@ -20,13 +20,13 @@ const InviteUserToCompany = () => {
   }) {
     makeRequest(
       {
-        url: USER_ROUTE + "/change-password/" + router.query.code,
+        url: USER_ROUTE + "/invite/" + router.query.code,
         method: "PUT",
         data: values,
       },
       (res) => {
         if (res.statusText === "OK") {
-          router.push("/login");
+          console.log("user: ", res.data.data);
         }
       }
     );
@@ -52,7 +52,7 @@ const InviteUserToCompany = () => {
               placeholder="Username..."
             />
             <PrimaryInput
-              label="Username"
+              label="Email"
               name="email"
               placeholder="Email..."
               type="email"
