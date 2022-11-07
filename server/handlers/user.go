@@ -398,58 +398,57 @@ func InviteUserToCompany(c *fiber.Ctx) error {
 }
 
 func AddUserToCompany(c *fiber.Ctx) error {
-
-	type InviteUserInput struct {
-		Email string `json:"email"`
-	}
-
-	var input InviteUserInput
-
-	err := c.BodyParser(&input)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Bad input.",
-		})
-	}
-
-	userId, err := actions.GetUserIdFromSession(c)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not identify you.",
-		})
-	}
-
-	originalUser := &actions.UserCompanyRole{}
-
-	err = originalUser.GetUserCompanyRole(userId)
-
-	if err != nil {
-		return c.Status(404).JSON(fiber.Map{
-			"data": "Could not identify you.",
-		})
-	}
-
 	user := &actions.User{}
 
-	err = user.GetUserByEmail(input.Email)
+	// Check if user has code coming from /invite/:code
+	code := c.Params("code")
 
-	if err != nil {
-		return c.Status(404).JSON(fiber.Map{
-			"data": "User with that e-mail was not found.",
+	if len(code) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "No code found in request params.",
 		})
 	}
 
+	err := c.BodyParser(&user)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Unable to Parse Request Body.",
+		})
+	}
+
+	// Create with client input
+	err = user.CreateUser()
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"data": err.Error(),
+		})
+	}
+
+	// Fetch company token
+	companyToken := &actions.CompanyToken{}
+
+	err = companyToken.GetCompanyToken(code, user.Email)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not find company using that token.",
+		})
+	}
+
+	// Assign user with default Role ID to the company associate with that UUID code
+	ucr := &actions.UserCompanyRole{}
+
 	userCompanyRole := models.UserCompanyRole{
-		CompanyID: originalUser.CompanyID,
-		RoleID:    2, // Role 2 is "employee."
+		CompanyID: ucr.CompanyID,
+		RoleID:    2, // Role 2 is "employee".
 		UserID:    user.ID,
 	}
-	ucr := &actions.UserCompanyRole{}
 
 	ucr.UserCompanyRole = &userCompanyRole
 
+	// Persist to DB
 	err = ucr.SaveUserCompanyRole()
 
 	if err != nil {
@@ -458,7 +457,7 @@ func AddUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(200).JSON(fiber.Map{
+	return c.Status(201).JSON(fiber.Map{
 		"data": user,
 	})
 }
