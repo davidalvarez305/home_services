@@ -44,7 +44,11 @@ func InviteUserToCompany(companyId int, email string) error {
 
 	// Generate a company token
 	companyToken := &CompanyToken{}
-	companyToken.GenerateCompanyToken(companyId, email)
+	err := companyToken.GenerateCompanyToken(companyId, email)
+
+	if err != nil {
+		return err
+	}
 
 	// Send e-mail to the user
 	clientUrl := os.Getenv("CLIENT_URL")

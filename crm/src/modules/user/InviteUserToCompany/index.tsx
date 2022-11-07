@@ -21,7 +21,7 @@ const InviteUserToCompany = () => {
     makeRequest(
       {
         url: USER_ROUTE + "/invite/" + router.query.code,
-        method: "PUT",
+        method: "POST",
         data: values,
       },
       (res) => {

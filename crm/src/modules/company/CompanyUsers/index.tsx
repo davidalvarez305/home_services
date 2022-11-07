@@ -14,7 +14,7 @@ import EditModal from "../../../components/EditModal";
 const CompanyUsers: React.FC = () => {
   useLoginRequired();
   const [users, setUsers] = useState<UsersByCompany[]>([]);
-  const { makeRequest, isLoading, cancelToken } = useFetch();
+  const { makeRequest, isLoading } = useFetch();
   const [editModal, setEditModal] = useState(false);
   const [editingItem, setEditingItem] = useState("");
   const toast = useToast();
@@ -25,13 +25,10 @@ const CompanyUsers: React.FC = () => {
         url: USER_ROUTE + "/company",
       },
       (res) => {
-        setUsers(res.data.data);
+        setUsers([]);
       }
     );
-    return () => {
-      cancelToken.cancel();
-    };
-  }, [cancelToken, makeRequest]);
+  }, [makeRequest]);
 
   function handleSubmit(email: string) {
     makeRequest(

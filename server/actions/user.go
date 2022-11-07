@@ -220,5 +220,5 @@ func (u *UserCompanyRole) SaveUserCompanyRole() error {
 
 // Get all users that belong to a company
 func (u *UserCompanyRole) GetUserCompanyRole(userId int) error {
-	return database.DB.Where("user_id = ?", userId).Find(&u).Error
+	return database.DB.Where("user_id = ?", userId).First(&u).Error
 }

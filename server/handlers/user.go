@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/actions"
@@ -419,8 +420,15 @@ func AddUserToCompany(c *fiber.Ctx) error {
 	err = user.CreateUser()
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"data": err.Error(),
+
+		if strings.Contains(err.Error(), "23505") {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Somebody with that username or e-mail already exists.",
+			})
+		}
+
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Unable to Create User.",
 		})
 	}
 
