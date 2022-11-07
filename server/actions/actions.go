@@ -56,7 +56,7 @@ func InviteUserToCompany(companyId int, email string) error {
 }
 
 // Get all users that belong to a company
-func GetUsersByCompany(companyId string) ([]*types.UsersByCompany, error) {
+func GetUsersByCompany(userId int) ([]*types.UsersByCompany, error) {
 	var usersByCompany []*types.UsersByCompany
 
 	sql := fmt.Sprintf(`
@@ -64,9 +64,9 @@ func GetUsersByCompany(companyId string) ([]*types.UsersByCompany, error) {
 	FROM user_company_role AS ucr
 	JOIN "user" AS u
 	ON ucr.user_id = u.id
-	WHERE u.id = %s;`, companyId)
+	WHERE u.id = %v;`, userId)
 
-	stmt := database.DB.Exec(sql).Scan(&usersByCompany).Error
+	stmt := database.DB.Raw(sql).Scan(&usersByCompany).Error
 
 	if stmt != nil {
 		return usersByCompany, stmt

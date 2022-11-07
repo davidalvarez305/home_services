@@ -326,15 +326,16 @@ func ChangeProfilePicture(c *fiber.Ctx) error {
 }
 
 func GetUsersByCompany(c *fiber.Ctx) error {
-	company := c.Query("company")
 
-	if company == "" {
+	userId, err := actions.GetUserIdFromSession(c)
+
+	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "No company in query string.",
+			"data": "Could find user by cookie.",
 		})
 	}
 
-	usersByCompany, err := actions.GetUsersByCompany(company)
+	usersByCompany, err := actions.GetUsersByCompany(userId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

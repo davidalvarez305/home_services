@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
-import { User } from "../../../types/general";
+import { UsersByCompany } from "../../../types/general";
 import useFetch from "../../../hooks/useFetch";
 import { USER_ROUTE } from "../../../constants";
 import styles from "./CompanyUsers.module.css";
-import { Formik, Form, Field } from "formik";
 import SmallTableElement from "../../../components/SmallTableElement";
 import Button from "../../../components/Button";
 import { Table, Tbody, Td, Th, Thead, Tr, useToast } from "@chakra-ui/react";
@@ -14,7 +13,7 @@ import EditModal from "../../../components/EditModal";
 
 const CompanyUsers: React.FC = () => {
   useLoginRequired();
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UsersByCompany[]>([]);
   const { makeRequest, isLoading, cancelToken } = useFetch();
   const [editModal, setEditModal] = useState(false);
   const [editingItem, setEditingItem] = useState("");
@@ -23,11 +22,10 @@ const CompanyUsers: React.FC = () => {
   useEffect(() => {
     makeRequest(
       {
-        url: USER_ROUTE,
+        url: USER_ROUTE + "/company",
       },
       (res) => {
-        console.log("res: ", res.data.data);
-        setUsers((prev) => [...prev, res.data.data]);
+        setUsers(res.data.data);
       }
     );
     return () => {
@@ -59,40 +57,31 @@ const CompanyUsers: React.FC = () => {
       <div className={styles["main-container"]}>
         <div>
           <div>
-            <Formik
-              initialValues={{ users }}
-              onSubmit={(values) =>
-                console.log(JSON.stringify(values, null, 2))
-              }
-            >
-              <Form>
-                <Table>
-                  <Thead>
-                    <Tr>
-                      {["Friends", "Actions"].map((header) => (
-                        <Td key={header}>{header}</Td>
-                      ))}
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {users.map((user, index) => (
-                      <Tr key={user.id}>
-                        <Td>
-                          <SmallTableElement>
-                            <Field name={`friends.${index}`} />
-                          </SmallTableElement>
-                        </Td>
-                        <Td>
-                          <DeleteButton
-                            minusButton={() => console.log("removed ")}
-                          />
-                        </Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </Form>
-            </Formik>
+            <Table>
+              <Thead>
+                <Tr>
+                  {["Users", "Actions"].map((header) => (
+                    <Td key={header}>{header}</Td>
+                  ))}
+                </Tr>
+              </Thead>
+              <Tbody>
+                {users.map((user) => (
+                  <Tr key={user.user_id}>
+                    <Td>
+                      <SmallTableElement>
+                        <div key={user.username}>{user.username}</div>
+                      </SmallTableElement>
+                    </Td>
+                    <Td>
+                      <DeleteButton
+                        minusButton={() => console.log("removed")}
+                      />
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
           </div>
         </div>
         <div className={styles["save-change-button"]}>

@@ -36,3 +36,11 @@ export type CompanyServiceLocations = {
   zip_codes: number[];
   services: number[];
 };
+
+export type UsersByCompany = {
+  username: string;
+  email: string;
+  company_id: number;
+  user_id: number;
+  role_id: number;
+};
