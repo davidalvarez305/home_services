@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/actions"
+	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -349,6 +350,53 @@ func GetUsersByCompany(c *fiber.Ctx) error {
 	})
 }
 
+func InviteUserToCompany(c *fiber.Ctx) error {
+
+	type InviteUserInput struct {
+		Email string `json:"email"`
+	}
+
+	var input InviteUserInput
+
+	err := c.BodyParser(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Bad input.",
+		})
+	}
+
+	userId, err := actions.GetUserIdFromSession(c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not identify you.",
+		})
+	}
+
+	originalUser := &actions.UserCompanyRole{}
+
+	err = originalUser.GetUserCompanyRole(userId)
+
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Could not identify you.",
+		})
+	}
+
+	err = actions.InviteUserToCompany(originalUser.CompanyID, input.Email)
+
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Could not invite user to the company.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": "OK",
+	})
+}
+
 func AddUserToCompany(c *fiber.Ctx) error {
 
 	type InviteUserInput struct {
@@ -389,17 +437,26 @@ func AddUserToCompany(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{
-			"data": "User not found.",
+			"data": "User with that e-mail was not found.",
 		})
 	}
 
-	userCompany := &actions.UserCompanyRole{}
+	userCompanyRole := models.UserCompanyRole{
+		CompanyID: originalUser.CompanyID,
+		RoleID:    2, // Role 2 is "employee."
+		UserID:    user.ID,
+	}
+	ucr := &actions.UserCompanyRole{}
 
-	userCompany.CompanyID = originalUser.CompanyID
-	userCompany.RoleID = 2 // Role 2 is "employee."
-	userCompany.UserID = user.ID
+	ucr.UserCompanyRole = &userCompanyRole
 
-	userCompany.SaveUserCompanyRole()
+	err = ucr.SaveUserCompanyRole()
+
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Could not add user to company.",
+		})
+	}
 
 	return c.Status(200).JSON(fiber.Map{
 		"data": user,

@@ -15,17 +15,3 @@ func (c *Company) CreateCompany() error {
 
 	return result.Error
 }
-
-// Update and return company model.
-func (c *Company) UpdateCompany() error {
-	result := database.DB.Save(&c).First(&c)
-
-	return result.Error
-}
-
-// Get company model.
-func (c *Company) GetCompany() error {
-	result := database.DB.First(&c)
-
-	return result.Error
-}

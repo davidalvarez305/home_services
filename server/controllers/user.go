@@ -19,6 +19,6 @@ func User(router fiber.Router) {
 	user.Post("/login", handlers.Login)
 	user.Post("/logout", handlers.Logout)
 	user.Put("/change-picture", handlers.ChangeProfilePicture)
+	user.Post("/invite", handlers.InviteUserToCompany)
 	user.Put("/change-password/:code", handlers.ChangePassword)
-	user.Post("/add-user", handlers.AddUserToCompany)
 }
