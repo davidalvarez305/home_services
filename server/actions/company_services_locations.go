@@ -23,7 +23,7 @@ func (c *CompanyServicesLocations) DeleteServiceLocation() error {
 }
 
 func (c *CompanyServicesLocations) FindServiceLocationByZipCode(zipCode string, companyId int) error {
-	return database.DB.Where("zipCode = ? AND company_id = ?", zipCode).First(&c).Error
+	return database.DB.Where("zip_code_id = ? AND company_id = ?", zipCode).First(&c).Error
 }
 
 func (c *CompanyServicesLocations) DeleteServiceByZipCode(zipCode string, companyId int) error {
@@ -37,7 +37,14 @@ func (c *CompanyServicesLocations) DeleteServiceByZipCode(zipCode string, compan
 }
 
 func (c *CompanyServicesLocations) FindServiceLocationByCity(cityId string, companyId int) error {
-	return database.DB.Where("city_id = ? AND company_id = ?", cityId, companyId).First(&c).Error
+	sql := `
+	SELECT c.service_id, c.zip_code_id, c.company_id, z.city_id
+	FROM company_services_locations AS c
+	LEFT JOIN zip_code AS z
+	ON z.id = c.zip_code_id
+	WHERE z.city_id = ? AND c.company_id = ?
+	`
+	return database.DB.Raw(sql, cityId, companyId).First(&c).Error
 }
 
 func (c *CompanyServicesLocations) DeleteServiceByCity(cityId string, companyId int) error {
