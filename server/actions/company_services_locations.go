@@ -13,9 +13,32 @@ type CompanyServicesLocations struct {
 
 type CompanyServicesLocationsSlice []*models.CompanyServicesLocations
 
+type CompanyServiceByArea struct {
+	ServiceID int    `json:"service_id"`
+	Service   string `json:"service"`
+	ZipCodeID int    `json:"zip_code_id"`
+	ZipCode   string `json:"zip_code"`
+	CityID    int    `json:"city_id"`
+	City      string `json:"city"`
+}
+
 func (c *CompanyServicesLocationsSlice) GetCompanyServiceAreas(companyId int) error {
+	sql := `
+	SELECT csl.service_id, csl.zip_code_id, c.id, c.name
+	FROM company_services_locations AS csl
+	LEFT JOIN city AS c
+	ON c.zip_code_id = csl.zip_code_id
+	WHERE company_id = ?`
+	return database.DB.Raw(sql, companyId).Scan(&c).Error
+}
+
+func (c *CompanyServicesLocationsSlice) GetServicesAreasByCompany(companyId int) error {
 	sql := fmt.Sprintf(`SELECT * FROM company_services_locations WHERE company_id = %v`, companyId)
 	return database.DB.Raw(sql).Scan(&c).Error
+}
+
+func (c *CompanyServicesLocationsSlice) CreateCompanyServiceLocations(companyId int) error {
+	return database.DB.Save(&c).Where("company_id = ?", companyId).Find(&c).Error
 }
 
 func (c *CompanyServicesLocations) DeleteServiceLocation() error {
