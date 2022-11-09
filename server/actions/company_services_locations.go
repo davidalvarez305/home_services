@@ -13,13 +13,8 @@ type CompanyServicesLocations struct {
 
 type CompanyServicesLocationsSlice []*models.CompanyServicesLocations
 
-func (c *CompanyServicesLocationsSlice) GetCompanyServiceAreasByUser(userId int) error {
-	sql := fmt.Sprintf(`
-		SELECT * FROM company_services_locations WHERE company_id = (
-			SELECT company_id FROM user_company_role WHERE user_id = %v
-		)
-
-	`, userId)
+func (c *CompanyServicesLocationsSlice) GetCompanyServiceAreas(companyId int) error {
+	sql := fmt.Sprintf(`SELECT * FROM company_services_locations WHERE company_id = %v`, companyId)
 	return database.DB.Raw(sql).Scan(&c).Error
 }
 
@@ -27,12 +22,12 @@ func (c *CompanyServicesLocations) DeleteServiceLocation() error {
 	return database.DB.Delete(&c).Error
 }
 
-func (c *CompanyServicesLocations) FindServiceLocationByZipCode(zip_code string) error {
-	return database.DB.Where("zip_code = ?", zip_code).First(&c).Error
+func (c *CompanyServicesLocations) FindServiceLocationByZipCode(zipCode string, companyId int) error {
+	return database.DB.Where("zipCode = ? AND company_id = ?", zipCode).First(&c).Error
 }
 
-func (c *CompanyServicesLocations) DeleteServiceByZipCode(zip_code string) error {
-	err := c.FindServiceLocationByZipCode(zip_code)
+func (c *CompanyServicesLocations) DeleteServiceByZipCode(zipCode string, companyId int) error {
+	err := c.FindServiceLocationByZipCode(zipCode, companyId)
 
 	if err != nil {
 		return err
@@ -41,12 +36,12 @@ func (c *CompanyServicesLocations) DeleteServiceByZipCode(zip_code string) error
 	return c.DeleteServiceLocation()
 }
 
-func (c *CompanyServicesLocations) FindServiceLocationByCity(cityId string) error {
-	return database.DB.Where("city_id = ?", cityId).First(&c).Error
+func (c *CompanyServicesLocations) FindServiceLocationByCity(cityId string, companyId int) error {
+	return database.DB.Where("city_id = ? AND company_id = ?", cityId, companyId).First(&c).Error
 }
 
-func (c *CompanyServicesLocations) DeleteServiceByCity(cityId string) error {
-	err := c.FindServiceLocationByCity(cityId)
+func (c *CompanyServicesLocations) DeleteServiceByCity(cityId string, companyId int) error {
+	err := c.FindServiceLocationByCity(cityId, companyId)
 
 	if err != nil {
 		return err

@@ -39,6 +39,32 @@ func GetUserIdFromSession(c *fiber.Ctx) (int, error) {
 	return userId, nil
 }
 
+// Grabs the current user's CompanyID from the session store ('database = fiber')
+func GetCompanyIdFromSession(c *fiber.Ctx) (int, error) {
+	var companyId int
+	sess, err := sessions.Sessions.Get(c)
+
+	if err != nil {
+		return companyId, err
+	}
+
+	cId := sess.Get("companyId")
+
+	if cId == nil {
+		return companyId, errors.New("company not found")
+	}
+
+	company := fmt.Sprintf("%v", cId)
+
+	companyId, err = strconv.Atoi(company)
+
+	if err != nil {
+		return companyId, err
+	}
+
+	return companyId, nil
+}
+
 // Invite user to company
 func InviteUserToCompany(companyId int, email string) error {
 

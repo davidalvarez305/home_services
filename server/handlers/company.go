@@ -66,11 +66,10 @@ func CreateCompany(c *fiber.Ctx) error {
 }
 
 func DeleteLocation(c *fiber.Ctx) error {
-	zipCode := c.Query("zip_code")
 	location := &actions.CompanyServicesLocations{}
 	updatedLocations := &actions.CompanyServicesLocationsSlice{}
 
-	userId, err := actions.GetUserIdFromSession(c)
+	companyId, err := actions.GetCompanyIdFromSession(c)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -78,9 +77,11 @@ func DeleteLocation(c *fiber.Ctx) error {
 		})
 	}
 
+	zipCode := c.Query("zip_code")
+
 	// Delete Location by Using Zip Code
 	if len(zipCode) > 0 {
-		err := location.DeleteServiceByZipCode(zipCode)
+		err := location.DeleteServiceByZipCode(zipCode, companyId)
 
 		if err != nil {
 			return c.Status(400).JSON(fiber.Map{
@@ -88,7 +89,7 @@ func DeleteLocation(c *fiber.Ctx) error {
 			})
 		}
 
-		err = updatedLocations.GetCompanyServiceAreasByUser(userId)
+		err = updatedLocations.GetCompanyServiceAreas(companyId)
 
 		if err != nil {
 			return c.Status(400).JSON(fiber.Map{
@@ -105,7 +106,7 @@ func DeleteLocation(c *fiber.Ctx) error {
 
 	// Delete Location by Using City
 	if len(zipCode) > 0 {
-		err := location.DeleteServiceByCity(city)
+		err := location.DeleteServiceByCity(city, companyId)
 
 		if err != nil {
 			return c.Status(400).JSON(fiber.Map{
@@ -113,7 +114,7 @@ func DeleteLocation(c *fiber.Ctx) error {
 			})
 		}
 
-		err = updatedLocations.GetCompanyServiceAreasByUser(userId)
+		err = updatedLocations.GetCompanyServiceAreas(companyId)
 
 		if err != nil {
 			return c.Status(400).JSON(fiber.Map{
