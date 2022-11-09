@@ -24,11 +24,15 @@ type CompanyServiceByArea struct {
 
 func (c *CompanyServicesLocationsSlice) GetCompanyServiceAreas(companyId int) error {
 	sql := `
-	SELECT csl.service_id, csl.zip_code_id, c.id, c.name
+	SELECT s.id AS service_id, s.name AS service, z.id AS zip_code_id, z.zip_code AS zip_code, c.id AS city_id, c.name AS city
 	FROM company_services_locations AS csl
+	LEFT JOIN zip_code AS z
+	ON z.id = csl.zip_code_id
 	LEFT JOIN city AS c
-	ON c.zip_code_id = csl.zip_code_id
-	WHERE company_id = ?`
+	ON c.id = z.city_id
+	LEFT JOIN service AS s
+	ON s.id = csl.service_id
+	WHERE csl.company_id = ?`
 	return database.DB.Raw(sql, companyId).Scan(&c).Error
 }
 
