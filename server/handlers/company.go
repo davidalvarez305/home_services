@@ -64,3 +64,69 @@ func CreateCompany(c *fiber.Ctx) error {
 		"data": company,
 	})
 }
+
+func DeleteLocation(c *fiber.Ctx) error {
+	zipCode := c.Query("zip_code")
+	location := &actions.CompanyServicesLocations{}
+	updatedLocations := &actions.CompanyServicesLocationsSlice{}
+
+	userId, err := actions.GetUserIdFromSession(c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not identify user.",
+		})
+	}
+
+	// Delete Location by Using Zip Code
+	if len(zipCode) > 0 {
+		err := location.DeleteServiceByZipCode(zipCode)
+
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Could not delete the location associated with that service.",
+			})
+		}
+
+		err = updatedLocations.GetCompanyServiceAreasByUser(userId)
+
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Could not retrieve updated locations.",
+			})
+		}
+
+		return c.Status(200).JSON(fiber.Map{
+			"data": updatedLocations,
+		})
+	}
+
+	city := c.Query("city")
+
+	// Delete Location by Using City
+	if len(zipCode) > 0 {
+		err := location.DeleteServiceByCity(city)
+
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Could not delete the location associated with that service.",
+			})
+		}
+
+		err = updatedLocations.GetCompanyServiceAreasByUser(userId)
+
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Could not retrieve updated locations.",
+			})
+		}
+
+		return c.Status(200).JSON(fiber.Map{
+			"data": updatedLocations,
+		})
+	}
+
+	return c.Status(400).JSON(fiber.Map{
+		"data": "Bad Input.",
+	})
+}

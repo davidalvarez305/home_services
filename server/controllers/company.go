@@ -10,4 +10,5 @@ func Company(router fiber.Router) {
 	company := router.Group("company")
 
 	company.Post("/", handlers.CreateCompany)
+	company.Delete("/location", handlers.DeleteLocation)
 }
