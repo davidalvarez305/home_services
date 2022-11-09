@@ -21,12 +21,6 @@ type User struct {
 
 type Users []*models.User
 
-type UserCompanyRoles []*models.UserCompanyRole
-
-type UserCompanyRole struct {
-	*models.UserCompanyRole
-}
-
 // Persist user to database.
 func (user *User) Save() error {
 	result := database.DB.Save(&user).First(&user)
@@ -151,6 +145,22 @@ func (user *User) Login(c *fiber.Ctx) error {
 
 	err = sess.Save()
 
+	if err != nil {
+		return err
+	}
+
+	userCompanyRole := &UserCompanyRole{}
+
+	err = userCompanyRole.GetUserCompanyRole(user.ID)
+
+	if err != nil {
+		return err
+	}
+
+	sess.Set("companyId", userCompanyRole.CompanyID)
+
+	err = sess.Save()
+
 	return err
 }
 
@@ -211,14 +221,4 @@ func (user *User) ChangeProfilePicture(file *multipart.FileHeader) error {
 	}
 
 	return nil
-}
-
-// Assign a user to a company and a role.
-func (u *UserCompanyRole) SaveUserCompanyRole() error {
-	return database.DB.Save(&u).First(&u).Error
-}
-
-// Get all users that belong to a company
-func (u *UserCompanyRole) GetUserCompanyRole(userId int) error {
-	return database.DB.Where("user_id = ?", userId).First(&u).Error
 }
