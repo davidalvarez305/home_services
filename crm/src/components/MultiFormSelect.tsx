@@ -5,39 +5,29 @@ import {
   FormErrorMessage,
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
-import ReactSelect, { MultiValue } from "react-select";
+import ReactSelect, {
+  GroupBase,
+  MultiValue,
+  OptionsOrGroups,
+} from "react-select";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import { useField, useFormikContext } from "formik";
 
-type SelectType = { value: string | number; label: string };
+export type SelectType = { value: string | number; label: string };
 
 type Props = {
   options: SelectType[];
   name: string;
 };
 
-const FormSelect: React.FC<Props> = ({ options, name }) => {
-  let initialProps = useMemo(
-    () =>
-      Object.create({
-        value: "",
-        label: "",
-      }),
-    []
-  );
-  const { setFieldValue, values } = useFormikContext();
+const MultiFormSelect: React.FC<Props> = ({ options, name }) => {
+  const { setFieldValue } = useFormikContext();
 
   const [field, meta] = useField(name);
 
-  const [selectedValue, setSelectedValue] = useState<MultiValue<SelectType>>([
-    initialProps,
-  ]);
-
-  useEffect(() => {
-    if ((values as any).word === "") {
-      setSelectedValue(initialProps);
-    }
-  }, [values, initialProps]);
+  const [selectedValue, setSelectedValue] = useState<
+    OptionsOrGroups<SelectType, GroupBase<SelectType>> | undefined
+  >([]);
 
   return (
     <Box
@@ -84,4 +74,4 @@ const FormSelect: React.FC<Props> = ({ options, name }) => {
   );
 };
 
-export default FormSelect;
+export default MultiFormSelect;
