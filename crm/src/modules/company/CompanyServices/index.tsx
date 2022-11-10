@@ -14,7 +14,6 @@ const CompanyServices: React.FC = () => {
   const [toggleZipCodes, setToggleZipCodes] = useState(false);
   const [filteredLocations, setFilteredLocations] = useState<any[]>([""]);
   const [multipleSelectModal, setMultipleSelectModal] = useState(false);
-  const ref = useRef(null);
   const [data, setData] = useState<any[]>([
     {
       service: "Kitchen Remodeling",
@@ -64,7 +63,10 @@ const CompanyServices: React.FC = () => {
                 <Td>
                   <div className={styles["zip-code-container"]}>
                     <div>{location.zip_code}</div>
-                    <DeleteButton minusButton={() => console.log("clicked")} />
+                    <DeleteButton
+                      aria-label={"remove"}
+                      minusButton={() => console.log("clicked")}
+                    />
                   </div>
                 </Td>
               </Tr>

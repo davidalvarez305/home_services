@@ -17,12 +17,14 @@ import ReactSelect, { SingleValue } from "react-select";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import { removeOptionAtIndex } from "../utils/removeOptionAtIndex";
 import { SelectType } from "./MultiFormSelect";
+import { SelectedComponent } from "./SelectedComponent";
 
 interface MultiSelectProps {
   options: SelectType[];
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
+  const emptyValue: SelectType = { value: "", label: "" };
   const [selectOptions, setSelectOptions] = useState<SelectType[]>(options);
   const [selectedValues, setSelectedValues] = useState<
     SingleValue<{
@@ -36,44 +38,62 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
       sx={{
         ml: 2,
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
-        width: 250,
+        flexDirection: "column",
+        height: 500,
       }}
     >
-      <FormControl>
-        <FormLabel
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          htmlFor={"select-locations"}
-        >
-          {"Select Locations"}
-        </FormLabel>
-        <ReactSelect
-          id={"select-locations"}
-          name={"select-locations"}
-          onChange={(e) => {
-            const newOptions = removeOptionAtIndex(options, {
-              value: e!.value,
-              label: e!.label,
-            });
-            setSelectOptions(newOptions);
-            setSelectedValues((prev) => [...prev, e]);
-          }}
-          options={selectOptions.map((op) => {
-            return {
-              value: op.value,
-              label: capitalizeFirstLetter(op.label),
-            };
-          })}
-        />
-      </FormControl>
-      {selectedValues.map((value) => (
-        <div key={value?.value}>{value?.label}</div>
-      ))}
+      <Box
+        sx={{
+          ml: 2,
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          flexDirection: "column",
+          width: 250,
+          height: 150,
+        }}
+      >
+        <FormControl>
+          <FormLabel
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            htmlFor={"select-locations"}
+          >
+            {"Select Locations"}
+          </FormLabel>
+          <ReactSelect
+            id={"select-locations"}
+            name={"select-locations"}
+            value={emptyValue}
+            onChange={(e) => {
+              const newOptions = removeOptionAtIndex(options, {
+                value: e!.value,
+                label: e!.label,
+              });
+              setSelectOptions(newOptions);
+              setSelectedValues((prev) => [...prev, e]);
+            }}
+            options={selectOptions.map((op) => {
+              return {
+                value: op.value,
+                label: capitalizeFirstLetter(op.label),
+              };
+            })}
+          />
+        </FormControl>
+      </Box>
+      <Box>
+        {selectedValues.map((value) => (
+          <React.Fragment key={value?.value}>
+            <SelectedComponent selected={value} onClick={() => {}} />
+          </React.Fragment>
+        ))}
+      </Box>
     </Box>
   );
 };
