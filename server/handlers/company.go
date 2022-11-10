@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/actions"
@@ -67,7 +68,7 @@ func CreateCompany(c *fiber.Ctx) error {
 
 func DeleteLocation(c *fiber.Ctx) error {
 	location := &actions.CompanyServicesLocations{}
-	updatedLocations := &actions.CompanyServicesLocationsSlice{}
+	updatedLocations := &actions.CompanyServicesByArea{}
 
 	companyId, err := actions.GetCompanyIdFromSession(c)
 
@@ -129,5 +130,83 @@ func DeleteLocation(c *fiber.Ctx) error {
 
 	return c.Status(400).JSON(fiber.Map{
 		"data": "Bad Input.",
+	})
+}
+
+// This endpoint expects a slice of company_services_locations. Single structs will not work.
+func CreateServicesByZipCode(c *fiber.Ctx) error {
+	services := &actions.CompanyServicesLocationsSlice{}
+
+	err := c.BodyParser(&services)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Unable to Parse Request Body.",
+		})
+	}
+
+	companyId, err := actions.GetCompanyIdFromSession(c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Unable to Find Company By User Session.",
+		})
+	}
+
+	err = services.CreateCompanyServiceLocations(companyId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Unable to Create Services.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": services,
+	})
+}
+
+func CreateServicesByCity(c *fiber.Ctx) error {
+	var input []types.CreateServicesInput
+	var services actions.CompanyServicesLocationsSlice
+
+	err := c.BodyParser(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Unable to Parse Request Body.",
+		})
+	}
+
+	for _, service := range input {
+		var zipCodes actions.ZipCodes
+
+		err = zipCodes.GetZipCodesByCity(service.CityID)
+
+		if err != nil {
+			fmt.Printf("Could not get zip codes for city: %v", service.CityID)
+		}
+
+		for _, zipCode := range zipCodes {
+			service := models.CompanyServicesLocations{
+				ZipCodeID: zipCode.ID,
+				ServiceID: service.ServiceID,
+				CompanyID: service.CompanyID,
+			}
+
+			services = append(services, &service)
+		}
+	}
+
+	err = services.CreateCompanyServiceLocations(services[0].CompanyID)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Unable to Create Services.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": services,
 	})
 }

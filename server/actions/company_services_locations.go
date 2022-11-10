@@ -20,7 +20,9 @@ type CompanyServiceByArea struct {
 	City      string `json:"city"`
 }
 
-func (c *CompanyServicesLocationsSlice) GetCompanyServiceAreas(companyId int) error {
+type CompanyServicesByArea []*CompanyServiceByArea
+
+func (c *CompanyServicesByArea) GetCompanyServiceAreas(companyId int) error {
 	sql := `
 	SELECT s.id AS service_id, s.name AS service, z.id AS zip_code_id, z.zip_code AS zip_code, c.id AS city_id, c.name AS city
 	FROM company_services_locations AS csl
