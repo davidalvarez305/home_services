@@ -9,32 +9,27 @@ import {
   Modal,
   Box,
   FormControl,
-  FormErrorMessage,
   FormLabel,
 } from "@chakra-ui/react";
-import { Form, Formik, useField, useFormikContext } from "formik";
+import { Form, Formik } from "formik";
 import React, { useRef, useState } from "react";
-import ReactSelect, {
-  OptionsOrGroups,
-  GroupBase,
-  MultiValue,
-} from "react-select";
+import ReactSelect, { SingleValue } from "react-select";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
+import { removeOptionAtIndex } from "../utils/removeOptionAtIndex";
 import { SelectType } from "./MultiFormSelect";
 
-interface MultiSelectModalProps {
+interface MultiSelectProps {
   options: SelectType[];
 }
 
-const MultiSelectModal: React.FC<MultiSelectModalProps> = ({ options }) => {
+const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
+  const [selectOptions, setSelectOptions] = useState<SelectType[]>(options);
   const [selectedValues, setSelectedValues] = useState<
-    MultiValue<{
+    SingleValue<{
       value: string | number;
       label: string;
-    }>
+    }>[]
   >([]);
-
-  console.log("selectedValues: ", selectedValues);
 
   return (
     <Box
@@ -59,18 +54,26 @@ const MultiSelectModal: React.FC<MultiSelectModalProps> = ({ options }) => {
         </FormLabel>
         <ReactSelect
           id={"select-locations"}
+          name={"select-locations"}
           onChange={(e) => {
-            setSelectedValues(e);
+            const newOptions = removeOptionAtIndex(options, {
+              value: e!.value,
+              label: e!.label,
+            });
+            setSelectOptions(newOptions);
+            setSelectedValues((prev) => [...prev, e]);
           }}
-          options={options.map((op) => {
+          options={selectOptions.map((op) => {
             return {
               value: op.value,
               label: capitalizeFirstLetter(op.label),
             };
           })}
-          isMulti={true}
         />
       </FormControl>
+      {selectedValues.map((value) => (
+        <div key={value?.value}>{value?.label}</div>
+      ))}
     </Box>
   );
 };
@@ -104,7 +107,7 @@ const SelectMultipleModal: React.FC<Props> = ({
               <ModalHeader>{`Adding Locations...`}</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <MultiSelectModal options={values.locations} />
+                <MultiSelect options={values.locations} />
               </ModalBody>
               <ModalFooter>
                 <Button
