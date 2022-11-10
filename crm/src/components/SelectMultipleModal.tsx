@@ -7,10 +7,73 @@ import {
   ModalFooter,
   Button,
   Modal,
+  Box,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
 } from "@chakra-ui/react";
-import { Form, Formik } from "formik";
-import React, { useRef } from "react";
-import MultiFormSelect, { SelectType } from "./MultiFormSelect";
+import { Form, Formik, useField, useFormikContext } from "formik";
+import React, { useRef, useState } from "react";
+import ReactSelect, {
+  OptionsOrGroups,
+  GroupBase,
+  MultiValue,
+} from "react-select";
+import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
+import { SelectType } from "./MultiFormSelect";
+
+interface MultiSelectModalProps {
+  options: SelectType[];
+}
+
+const MultiSelectModal: React.FC<MultiSelectModalProps> = ({ options }) => {
+  const [selectedValues, setSelectedValues] = useState<
+    MultiValue<{
+      value: string | number;
+      label: string;
+    }>
+  >([]);
+
+  console.log("selectedValues: ", selectedValues);
+
+  return (
+    <Box
+      sx={{
+        ml: 2,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: 250,
+      }}
+    >
+      <FormControl>
+        <FormLabel
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          htmlFor={"select-locations"}
+        >
+          {"Select Locations"}
+        </FormLabel>
+        <ReactSelect
+          id={"select-locations"}
+          onChange={(e) => {
+            setSelectedValues(e);
+          }}
+          options={options.map((op) => {
+            return {
+              value: op.value,
+              label: capitalizeFirstLetter(op.label),
+            };
+          })}
+          isMulti={true}
+        />
+      </FormControl>
+    </Box>
+  );
+};
 
 interface Props {
   handleSubmit: (values: { locations: SelectType[] }) => void;
@@ -41,10 +104,7 @@ const SelectMultipleModal: React.FC<Props> = ({
               <ModalHeader>{`Adding Locations...`}</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <MultiFormSelect
-                  options={values.locations}
-                  name={"locations"}
-                />
+                <MultiSelectModal options={values.locations} />
               </ModalBody>
               <ModalFooter>
                 <Button
