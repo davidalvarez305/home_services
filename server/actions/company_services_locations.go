@@ -1,8 +1,6 @@
 package actions
 
 import (
-	"fmt"
-
 	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
 )
@@ -37,8 +35,7 @@ func (c *CompanyServicesLocationsSlice) GetCompanyServiceAreas(companyId int) er
 }
 
 func (c *CompanyServicesLocationsSlice) GetServicesAreasByCompany(companyId int) error {
-	sql := fmt.Sprintf(`SELECT * FROM company_services_locations WHERE company_id = %v`, companyId)
-	return database.DB.Raw(sql).Scan(&c).Error
+	return database.DB.Raw(`SELECT * FROM company_services_locations WHERE company_id = ?`, companyId).Scan(&c).Error
 }
 
 func (c *CompanyServicesLocationsSlice) CreateCompanyServiceLocations(companyId int) error {
