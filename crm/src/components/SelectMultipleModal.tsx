@@ -11,7 +11,7 @@ import {
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import React, { useRef, useState } from "react";
 import ReactSelect, { SingleValue } from "react-select";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
@@ -32,6 +32,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
       label: string;
     }>[]
   >([]);
+  const { setFieldValue } = useFormikContext();
 
   return (
     <Box
@@ -62,13 +63,13 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
               justifyContent: "center",
               alignItems: "center",
             }}
-            htmlFor={"select-locations"}
+            htmlFor={"locations"}
           >
             {"Select Locations"}
           </FormLabel>
           <ReactSelect
-            id={"select-locations"}
-            name={"select-locations"}
+            id={"locations"}
+            name={"locations"}
             value={emptyValue}
             onChange={(e) => {
               const newOptions = removeOptionAtIndex(options, {
@@ -76,7 +77,11 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
                 label: e!.label,
               });
               setSelectOptions(newOptions);
-              setSelectedValues((prev) => [...prev, e]);
+              setSelectedValues((prev) => {
+                const selected = [...prev, e];
+                setFieldValue("locations", selected);
+                return selected;
+              });
             }}
             options={selectOptions.map((op) => {
               return {
