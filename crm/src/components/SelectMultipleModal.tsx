@@ -68,8 +68,6 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
             {"Select Locations"}
           </FormLabel>
           <ReactSelect
-            id={"locations"}
-            name={"locations"}
             value={emptyValue}
             onChange={(e) => {
               const newOptions = removeOptionAtIndex(options, {
@@ -77,11 +75,8 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
                 label: e!.label,
               });
               setSelectOptions(newOptions);
-              setSelectedValues((prev) => {
-                const selected = [...prev, e];
-                setFieldValue("locations", selected);
-                return selected;
-              });
+              setSelectedValues((prev) => [...prev, e]);
+              setFieldValue("locations", selectedValues);
             }}
             options={selectOptions.map((op) => {
               return {

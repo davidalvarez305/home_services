@@ -9,8 +9,8 @@ export const Line = () => (
     <path
       d="M1 0.5H501"
       stroke="#CFDBD5"
-      stroke-opacity="0.7"
-      stroke-linecap="square"
+      strokeOpacity="0.7"
+      strokeLinecap="square"
     />
   </svg>
 );
