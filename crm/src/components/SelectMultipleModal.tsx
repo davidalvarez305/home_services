@@ -95,7 +95,31 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
       <Box>
         {selectedValues.map((value) => (
           <React.Fragment key={value?.value}>
-            <SelectedComponent selected={value} onClick={() => {}} />
+            <SelectedComponent
+              selected={value}
+              onClick={() => {
+                // Remove the deleted option from the selected values ('the list')
+                const newSelectedValues = removeOptionAtIndex(
+                  selectedValues as any,
+                  {
+                    value: value!.value,
+                    label: value!.label,
+                  }
+                );
+                setSelectedValues(newSelectedValues);
+
+                // Append the deleted value to the available selectable options
+                setSelectOptions((prev) => {
+                  return [
+                    ...prev,
+                    { value: value!.value, label: value!.label },
+                  ];
+                });
+
+                // Set it to Formik
+                setFieldValue("locations", newSelectedValues);
+              }}
+            />
           </React.Fragment>
         ))}
       </Box>
