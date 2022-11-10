@@ -185,6 +185,7 @@ func CreateServicesByCity(c *fiber.Ctx) error {
 
 		if err != nil {
 			fmt.Printf("Could not get zip codes for city: %v", service.CityID)
+			continue
 		}
 
 		for _, zipCode := range zipCodes {
@@ -195,6 +196,14 @@ func CreateServicesByCity(c *fiber.Ctx) error {
 			}
 
 			services = append(services, &service)
+		}
+	}
+
+	if len(services) == 0 {
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Unable to Create Services.",
+			})
 		}
 	}
 
