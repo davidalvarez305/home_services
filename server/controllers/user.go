@@ -11,7 +11,7 @@ func User(router fiber.Router) {
 
 	user.Get("/", handlers.GetUser)
 	user.Get("/change-password", handlers.RequestChangePasswordCode)
-	user.Get("/company", handlers.GetUsersByCompany)
+	user.Get("/company/:id", handlers.GetUsersByCompany)
 	user.Put("/", handlers.UpdateUser)
 	user.Delete("/", handlers.DeleteUser)
 	user.Post("/register", handlers.CreateUser)

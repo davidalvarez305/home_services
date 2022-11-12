@@ -6,9 +6,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/sessions"
-	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/davidalvarez305/home_services/server/utils"
 	"github.com/gofiber/fiber/v2"
 )
@@ -83,24 +81,4 @@ func InviteUserToCompany(companyId int, email string) error {
 
 	return utils.SendGmail(msg, email, title)
 
-}
-
-// Get all users that belong to a company
-func GetUsersByCompany(userId int) ([]*types.UsersByCompany, error) {
-	var usersByCompany []*types.UsersByCompany
-
-	sql := `
-	SELECT ucr.company_id, ucr.user_id, ucr.role_id, u.username, u.email
-	FROM user_company_role AS ucr
-	JOIN "user" AS u
-	ON ucr.user_id = u.id
-	WHERE u.id = ?`
-
-	stmt := database.DB.Raw(sql, userId).Scan(&usersByCompany).Error
-
-	if stmt != nil {
-		return usersByCompany, stmt
-	}
-
-	return usersByCompany, nil
 }

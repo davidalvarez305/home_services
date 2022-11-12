@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 	"time"
 
@@ -326,16 +327,25 @@ func ChangeProfilePicture(c *fiber.Ctx) error {
 }
 
 func GetUsersByCompany(c *fiber.Ctx) error {
+	usersByCompany := &actions.Users{}
 
-	userId, err := actions.GetUserIdFromSession(c)
+	id := c.Params("id")
 
-	if err != nil {
+	if len(id) == 0 {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Could find user by cookie.",
+			"data": "Company ID not found in params.",
 		})
 	}
 
-	usersByCompany, err := actions.GetUsersByCompany(userId)
+	companyId, err := strconv.Atoi(id)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Invalid company id.",
+		})
+	}
+
+	err = usersByCompany.GetUsersByCompany(companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

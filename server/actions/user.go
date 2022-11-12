@@ -206,3 +206,7 @@ func (user *User) ChangeProfilePicture(file *multipart.FileHeader) error {
 
 	return nil
 }
+
+func (users *Users) GetUsersByCompany(companyId int) error {
+	return database.DB.Where("company_id = ?", companyId).Find(&users).Error
+}

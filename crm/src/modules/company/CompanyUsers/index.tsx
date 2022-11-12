@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { UsersByCompany } from "../../../types/general";
@@ -10,9 +10,11 @@ import Button from "../../../components/Button";
 import { Table, Tbody, Td, Th, Thead, Tr, useToast } from "@chakra-ui/react";
 import DeleteButton from "../../../components/DeleteIconButton";
 import EditModal from "../../../components/EditModal";
+import { UserContext } from "../../../context/UserContext";
 
 const CompanyUsers: React.FC = () => {
   useLoginRequired();
+  const ctx = useContext(UserContext);
   const [users, setUsers] = useState<UsersByCompany[]>([]);
   const { makeRequest, isLoading } = useFetch();
   const [editModal, setEditModal] = useState(false);
@@ -22,13 +24,13 @@ const CompanyUsers: React.FC = () => {
   useEffect(() => {
     makeRequest(
       {
-        url: USER_ROUTE + "/company",
+        url: USER_ROUTE + "/company/" + 1,
       },
       (res) => {
-        setUsers([]);
+        setUsers(res.data.data);
       }
     );
-  }, [makeRequest]);
+  }, [makeRequest, ctx?.user.company_id]);
 
   function handleSubmit(email: string) {
     makeRequest(
@@ -73,6 +75,7 @@ const CompanyUsers: React.FC = () => {
                     <Td>
                       <DeleteButton
                         minusButton={() => console.log("removed")}
+                        aria-label={"remove"}
                       />
                     </Td>
                   </Tr>
