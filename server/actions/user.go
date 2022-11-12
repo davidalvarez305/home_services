@@ -207,6 +207,18 @@ func (user *User) ChangeProfilePicture(file *multipart.FileHeader) error {
 	return nil
 }
 
+// Get all users that belong to a company
 func (users *Users) GetUsersByCompany(companyId int) error {
 	return database.DB.Where("company_id = ?", companyId).Find(&users).Error
+}
+
+// Check that user can mutate company attributes
+func (user *User) CheckUserPermission(c *fiber.Ctx) (bool, error) {
+	err := user.GetUserFromSession(c)
+
+	if err != nil {
+		return false, err
+	}
+
+	return user.RoleID == 1, nil
 }

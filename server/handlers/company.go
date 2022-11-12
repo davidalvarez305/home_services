@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -248,5 +249,229 @@ func CreateServicesByCity(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(fiber.Map{
 		"data": services,
+	})
+}
+
+func GetUsersByCompany(c *fiber.Ctx) error {
+	usersByCompany := &actions.Users{}
+
+	id := c.Params("id")
+
+	if len(id) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Company ID not found in params.",
+		})
+	}
+
+	companyId, err := strconv.Atoi(id)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Invalid company id.",
+		})
+	}
+
+	err = usersByCompany.GetUsersByCompany(companyId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not find users by that company.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": usersByCompany,
+	})
+}
+
+func InviteUserToCompany(c *fiber.Ctx) error {
+	user := &actions.User{}
+
+	type InviteUserInput struct {
+		Email string `json:"email"`
+	}
+
+	var input InviteUserInput
+
+	err := c.BodyParser(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Bad input.",
+		})
+	}
+
+	err = user.GetUserFromSession(c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not identify you.",
+		})
+	}
+
+	err = actions.InviteUserToCompany(user.CompanyID, input.Email)
+
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Could not invite user to the company.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": "OK",
+	})
+}
+
+func AddUserToCompany(c *fiber.Ctx) error {
+	user := &actions.User{}
+
+	// Check if user has code coming from /invite/:code
+	code := c.Params("code")
+
+	if len(code) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "No code found in request params.",
+		})
+	}
+
+	err := c.BodyParser(&user)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Unable to Parse Request Body.",
+		})
+	}
+
+	// Create with client input
+	err = user.CreateUser()
+
+	if err != nil {
+
+		if strings.Contains(err.Error(), "23505") {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Somebody with that username or e-mail already exists.",
+			})
+		}
+
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Unable to Create User.",
+		})
+	}
+
+	// Fetch company token
+	companyToken := &actions.CompanyToken{}
+
+	err = companyToken.GetCompanyToken(code, user.Email)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not find company using that token.",
+		})
+	}
+
+	user.RoleID = 2 // Role 2 is "employee".
+	user.CompanyID = companyToken.CompanyID
+	user.UpdatedAt = time.Now().Unix()
+
+	// Persist to DB
+	err = user.Save()
+
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Could not add user to company.",
+		})
+	}
+
+	return c.Status(201).JSON(fiber.Map{
+		"data": user,
+	})
+}
+
+func UpdateCompany(c *fiber.Ctx) error {
+	input := &actions.Company{}
+	company := &actions.Company{}
+	user := &actions.User{}
+
+	companyId := c.Params("id")
+
+	if len(companyId) == 0 {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Company ID not found in params.",
+		})
+	}
+
+	err := c.BodyParser(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not correctly parse company fields.",
+		})
+	}
+
+	hasPermission, err := user.CheckUserPermission(c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not check user permissions.",
+		})
+	}
+
+	// Only company owners can mutate company fields
+	if !hasPermission {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Not allowed.",
+		})
+	}
+
+	err = company.UpdateCompany(companyId, *input.Company)
+
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Company could not be updated.",
+		})
+	}
+
+	return c.Status(201).JSON(fiber.Map{
+		"data": company,
+	})
+}
+
+func DeleteCompany(c *fiber.Ctx) error {
+	company := &actions.Company{}
+	user := &actions.User{}
+
+	companyId := c.Params("id")
+
+	if len(companyId) == 0 {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Company ID not found in params.",
+		})
+	}
+
+	hasPermission, err := user.CheckUserPermission(c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not check user permissions.",
+		})
+	}
+
+	// Only company owners can mutate company fields
+	if !hasPermission {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Not allowed.",
+		})
+	}
+
+	err = company.DeleteCompany(companyId)
+
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Company could not be deleted.",
+		})
+	}
+
+	return c.Status(204).JSON(fiber.Map{
+		"data": "OK",
 	})
 }

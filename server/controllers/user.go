@@ -11,7 +11,6 @@ func User(router fiber.Router) {
 
 	user.Get("/", handlers.GetUser)
 	user.Get("/change-password", handlers.RequestChangePasswordCode)
-	user.Get("/company/:id", handlers.GetUsersByCompany)
 	user.Put("/", handlers.UpdateUser)
 	user.Delete("/", handlers.DeleteUser)
 	user.Post("/register", handlers.CreateUser)
@@ -19,7 +18,5 @@ func User(router fiber.Router) {
 	user.Post("/login", handlers.Login)
 	user.Post("/logout", handlers.Logout)
 	user.Put("/change-picture", handlers.ChangeProfilePicture)
-	user.Post("/invite", handlers.InviteUserToCompany)
-	user.Post("/invite/:code", handlers.AddUserToCompany)
 	user.Put("/change-password/:code", handlers.ChangePassword)
 }

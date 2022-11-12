@@ -3,7 +3,7 @@ import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { UsersByCompany } from "../../../types/general";
 import useFetch from "../../../hooks/useFetch";
-import { USER_ROUTE } from "../../../constants";
+import { COMPANY_ROUTE, USER_ROUTE } from "../../../constants";
 import styles from "./CompanyUsers.module.css";
 import SmallTableElement from "../../../components/SmallTableElement";
 import Button from "../../../components/Button";
@@ -24,7 +24,7 @@ const CompanyUsers: React.FC = () => {
   useEffect(() => {
     makeRequest(
       {
-        url: USER_ROUTE + "/company/" + 1,
+        url: COMPANY_ROUTE + `/${ctx?.user.company_id}/user`,
       },
       (res) => {
         setUsers(res.data.data);
@@ -51,6 +51,24 @@ const CompanyUsers: React.FC = () => {
     );
   }
 
+  function handleRemoveUserFromCompany(userId: number) {
+    makeRequest(
+      {
+        url: USER_ROUTE + `/company/${ctx?.user.company_id}/?userId=${userId}`,
+        method: "DELETE",
+      },
+      (_) => {
+        toast({
+          title: "Success!",
+          description: "User has been removed.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    );
+  }
+
   return (
     <PrimaryLayout screenName="Users">
       <div className={styles["main-container"]}>
@@ -66,19 +84,23 @@ const CompanyUsers: React.FC = () => {
               </Thead>
               <Tbody>
                 {users.map((user) => (
-                  <Tr key={user.user_id}>
-                    <Td>
-                      <SmallTableElement>
-                        <div key={user.username}>{user.username}</div>
-                      </SmallTableElement>
-                    </Td>
-                    <Td>
-                      <DeleteButton
-                        minusButton={() => console.log("removed")}
-                        aria-label={"remove"}
-                      />
-                    </Td>
-                  </Tr>
+                  <React.Fragment key={user.username}>
+                    <Tr>
+                      <Td>
+                        <SmallTableElement>
+                          <div>{user.username}</div>
+                        </SmallTableElement>
+                      </Td>
+                      <Td>
+                        <DeleteButton
+                          minusButton={() =>
+                            handleRemoveUserFromCompany(user.user_id)
+                          }
+                          aria-label={"remove"}
+                        />
+                      </Td>
+                    </Tr>
+                  </React.Fragment>
                 ))}
               </Tbody>
             </Table>
