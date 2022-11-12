@@ -79,20 +79,12 @@ func CreateCompany(c *fiber.Ctx) error {
 	}
 
 	// Create company with authenticated user set as 'Owner' as default
-	ucr := &actions.UserCompanyRole{}
-
-	userCompanyRole := models.UserCompanyRole{
-		CompanyID: co.ID,
-		RoleID:    1, // Role 2 is "owner".
-		UserID:    user.ID,
-		CreatedAt: time.Now().Unix(),
-		UpdatedAt: time.Now().Unix(),
-	}
-
-	ucr.UserCompanyRole = &userCompanyRole
+	user.CompanyID = co.ID
+	user.RoleID = 1 // Role 2 is "owner".
+	user.UpdatedAt = time.Now().Unix()
 
 	// Persist to DB
-	err = ucr.SaveUserCompanyRole()
+	err = user.Save()
 
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{

@@ -11,4 +11,8 @@ type User struct {
 	UpdatedAt       int64          `gorm:"not null;column:updated_at" json:"updated_at"`
 	AccountStatusID int            `json:"account_status_id"`
 	AccountStatus   *AccountStatus `gorm:"not null;column:account_status_id;foreignKey:AccountStatusID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
+	RoleID          int            `json:"role_id"`
+	Role            *Role          `gorm:"column:role_id;foreignKey:RoleID;constraint:OnDelete:SET NULL,OnUpdate:CASCADE" json:"-"`
+	CompanyID       int            `json:"company_id"`
+	Company         *Company       `gorm:"column:company_id;foreignKey:CompanyID;constraint:OnDelete:SET NULL,OnUpdate:CASCADE" json:"-"`
 }

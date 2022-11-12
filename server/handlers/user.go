@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/actions"
-	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -350,6 +349,7 @@ func GetUsersByCompany(c *fiber.Ctx) error {
 }
 
 func InviteUserToCompany(c *fiber.Ctx) error {
+	user := &actions.User{}
 
 	type InviteUserInput struct {
 		Email string `json:"email"`
@@ -365,7 +365,7 @@ func InviteUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	userId, err := actions.GetUserIdFromSession(c)
+	err = user.GetUserFromSession(c)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -373,17 +373,7 @@ func InviteUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	originalUser := &actions.UserCompanyRole{}
-
-	err = originalUser.GetUserCompanyRole(userId)
-
-	if err != nil {
-		return c.Status(404).JSON(fiber.Map{
-			"data": "Could not identify you.",
-		})
-	}
-
-	err = actions.InviteUserToCompany(originalUser.CompanyID, input.Email)
+	err = actions.InviteUserToCompany(user.CompanyID, input.Email)
 
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{
@@ -443,19 +433,12 @@ func AddUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	// Assign user with default Role ID to the company associate with that UUID code
-	ucr := &actions.UserCompanyRole{}
-
-	userCompanyRole := models.UserCompanyRole{
-		CompanyID: ucr.CompanyID,
-		RoleID:    2, // Role 2 is "employee".
-		UserID:    user.ID,
-	}
-
-	ucr.UserCompanyRole = &userCompanyRole
+	user.RoleID = 2 // Role 2 is "employee".
+	user.CompanyID = companyToken.CompanyID
+	user.UpdatedAt = time.Now().Unix()
 
 	// Persist to DB
-	err = ucr.SaveUserCompanyRole()
+	err = user.Save()
 
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{
