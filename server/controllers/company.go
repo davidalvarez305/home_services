@@ -10,10 +10,10 @@ func Company(router fiber.Router) {
 	company := router.Group("company")
 
 	company.Post("/", handlers.CreateCompany)
-	company.Put("/", handlers.UpdateCompany)
-	company.Delete("/", handlers.DeleteCompany)
 
 	// Manage Company Users
+	company.Put("/:id", handlers.UpdateCompany)
+	company.Delete("/:id", handlers.DeleteCompany)
 	company.Get("/:id/user", handlers.GetUsersByCompany)
 	company.Delete("/:id/user", handlers.RemoveUserFromCompany)
 	company.Post("/:id/invite", handlers.InviteUserToCompany)
