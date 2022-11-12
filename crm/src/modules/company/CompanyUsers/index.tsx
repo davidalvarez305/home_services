@@ -35,7 +35,7 @@ const CompanyUsers: React.FC = () => {
   function handleSubmit(email: string) {
     makeRequest(
       {
-        url: USER_ROUTE + "/invite",
+        url: COMPANY_ROUTE + `/${ctx?.user.company_id}/invite`,
         method: "POST",
         data: { email },
       },

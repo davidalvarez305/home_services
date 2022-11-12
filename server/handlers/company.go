@@ -488,6 +488,14 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 		})
 	}
 
+	userId := c.Query("userId")
+
+	if len(userId) == 0 {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "No User ID found in query string.",
+		})
+	}
+
 	hasPermission, err := companyOwner.CheckUserPermission(c)
 
 	if err != nil {
@@ -503,7 +511,7 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err = userToUpdate.RemoveUserFromCompany(companyId)
+	err = userToUpdate.RemoveUserFromCompany(companyId, userId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
