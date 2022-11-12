@@ -32,10 +32,10 @@ const CompanyUsers: React.FC = () => {
     );
   }, [makeRequest, ctx?.user.company_id]);
 
-  function handleSubmit(email: string) {
+  function handleInviteUser(email: string) {
     makeRequest(
       {
-        url: COMPANY_ROUTE + `/${ctx?.user.company_id}/invite`,
+        url: COMPANY_ROUTE + `/${ctx?.user.company_id}/user/invite`,
         method: "POST",
         data: { email },
       },
@@ -54,7 +54,7 @@ const CompanyUsers: React.FC = () => {
   function handleRemoveUserFromCompany(userId: number) {
     makeRequest(
       {
-        url: USER_ROUTE + `/company/${ctx?.user.company_id}/?userId=${userId}`,
+        url: COMPANY_ROUTE + `/${ctx?.user.company_id}/user/?userId=${userId}`,
         method: "DELETE",
       },
       (_) => {
@@ -123,7 +123,7 @@ const CompanyUsers: React.FC = () => {
       {editModal && (
         <EditModal
           handleSubmit={(values) => {
-            handleSubmit(values.input);
+            handleInviteUser(values.input);
             setEditModal(false);
           }}
           editModal={editModal}

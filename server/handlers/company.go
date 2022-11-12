@@ -408,7 +408,7 @@ func UpdateCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	hasPermission, err := user.CheckUserPermission(c)
+	hasPermission, err := user.CheckUserPermission(c, companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -448,7 +448,7 @@ func DeleteCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	hasPermission, err := user.CheckUserPermission(c)
+	hasPermission, err := user.CheckUserPermission(c, companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -496,7 +496,7 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	hasPermission, err := companyOwner.CheckUserPermission(c)
+	hasPermission, err := companyOwner.CheckUserPermission(c, companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -519,6 +519,72 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 		})
 	}
 
+	users := &actions.Users{}
+
+	id, err := strconv.Atoi(companyId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not parse company id.",
+		})
+	}
+
+	err = users.GetUsersByCompany(id)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not find any users for that company.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": users,
+	})
+}
+
+func UpdateCompanyUser(c *fiber.Ctx) error {
+	companyOwner := &actions.User{}
+	userToUpdate := &actions.User{}
+	companyId := c.Params("id")
+
+	if len(companyId) == 0 {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Company ID not found in params.",
+		})
+	}
+
+	userId := c.Query("userId")
+
+	if len(userId) == 0 {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "No User ID found in query string.",
+		})
+	}
+
+	hasPermission, err := companyOwner.CheckUserPermission(c, companyId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not check user permissions.",
+		})
+	}
+
+	// Only company owners can mutate company fields
+	if !hasPermission {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Not allowed.",
+		})
+	}
+
+	err = userToUpdate.UpdateCompanyUser(companyId, userId, userToUpdate.User)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not update user fields.",
+		})
+	}
+
+	// Return company users after updating fields
 	users := &actions.Users{}
 
 	id, err := strconv.Atoi(companyId)

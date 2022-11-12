@@ -76,7 +76,8 @@ func InviteUserToCompany(companyId int, email string) error {
 
 	// Send e-mail to the user
 	clientUrl := os.Getenv("CLIENT_URL")
-	msg := fmt.Sprintf("Click this link to accept your invite, and create your account: %s", clientUrl+"/invite/"+companyToken.UUID)
+	url := fmt.Sprintf(`%s/invite/%s?companyId=%v`, clientUrl, companyToken.UUID, companyToken.CompanyID)
+	msg := fmt.Sprintf("Click this link to accept your invite, and create your account: %s", url)
 	title := "You have been invited to join Home Services."
 
 	return utils.SendGmail(msg, email, title)

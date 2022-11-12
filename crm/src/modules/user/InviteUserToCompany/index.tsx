@@ -3,9 +3,8 @@ import { useRouter } from "next/router";
 import Button from "../../../components/Button";
 import PrimaryInput from "../../../components/FormInput";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
-import { USER_ROUTE } from "../../../constants";
+import { COMPANY_ROUTE } from "../../../constants";
 import useFetch from "../../../hooks/useFetch";
-import PrimaryLayout from "../../../layout/Primary";
 import UserWrapper from "../UserWrapper";
 import styles from "./InviteUserToCompany.module.css";
 
@@ -20,7 +19,7 @@ const InviteUserToCompany = () => {
   }) {
     makeRequest(
       {
-        url: USER_ROUTE + "/invite/" + router.query.code,
+        url: COMPANY_ROUTE + `/${router.query.companyId}/user/invite/${router.query.code}`,
         method: "POST",
         data: values,
       },

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/database"
@@ -213,14 +214,22 @@ func (users *Users) GetUsersByCompany(companyId int) error {
 }
 
 // Check that user can mutate company attributes
-func (user *User) CheckUserPermission(c *fiber.Ctx) (bool, error) {
-	err := user.GetUserFromSession(c)
+func (user *User) CheckUserPermission(c *fiber.Ctx, companyId string) (bool, error) {
+
+	cId, err := strconv.Atoi(companyId)
 
 	if err != nil {
 		return false, err
 	}
 
-	return user.RoleID == 1, nil
+	err = user.GetUserFromSession(c)
+
+	if err != nil {
+		return false, err
+	}
+
+	// Assert that (A) the user is an owner, and (B) that the company being updated belongs to that user.
+	return user.RoleID == 1 && user.CompanyID == cId, nil
 }
 
 // Set company and role ID's to zero
@@ -235,6 +244,23 @@ func (user *User) RemoveUserFromCompany(companyId, userId string) error {
 	// If user does not belong to a company, role_id is also null
 	user.CompanyID = 0
 	user.RoleID = 0
+	user.UpdatedAt = time.Now().Unix()
+
+	return user.Save()
+}
+
+// Set company and role ID's to zero
+func (user *User) UpdateCompanyUser(companyId, userId string, input *models.User) error {
+
+	result := database.DB.Where("user_id = ? AND company_id = ?", userId, companyId).First(&user)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	// If user does not belong to a company, role_id is also null
+	user.RoleID = int(input.RoleID)
+	user.AccountStatusID = int(input.AccountStatusID)
 	user.UpdatedAt = time.Now().Unix()
 
 	return user.Save()
