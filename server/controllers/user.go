@@ -9,14 +9,17 @@ func User(router fiber.Router) {
 
 	user := router.Group("user")
 
-	user.Get("/", handlers.GetUser)
-	user.Get("/change-password", handlers.RequestChangePasswordCode)
-	user.Put("/", handlers.UpdateUser)
-	user.Delete("/", handlers.DeleteUser)
+	// No login required
 	user.Post("/register", handlers.CreateUser)
 	user.Post("/forgot-password", handlers.ForgotPassword)
 	user.Post("/login", handlers.Login)
+
+	// Login required
+	user.Get("/", handlers.GetUser)
+	user.Put("/", handlers.UpdateUser)
+	user.Delete("/", handlers.DeleteUser)
 	user.Post("/logout", handlers.Logout)
+	user.Get("/change-password", handlers.RequestChangePasswordCode)
 	user.Put("/change-picture", handlers.ChangeProfilePicture)
 	user.Put("/change-password/:code", handlers.ChangePassword)
 }

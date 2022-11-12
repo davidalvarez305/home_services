@@ -222,3 +222,20 @@ func (user *User) CheckUserPermission(c *fiber.Ctx) (bool, error) {
 
 	return user.RoleID == 1, nil
 }
+
+// Set company and role ID's to zero
+func (user *User) RemoveUserFromCompany(companyId string) error {
+
+	result := database.DB.Where("user_id = ? AND company_id = ?", user.ID, companyId).First(&user)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	// If user does not belong to a company, role_id is also null
+	user.CompanyID = 0
+	user.RoleID = 0
+	user.UpdatedAt = time.Now().Unix()
+
+	return user.Save()
+}

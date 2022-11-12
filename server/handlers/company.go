@@ -475,3 +475,61 @@ func DeleteCompany(c *fiber.Ctx) error {
 		"data": "OK",
 	})
 }
+
+// Update a user's CompanyID & RoleID, then return all users that belong to a company.
+func RemoveUserFromCompany(c *fiber.Ctx) error {
+	companyOwner := &actions.User{}
+	userToUpdate := &actions.User{}
+	companyId := c.Params("id")
+
+	if len(companyId) == 0 {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Company ID not found in params.",
+		})
+	}
+
+	hasPermission, err := companyOwner.CheckUserPermission(c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not check user permissions.",
+		})
+	}
+
+	// Only company owners can mutate company fields
+	if !hasPermission {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Not allowed.",
+		})
+	}
+
+	err = userToUpdate.RemoveUserFromCompany(companyId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not remove user from company.",
+		})
+	}
+
+	users := &actions.Users{}
+
+	id, err := strconv.Atoi(companyId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not parse company id.",
+		})
+	}
+
+	err = users.GetUsersByCompany(id)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not find any users for that company.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": users,
+	})
+}
