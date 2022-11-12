@@ -89,14 +89,14 @@ func InviteUserToCompany(companyId int, email string) error {
 func GetUsersByCompany(userId int) ([]*types.UsersByCompany, error) {
 	var usersByCompany []*types.UsersByCompany
 
-	sql := fmt.Sprintf(`
+	sql := `
 	SELECT ucr.company_id, ucr.user_id, ucr.role_id, u.username, u.email
 	FROM user_company_role AS ucr
 	JOIN "user" AS u
 	ON ucr.user_id = u.id
-	WHERE u.id = %v;`, userId)
+	WHERE u.id = ?`
 
-	stmt := database.DB.Raw(sql).Scan(&usersByCompany).Error
+	stmt := database.DB.Raw(sql, userId).Scan(&usersByCompany).Error
 
 	if stmt != nil {
 		return usersByCompany, stmt

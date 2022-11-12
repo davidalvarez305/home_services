@@ -64,7 +64,7 @@ const Login: React.FC = () => {
                 <Link href={"/forgot-password"}>Forgot Password</Link>
               </div>
             </div>
-            <Button className={"Blue"} isLoading={isLoading}>
+            <Button type={"submit"} className={"Blue"} isLoading={isLoading}>
               Sign in
             </Button>
             <RequestErrorMessage {...error} />

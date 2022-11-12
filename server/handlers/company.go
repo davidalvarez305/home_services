@@ -12,11 +12,20 @@ import (
 
 func CreateCompany(c *fiber.Ctx) error {
 	input := &types.CreateCompanyInput{}
+	user := &actions.User{}
 	err := c.BodyParser(&input)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Unable to Parse Request Body.",
+		})
+	}
+
+	err = user.GetUserFromSession(c)
+
+	if err != nil {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Not authenticated.",
 		})
 	}
 
@@ -58,6 +67,28 @@ func CreateCompany(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Could not save address.",
+		})
+	}
+
+	// Create company with authenticated user set as 'Owner' as default
+	ucr := &actions.UserCompanyRole{}
+
+	userCompanyRole := models.UserCompanyRole{
+		CompanyID: co.ID,
+		RoleID:    1, // Role 2 is "owner".
+		UserID:    user.ID,
+		CreatedAt: time.Now().Unix(),
+		UpdatedAt: time.Now().Unix(),
+	}
+
+	ucr.UserCompanyRole = &userCompanyRole
+
+	// Persist to DB
+	err = ucr.SaveUserCompanyRole()
+
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Could not add user to company.",
 		})
 	}
 

@@ -77,7 +77,7 @@ const Register: React.FC = () => {
                 <Link href={"/forgot-password"}>Forgot Password</Link>
               </div>
             </div>
-            <Button className={"Blue"} isLoading={isLoading}>
+            <Button type={"submit"} className={"Blue"} isLoading={isLoading}>
               Sign up
             </Button>
             <RequestErrorMessage {...error} />

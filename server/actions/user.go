@@ -145,22 +145,6 @@ func (user *User) Login(c *fiber.Ctx) error {
 
 	err = sess.Save()
 
-	if err != nil {
-		return err
-	}
-
-	userCompanyRole := &UserCompanyRole{}
-
-	err = userCompanyRole.GetUserCompanyRole(user.ID)
-
-	if err != nil {
-		return err
-	}
-
-	sess.Set("companyId", userCompanyRole.CompanyID)
-
-	err = sess.Save()
-
 	return err
 }
 
