@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/actions"
@@ -43,6 +44,13 @@ func CreateCompany(c *fiber.Ctx) error {
 	err = co.CreateCompany()
 
 	if err != nil {
+
+		if strings.Contains(err.Error(), "23505") {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Cannot have more than one company.",
+			})
+		}
+
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Could not create that company.",
 		})
