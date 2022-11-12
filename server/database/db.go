@@ -48,7 +48,7 @@ func Connect() {
 		&models.City{},
 		&models.CompanyInvoices{},
 		&models.CompanyServicesLocations{},
-		&models.Company{}, &models.DMA{},
+		&models.Company{}, &models.County{},
 		&models.InvoiceLeads{},
 		&models.Invoice{},
 		&models.LeadLog{},

@@ -14,10 +14,10 @@ interface Props {
 
 export const SelectedComponent: React.FC<Props> = ({ selected, onClick }) => {
   return (
-    <div className={styles["transactions-web-item-v2"]}>
+    <div className={styles["main-select-component"]}>
       <div className={styles["flex-row"]}>
-        <div className={styles["title"]}>
-          <div className={styles["ico"]}>
+        <div className={styles["header"]}>
+          <div className={styles["icon"]}>
             <DeleteButton
               size={"sm"}
               width={9}
@@ -27,9 +27,9 @@ export const SelectedComponent: React.FC<Props> = ({ selected, onClick }) => {
               minusButton={onClick}
             />
           </div>
-          <div className={styles["lable"]}>
-            <div className={styles["name"]}>{selected?.label}</div>
-            <div className={styles["date"]}>{"Florida"}</div>
+          <div className={styles["label"]}>
+            <div className={styles["label-body"]}>{selected?.label}</div>
+            <div className={styles["sub-header"]}>{"Florida"}</div>
           </div>
         </div>
       </div>
