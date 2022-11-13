@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { AccountStatus, User } from "../../../types/general";
@@ -15,6 +21,7 @@ import FormSelect from "../../../components/FormSelect";
 import { FieldArray, Form, Formik } from "formik";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import PrimaryInput from "../../../components/FormInput";
+import { capitalizeFirstLetter } from "../../../utils/capitalizeFirstLetter";
 
 const CompanyUsers: React.FC = () => {
   useLoginRequired();
@@ -112,116 +119,116 @@ const CompanyUsers: React.FC = () => {
     );
   }
 
-  if (isLoading) {
-    return (
-      <PrimaryLayout screenName="Users">
-        <div className={styles["main-container"]}>
-          <div>
-            <div>Loading...</div>
-          </div>
-          <RequestErrorMessage {...error} />
-        </div>
-      </PrimaryLayout>
-    );
-  }
-
   return (
     <PrimaryLayout screenName="Users">
       <div className={styles["main-container"]}>
         <div>
           <div>
-            <Formik
-              initialValues={{ users }}
-              onSubmit={handleUpdateCompanyUsers}
-            >
-              <Form>
-                <FieldArray
-                  name="users"
-                  render={() => (
-                    <Table>
-                      <Thead>
-                        <Tr>
-                          {["Users", "Actions"].map((header) => (
-                            <Td key={header}>{header}</Td>
-                          ))}
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {users.map((user, index) => {
-                          return (
-                            <React.Fragment key={user.username}>
-                              <Tr sx={{ minW: "100vw" }}>
-                                <Td sx={{ w: 200 }}>
-                                  <SmallTableElement>
-                                    <div>{user.username}</div>
-                                  </SmallTableElement>
-                                </Td>
-                                <Td
-                                  sx={{
-                                    display: "flex",
-                                    justifyContent: "space-around",
-                                    alignItems: "center",
-                                    minW: 600,
-                                    h: 150,
-                                  }}
-                                >
-                                  <DeleteButton
-                                    onClick={() =>
-                                      handleRemoveUserFromCompany(user.id)
-                                    }
-                                    aria-label={"remove"}
-                                  />
-                                  <FormSelect
-                                    options={[
-                                      { label: "Owner", value: 1 },
-                                      {
+            {users.length > 0 && (
+              <Formik
+                initialValues={{ users }}
+                onSubmit={handleUpdateCompanyUsers}
+              >
+                <Form>
+                  <FieldArray
+                    name="users"
+                    render={() => (
+                      <Table>
+                        <Thead>
+                          <Tr>
+                            {["Users", "Actions"].map((header) => (
+                              <Td key={header}>{header}</Td>
+                            ))}
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {users.map((user, index) => {
+                            return (
+                              <React.Fragment key={user.username}>
+                                <Tr sx={{ minW: "100vw" }}>
+                                  <Td sx={{ w: 200 }}>
+                                    <SmallTableElement>
+                                      <div>{user.username}</div>
+                                    </SmallTableElement>
+                                  </Td>
+                                  <Td
+                                    sx={{
+                                      display: "flex",
+                                      justifyContent: "space-around",
+                                      alignItems: "center",
+                                      minW: 600,
+                                      h: 150,
+                                    }}
+                                  >
+                                    <DeleteButton
+                                      onClick={() =>
+                                        handleRemoveUserFromCompany(user.id)
+                                      }
+                                      aria-label={"remove"}
+                                    />
+                                    <FormSelect
+                                      options={[
+                                        { label: "Owner", value: 1 },
+                                        {
+                                          label: "Employee",
+                                          value: 2,
+                                        },
+                                      ]}
+                                      defaultValue={{
+                                        value: user.role_id!,
                                         label: "Employee",
-                                        value: 2,
-                                      },
-                                    ]}
-                                    defaultValue={{
-                                      value: user.role_id!,
-                                      label: "Employee",
-                                    }}
-                                    name={`users.${index}.role_id`}
-                                  />
-                                  <FormSelect
-                                    options={accountStatus.map((status) => {
-                                      return {
-                                        value: status.id,
-                                        label: status.status,
-                                      };
-                                    })}
-                                    defaultValue={{
-                                      value: user.account_status_id!,
-                                      label: "Active",
-                                    }}
-                                    name={`users.${index}.account_status_id`}
-                                  />
-                                </Td>
-                              </Tr>
-                            </React.Fragment>
-                          );
-                        })}
-                      </Tbody>
-                    </Table>
-                  )}
-                />
-                <div className={styles["save-change-button"]}>
-                  <Button className={"Dark"} type="submit">
-                    Save Changes
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setEditModal(true);
-                    }}
-                    className={"Light"}
-                  >
-                    Add User
-                  </Button>
-                </div>
-              </Form>
-            </Formik>
+                                      }}
+                                      name={`users.${index}.role_id`}
+                                    />
+                                    <FormSelect
+                                      options={accountStatus.map((status) => {
+                                        return {
+                                          value: status.id,
+                                          label: status.status,
+                                        };
+                                      })}
+                                      defaultValue={{
+                                        value: user.account_status_id!,
+                                        label: capitalizeFirstLetter(
+                                          accountStatus.filter(
+                                            (status) =>
+                                              status.id ===
+                                              user.account_status_id
+                                          )[0].status
+                                        ),
+                                      }}
+                                      name={`users.${index}.account_status_id`}
+                                    />
+                                  </Td>
+                                </Tr>
+                              </React.Fragment>
+                            );
+                          })}
+                        </Tbody>
+                      </Table>
+                    )}
+                  />
+                  <div className={styles["save-change-button"]}>
+                    <Button
+                      className={"Dark"}
+                      type="submit"
+                      isLoading={isLoading}
+                    >
+                      Save Changes
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setEditModal(true);
+                      }}
+                      className={"Light"}
+                      isLoading={isLoading}
+                    >
+                      Add User
+                    </Button>
+                  </div>
+                </Form>
+              </Formik>
+            )}
           </div>
         </div>
         <RequestErrorMessage {...error} />
