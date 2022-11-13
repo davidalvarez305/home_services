@@ -354,7 +354,7 @@ func AddNewUserToCompany(c *fiber.Ctx) error {
 	}
 
 	// Token expires after 5 minutes.
-	if companyToken.CreatedAt-time.Now().Unix() > 300 {
+	if time.Now().Unix()-companyToken.CreatedAt > 300 {
 		err = companyToken.DeleteCompanyToken()
 
 		if err != nil {
@@ -365,6 +365,13 @@ func AddNewUserToCompany(c *fiber.Ctx) error {
 
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Token expired.",
+		})
+	}
+
+	// Check that user from session's e-mail and user from token's e-mail are the same
+	if companyToken.Email != user.Email {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Token was generated for a different e-mail address.",
 		})
 	}
 
@@ -631,7 +638,7 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	code := c.Query("code")
+	code := c.Params("code")
 
 	if len(code) == 0 {
 		return c.Status(400).JSON(fiber.Map{
@@ -659,7 +666,7 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 	}
 
 	// Token expires after 5 minutes.
-	if companyToken.CreatedAt-time.Now().Unix() > 300 {
+	if time.Now().Unix()-companyToken.CreatedAt > 300 {
 		err = companyToken.DeleteCompanyToken()
 
 		if err != nil {
@@ -670,6 +677,13 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Token expired.",
+		})
+	}
+
+	// Check that user from session's e-mail and user from token's e-mail are the same
+	if companyToken.Email != user.Email {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Token was generated for a different e-mail address.",
 		})
 	}
 

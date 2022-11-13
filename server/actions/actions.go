@@ -70,13 +70,13 @@ func InviteUserToCompany(companyId int, email string) error {
 
 	// If the user exists, they will be taken to a page to accept the invitation.
 	// Otherwise, they will be taken to a page to register.
-	clientDestination := "invite"
+	clientDestination := "accept-invite"
 
 	err := user.GetUserByEmail(email)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "record not found") {
-			clientDestination = "accept-invite"
+			clientDestination = "invite"
 		} else {
 			return err
 		}
