@@ -24,9 +24,7 @@ type Users []*models.User
 
 // Persist user to database.
 func (user *User) Save() error {
-	result := database.DB.Save(&user).First(&user)
-
-	return result.Error
+	return database.DB.Save(&user).First(&user).Error
 }
 
 // Destroy session.

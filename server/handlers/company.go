@@ -322,7 +322,7 @@ func InviteUserToCompany(c *fiber.Ctx) error {
 	})
 }
 
-func AddUserToCompany(c *fiber.Ctx) error {
+func AddNewUserToCompany(c *fiber.Ctx) error {
 	user := &actions.User{}
 
 	// Check if user has code coming from /invite/:code
@@ -350,6 +350,21 @@ func AddUserToCompany(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Could not find company using that token.",
+		})
+	}
+
+	// Token expires after 5 minutes.
+	if companyToken.CreatedAt-time.Now().Unix() > 300 {
+		err = companyToken.DeleteCompanyToken()
+
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Error validating token.",
+			})
+		}
+
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Token expired.",
 		})
 	}
 
@@ -603,5 +618,83 @@ func UpdateCompanyUser(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(fiber.Map{
 		"data": users,
+	})
+}
+
+func AddExistingUserToCompany(c *fiber.Ctx) error {
+	user := &actions.User{}
+	companyId := c.Params("id")
+
+	if len(companyId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Company ID not found in params.",
+		})
+	}
+
+	code := c.Query("code")
+
+	if len(code) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "No code found in params.",
+		})
+	}
+
+	err := user.GetUserFromSession(c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "User is not logged in.",
+		})
+	}
+
+	// Fetch company token
+	companyToken := &actions.CompanyToken{}
+
+	err = companyToken.GetCompanyToken(code)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not find company using that token.",
+		})
+	}
+
+	// Token expires after 5 minutes.
+	if companyToken.CreatedAt-time.Now().Unix() > 300 {
+		err = companyToken.DeleteCompanyToken()
+
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Error validating token.",
+			})
+		}
+
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Token expired.",
+		})
+	}
+
+	user.RoleID = 2 // Role 2 is "employee".
+	user.CompanyID = companyToken.CompanyID
+	user.UpdatedAt = time.Now().Unix()
+
+	// Create with client input
+	err = user.Save()
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Unable to Create User.",
+		})
+	}
+
+	err = companyToken.DeleteCompanyToken()
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Error while creating user.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": user,
 	})
 }
