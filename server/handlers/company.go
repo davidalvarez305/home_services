@@ -670,7 +670,8 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	user.RoleID = 2 // Role 2 is "employee".
+	user.RoleID = 2          // Role 2 is "employee".
+	user.AccountStatusID = 2 // Account is inactive after first added to a company.
 	user.CompanyID = companyToken.CompanyID
 	user.UpdatedAt = time.Now().Unix()
 
