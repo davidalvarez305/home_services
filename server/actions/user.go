@@ -11,7 +11,6 @@ import (
 	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/davidalvarez305/home_services/server/sessions"
-	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/davidalvarez305/home_services/server/utils"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
@@ -23,12 +22,12 @@ type User struct {
 
 type Users []*models.User
 
-// Persist user to database.
+// Persist users to database & returns the users.
 func (user *User) Save() error {
 	return database.DB.Save(&user).First(&user).Error
 }
 
-// Persist users to database.
+// Persist users to database & returns the users.
 func (users *Users) Save() error {
 	return database.DB.Save(&users).Find(&users).Error
 }
@@ -254,28 +253,21 @@ func (user *User) RemoveUserFromCompany(companyId, userId string) error {
 }
 
 // Set company and role ID's to zero
-func (users *Users) UpdateCompanyUsers(companyId string, input types.UpdateCompanyUserInput) error {
+func (users *Users) UpdateCompanyUsers(companyId string, clientInput *Users) error {
 
-	var userIdList []int
+	res := database.DB.Where("company_id = ?", companyId).Find(&users)
 
-	// This is used for querying the users sent from the client from the DB
-	for _, user := range input.Users {
-		userIdList = append(userIdList, user.UserID)
+	if res.Error != nil {
+		return res.Error
 	}
 
-	result := database.DB.Where("company_id = ? AND id IN = ?", companyId, userIdList).Find(&users)
-
-	if result.Error != nil {
-		return result.Error
-	}
-
-	// If User ID (DB) matches ID sent from Client -> Update the Role & Account Status ID.
-	for _, u := range *users {
-		for _, input := range input.Users {
-			if u.ID == input.UserID {
-				u.RoleID = input.RoleID
-				u.AccountStatusID = input.AccountStatusID
-				u.UpdatedAt = time.Now().Unix()
+	// Match client input users to DB users and adjust RoleID & AccountStatusID based on the form values
+	for _, input := range *clientInput {
+		for _, user := range *users {
+			if input.ID == user.ID {
+				user.RoleID = input.RoleID
+				user.AccountStatusID = input.AccountStatusID
+				user.UpdatedAt = time.Now().Unix()
 			}
 		}
 	}

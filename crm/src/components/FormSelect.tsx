@@ -14,9 +14,10 @@ type SelectType = { value: string | number; label: string };
 type Props = {
   options: SelectType[];
   name: string;
+  defaultValue?: SelectType;
 };
 
-const FormSelect: React.FC<Props> = ({ options, name }) => {
+const FormSelect: React.FC<Props> = ({ options, name, defaultValue }) => {
   let initialProps = useMemo(
     () =>
       Object.create({
@@ -63,7 +64,9 @@ const FormSelect: React.FC<Props> = ({ options, name }) => {
         <ReactSelect
           name={field.name}
           id={field.name}
-          value={selectedValue}
+          value={
+            defaultValue && !selectedValue?.value ? defaultValue : selectedValue
+          }
           onChange={(e) => {
             setSelectedValue(e);
             setFieldValue(field.name, e?.value);

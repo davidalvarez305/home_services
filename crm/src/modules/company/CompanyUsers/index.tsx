@@ -14,6 +14,7 @@ import { UserContext } from "../../../context/UserContext";
 import FormSelect from "../../../components/FormSelect";
 import { FieldArray, Form, Formik } from "formik";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
+import PrimaryInput from "../../../components/FormInput";
 
 const CompanyUsers: React.FC = () => {
   useLoginRequired();
@@ -31,6 +32,7 @@ const CompanyUsers: React.FC = () => {
           url: COMPANY_ROUTE + `/${ctx?.user.company_id}/user`,
         },
         (res) => {
+          console.log(res.data.data);
           setUsers(res.data.data);
         }
       );
@@ -75,6 +77,39 @@ const CompanyUsers: React.FC = () => {
     );
   }
 
+  function handleUpdateCompanyUsers(values: { users: User[] }) {
+    makeRequest(
+      {
+        url: COMPANY_ROUTE + `/${ctx?.user.company_id}/user`,
+        method: "PUT",
+        data: values,
+      },
+      (res) => {
+        setUsers(res.data.data);
+        toast({
+          title: "Success!",
+          description: "Users have been successfully updated.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <PrimaryLayout screenName="Users">
+        <div className={styles["main-container"]}>
+          <div>
+            <div>Loading...</div>
+          </div>
+          <RequestErrorMessage {...error} />
+        </div>
+      </PrimaryLayout>
+    );
+  }
+
   return (
     <PrimaryLayout screenName="Users">
       <div className={styles["main-container"]}>
@@ -82,12 +117,12 @@ const CompanyUsers: React.FC = () => {
           <div>
             <Formik
               initialValues={{ users }}
-              onSubmit={(values) => console.log(values)}
+              onSubmit={handleUpdateCompanyUsers}
             >
               <Form>
                 <FieldArray
                   name="users"
-                  render={(arrayHelpers) => (
+                  render={() => (
                     <Table>
                       <Thead>
                         <Tr>
@@ -97,53 +132,63 @@ const CompanyUsers: React.FC = () => {
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {users.map((user, index) => (
-                          <React.Fragment key={user.username}>
-                            <Tr sx={{ minW: "100vw" }}>
-                              <Td sx={{ w: 200 }}>
-                                <SmallTableElement>
-                                  <div>{user.username}</div>
-                                </SmallTableElement>
-                              </Td>
-                              <Td
-                                sx={{
-                                  display: "flex",
-                                  justifyContent: "space-around",
-                                  alignItems: "center",
-                                  minW: 600,
-                                  h: 150,
-                                }}
-                              >
-                                <DeleteButton
-                                  onClick={() =>
-                                    handleRemoveUserFromCompany(user.id)
-                                  }
-                                  aria-label={"remove"}
-                                />
-                                <FormSelect
-                                  options={[
-                                    { label: "Owner", value: 1 },
-                                    {
+                        {users.map((user, index) => {
+                          return (
+                            <React.Fragment key={user.username}>
+                              <Tr sx={{ minW: "100vw" }}>
+                                <Td sx={{ w: 200 }}>
+                                  <SmallTableElement>
+                                    <div>{user.username}</div>
+                                  </SmallTableElement>
+                                </Td>
+                                <Td
+                                  sx={{
+                                    display: "flex",
+                                    justifyContent: "space-around",
+                                    alignItems: "center",
+                                    minW: 600,
+                                    h: 150,
+                                  }}
+                                >
+                                  <DeleteButton
+                                    onClick={() =>
+                                      handleRemoveUserFromCompany(user.id)
+                                    }
+                                    aria-label={"remove"}
+                                  />
+                                  <FormSelect
+                                    options={[
+                                      { label: "Owner", value: 1 },
+                                      {
+                                        label: "Employee",
+                                        value: 2,
+                                      },
+                                    ]}
+                                    defaultValue={{
+                                      value: user.role_id!,
                                       label: "Employee",
-                                      value: 2,
-                                    },
-                                  ]}
-                                  name={`users.${index}.role_id`}
-                                />
-                                <FormSelect
-                                  options={[
-                                    { label: "Active", value: 1 },
-                                    {
-                                      label: "Inactive",
-                                      value: 2,
-                                    },
-                                  ]}
-                                  name={`users.${index}.account_status_id`}
-                                />
-                              </Td>
-                            </Tr>
-                          </React.Fragment>
-                        ))}
+                                    }}
+                                    name={`users.${index}.role_id`}
+                                  />
+                                  <FormSelect
+                                    options={[
+                                      { label: "Active", value: 1 },
+                                      {
+                                        label: "Inactive",
+                                        value: 2,
+                                      },
+                                    ]}
+                                    defaultValue={{
+                                      value: user.account_status_id!,
+                                      label: "Active",
+                                    }}
+                                    name={`users.${index}.account_status_id`}
+                                  />
+                                </Td>
+                              </Tr>
+                            </React.Fragment>
+                          );
+                        })}
                       </Tbody>
                     </Table>
                   )}

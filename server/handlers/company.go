@@ -563,9 +563,9 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 }
 
 func UpdateCompanyUsers(c *fiber.Ctx) error {
-	var input types.UpdateCompanyUserInput
+	input := &actions.Users{}
 	companyOwner := &actions.User{}
-	userToUpdate := &actions.Users{}
+	usersToUpdate := &actions.Users{}
 	companyId := c.Params("id")
 
 	if len(companyId) == 0 {
@@ -582,6 +582,14 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 		})
 	}
 
+	err := c.BodyParser(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not parse client input.",
+		})
+	}
+
 	hasPermission, err := companyOwner.CheckUserPermission(c, companyId)
 
 	if err != nil {
@@ -590,14 +598,14 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 		})
 	}
 
-	// Only company owners can mutate company fields
+	// Only company owners can mutate user permission fields
 	if !hasPermission {
 		return c.Status(403).JSON(fiber.Map{
 			"data": "Not allowed.",
 		})
 	}
 
-	err = userToUpdate.UpdateCompanyUsers(companyId, input)
+	err = usersToUpdate.UpdateCompanyUsers(companyId, input)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -605,27 +613,8 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 		})
 	}
 
-	// Return company users after updating fields
-	users := &actions.Users{}
-
-	id, err := strconv.Atoi(companyId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not parse company id.",
-		})
-	}
-
-	err = users.GetUsersByCompany(id)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not find any users for that company.",
-		})
-	}
-
 	return c.Status(200).JSON(fiber.Map{
-		"data": users,
+		"data": usersToUpdate,
 	})
 }
 
