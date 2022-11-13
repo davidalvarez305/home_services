@@ -10,4 +10,5 @@ func Router(app *fiber.App) {
 	api := app.Group("api", middleware.AuthMiddleware)
 	controllers.User(api)
 	controllers.Company(api)
+	controllers.AccountStatus(api)
 }
