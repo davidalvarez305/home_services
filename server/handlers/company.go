@@ -574,14 +574,6 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 		})
 	}
 
-	userId := c.Query("userId")
-
-	if len(userId) == 0 {
-		return c.Status(404).JSON(fiber.Map{
-			"data": "No User ID found in query string.",
-		})
-	}
-
 	err := c.BodyParser(&input)
 
 	if err != nil {
