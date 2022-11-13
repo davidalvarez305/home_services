@@ -1,15 +1,13 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
-import { AccountStatus, User } from "../../../types/general";
+import { AccountStatus, Role, User } from "../../../types/general";
 import useFetch from "../../../hooks/useFetch";
-import { COMPANY_ROUTE, ACCOUNT_STATUS_ROUTE } from "../../../constants";
+import {
+  COMPANY_ROUTE,
+  ACCOUNT_STATUS_ROUTE,
+  ROLE_ROUTE,
+} from "../../../constants";
 import styles from "./CompanyUsers.module.css";
 import SmallTableElement from "../../../components/SmallTableElement";
 import Button from "../../../components/Button";
@@ -20,13 +18,13 @@ import { UserContext } from "../../../context/UserContext";
 import FormSelect from "../../../components/FormSelect";
 import { FieldArray, Form, Formik } from "formik";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
-import PrimaryInput from "../../../components/FormInput";
 import { capitalizeFirstLetter } from "../../../utils/capitalizeFirstLetter";
 
 const CompanyUsers: React.FC = () => {
   useLoginRequired();
   const ctx = useContext(UserContext);
   const [users, setUsers] = useState<User[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
   const [accountStatus, setAccountStatus] = useState<AccountStatus[]>([]);
   const { makeRequest, isLoading, error } = useFetch();
   const [editModal, setEditModal] = useState(false);
@@ -40,6 +38,17 @@ const CompanyUsers: React.FC = () => {
       },
       (res) => {
         setAccountStatus(res.data.data);
+      }
+    );
+  }, [makeRequest]);
+
+  const fetchRoles = useCallback(() => {
+    makeRequest(
+      {
+        url: ROLE_ROUTE,
+      },
+      (res) => {
+        setRoles(res.data.data);
       }
     );
   }, [makeRequest]);
@@ -58,8 +67,11 @@ const CompanyUsers: React.FC = () => {
 
       // Fetch account status
       fetchAccountStatus();
+
+      // Fetch roles
+      fetchRoles();
     }
-  }, [makeRequest, ctx?.user.company_id, fetchAccountStatus]);
+  }, [makeRequest, ctx?.user.company_id, fetchAccountStatus, fetchRoles]);
 
   function handleInviteUser(email: string) {
     makeRequest(
@@ -124,7 +136,7 @@ const CompanyUsers: React.FC = () => {
       <div className={styles["main-container"]}>
         <div>
           <div>
-            {users.length > 0 && (
+            {users.length > 0 && accountStatus.length > 0 && roles.length > 0 && (
               <Formik
                 initialValues={{ users }}
                 onSubmit={handleUpdateCompanyUsers}
@@ -167,26 +179,31 @@ const CompanyUsers: React.FC = () => {
                                       aria-label={"remove"}
                                     />
                                     <FormSelect
-                                      options={[
-                                        { label: "Owner", value: 1 },
-                                        {
-                                          label: "Employee",
-                                          value: 2,
-                                        },
-                                      ]}
+                                      options={roles.map(({ id, role }) => {
+                                        return {
+                                          value: id,
+                                          label: role,
+                                        };
+                                      })}
                                       defaultValue={{
                                         value: user.role_id!,
-                                        label: "Employee",
+                                        label: capitalizeFirstLetter(
+                                          roles.filter(
+                                            (role) => role.id === user.role_id
+                                          )[0].role
+                                        ),
                                       }}
                                       name={`users.${index}.role_id`}
                                     />
                                     <FormSelect
-                                      options={accountStatus.map((status) => {
-                                        return {
-                                          value: status.id,
-                                          label: status.status,
-                                        };
-                                      })}
+                                      options={accountStatus.map(
+                                        ({ id, status }) => {
+                                          return {
+                                            value: id,
+                                            label: status,
+                                          };
+                                        }
+                                      )}
                                       defaultValue={{
                                         value: user.account_status_id!,
                                         label: capitalizeFirstLetter(
