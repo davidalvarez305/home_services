@@ -1,35 +1,39 @@
 import React, { useContext, useEffect, useState } from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
-import { UsersByCompany } from "../../../types/general";
+import { User } from "../../../types/general";
 import useFetch from "../../../hooks/useFetch";
-import { COMPANY_ROUTE, USER_ROUTE } from "../../../constants";
+import { COMPANY_ROUTE } from "../../../constants";
 import styles from "./CompanyUsers.module.css";
 import SmallTableElement from "../../../components/SmallTableElement";
 import Button from "../../../components/Button";
-import { Table, Tbody, Td, Th, Thead, Tr, useToast } from "@chakra-ui/react";
+import { Table, Tbody, Td, Thead, Tr, useToast } from "@chakra-ui/react";
 import DeleteButton from "../../../components/DeleteIconButton";
 import EditModal from "../../../components/EditModal";
 import { UserContext } from "../../../context/UserContext";
+import FormSelect from "../../../components/FormSelect";
+import { Form, Formik } from "formik";
 
 const CompanyUsers: React.FC = () => {
   useLoginRequired();
   const ctx = useContext(UserContext);
-  const [users, setUsers] = useState<UsersByCompany[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const { makeRequest, isLoading } = useFetch();
   const [editModal, setEditModal] = useState(false);
   const [editingItem, setEditingItem] = useState("");
   const toast = useToast();
 
   useEffect(() => {
-    makeRequest(
-      {
-        url: COMPANY_ROUTE + `/${ctx?.user.company_id}/user`,
-      },
-      (res) => {
-        setUsers(res.data.data);
-      }
-    );
+    if (ctx?.user.company_id) {
+      makeRequest(
+        {
+          url: COMPANY_ROUTE + `/${ctx?.user.company_id}/user`,
+        },
+        (res) => {
+          setUsers(res.data.data);
+        }
+      );
+    }
   }, [makeRequest, ctx?.user.company_id]);
 
   function handleInviteUser(email: string) {
@@ -74,36 +78,68 @@ const CompanyUsers: React.FC = () => {
       <div className={styles["main-container"]}>
         <div>
           <div>
-            <Table>
-              <Thead>
-                <Tr>
-                  {["Users", "Actions"].map((header) => (
-                    <Td key={header}>{header}</Td>
-                  ))}
-                </Tr>
-              </Thead>
-              <Tbody>
-                {users.map((user) => (
-                  <React.Fragment key={user.username}>
+            <Formik initialValues={users} onSubmit={() => console.log("yo")}>
+              <Form>
+                <Table>
+                  <Thead>
                     <Tr>
-                      <Td>
-                        <SmallTableElement>
-                          <div>{user.username}</div>
-                        </SmallTableElement>
-                      </Td>
-                      <Td>
-                        <DeleteButton
-                          minusButton={() =>
-                            handleRemoveUserFromCompany(user.user_id)
-                          }
-                          aria-label={"remove"}
-                        />
-                      </Td>
+                      {["Users", "Actions"].map((header) => (
+                        <Td key={header}>{header}</Td>
+                      ))}
                     </Tr>
-                  </React.Fragment>
-                ))}
-              </Tbody>
-            </Table>
+                  </Thead>
+                  <Tbody>
+                    {users.map((user) => (
+                      <React.Fragment key={user.username}>
+                        <Tr sx={{ minW: "100vw" }}>
+                          <Td sx={{ w: 200 }}>
+                            <SmallTableElement>
+                              <div>{user.username}</div>
+                            </SmallTableElement>
+                          </Td>
+                          <Td
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-around",
+                              alignItems: "center",
+                              minW: 600,
+                              h: 150,
+                            }}
+                          >
+                            <DeleteButton
+                              minusButton={() =>
+                                handleRemoveUserFromCompany(user.id)
+                              }
+                              aria-label={"remove"}
+                            />
+                            <FormSelect
+                              options={[
+                                { label: "Owner", value: 1 },
+                                {
+                                  label: "Employee",
+                                  value: 2,
+                                },
+                              ]}
+                              name={"role_id"}
+                            />
+                            <FormSelect
+                              options={[
+                                { label: "Active", value: 1 },
+                                {
+                                  label: "Inactive",
+                                  value: 2,
+                                },
+                              ]}
+                              name={"account_status_id"}
+                            />
+                          </Td>
+                        </Tr>
+                      </React.Fragment>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Form>
+            </Formik>
           </div>
         </div>
         <div className={styles["save-change-button"]}>

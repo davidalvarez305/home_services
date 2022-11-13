@@ -6,7 +6,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import ReactSelect from "react-select";
-import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
+import { toTitleCase } from "../utils/toTitleCase";
 import { useField, useFormikContext } from "formik";
 
 type SelectType = { value: string | number; label: string };
@@ -58,7 +58,7 @@ const FormSelect: React.FC<Props> = ({ options, name }) => {
           }}
           htmlFor={field.name}
         >
-          {capitalizeFirstLetter(name)}
+          {toTitleCase(name)}
         </FormLabel>
         <ReactSelect
           name={field.name}
@@ -71,7 +71,7 @@ const FormSelect: React.FC<Props> = ({ options, name }) => {
           options={options.map((op) => {
             return {
               value: op.value,
-              label: capitalizeFirstLetter(op.label),
+              label: toTitleCase(op.label),
             };
           })}
         />

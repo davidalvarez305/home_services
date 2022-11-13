@@ -10,7 +10,7 @@ import ReactSelect, {
   MultiValue,
   OptionsOrGroups,
 } from "react-select";
-import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
+import { capitalizeFirstLetter } from "../utils/toTitleCase";
 import { useField, useFormikContext } from "formik";
 
 export type SelectType = { value: string | number; label: string };
