@@ -2,17 +2,12 @@ import { GrClose } from "react-icons/gr";
 import { IconButton, IconButtonProps } from "@chakra-ui/react";
 import { MouseEventHandler } from "react";
 
-type Props = IconButtonProps & {
-  minusButton: MouseEventHandler<SVGElement>;
-};
+type Props = IconButtonProps;
 
-const DeleteButton: React.FC<Props> = ({
-  minusButton,
-  ...props
-}) => {
+const DeleteButton: React.FC<Props> = ({ ...props }) => {
   return (
     <IconButton
-      icon={<GrClose size={20} onClick={minusButton} />}
+      icon={<GrClose size={20} />}
       variant={"outline"}
       colorScheme={"red"}
       {...props}

@@ -59,10 +59,11 @@ const CompanyUsers: React.FC = () => {
   function handleRemoveUserFromCompany(userId: number) {
     makeRequest(
       {
-        url: COMPANY_ROUTE + `/${ctx?.user.company_id}/user/?userId=${userId}`,
+        url: COMPANY_ROUTE + `/${ctx?.user.company_id}/user/${userId}`,
         method: "DELETE",
       },
-      (_) => {
+      (res) => {
+        setUsers(res.data.data);
         toast({
           title: "Success!",
           description: "User has been removed.",
@@ -108,7 +109,7 @@ const CompanyUsers: React.FC = () => {
                             }}
                           >
                             <DeleteButton
-                              minusButton={() =>
+                              onClick={() =>
                                 handleRemoveUserFromCompany(user.id)
                               }
                               aria-label={"remove"}

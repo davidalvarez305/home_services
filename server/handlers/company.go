@@ -481,15 +481,15 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 	companyId := c.Params("id")
 
 	if len(companyId) == 0 {
-		return c.Status(404).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": "Company ID not found in params.",
 		})
 	}
 
-	userId := c.Query("userId")
+	userId := c.Params("userId")
 
 	if len(userId) == 0 {
-		return c.Status(404).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": "No User ID found in query string.",
 		})
 	}

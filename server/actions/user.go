@@ -235,7 +235,7 @@ func (user *User) CheckUserPermission(c *fiber.Ctx, companyId string) (bool, err
 // Set company and role ID's to zero
 func (user *User) RemoveUserFromCompany(companyId, userId string) error {
 
-	result := database.DB.Where("user_id = ? AND company_id = ?", userId, companyId).First(&user)
+	result := database.DB.Where("id = ? AND company_id = ?", userId, companyId).First(&user)
 
 	if result.Error != nil {
 		return result.Error
@@ -252,7 +252,7 @@ func (user *User) RemoveUserFromCompany(companyId, userId string) error {
 // Set company and role ID's to zero
 func (user *User) UpdateCompanyUser(companyId, userId string, input *models.User) error {
 
-	result := database.DB.Where("user_id = ? AND company_id = ?", userId, companyId).First(&user)
+	result := database.DB.Where("id = ? AND company_id = ?", userId, companyId).First(&user)
 
 	if result.Error != nil {
 		return result.Error
