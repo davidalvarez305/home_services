@@ -19,6 +19,11 @@ export type AccountStatus = {
   status: string;
 };
 
+export type Role = {
+  id: number;
+  role: string;
+};
+
 export type CreateCompanyInput = {
   name: string;
   logo: string;

@@ -11,4 +11,5 @@ func Router(app *fiber.App) {
 	controllers.User(api)
 	controllers.Company(api)
 	controllers.AccountStatus(api)
+	controllers.Role(api)
 }
