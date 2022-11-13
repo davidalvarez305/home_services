@@ -562,10 +562,10 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 	})
 }
 
-func UpdateCompanyUser(c *fiber.Ctx) error {
+func UpdateCompanyUsers(c *fiber.Ctx) error {
 	var input types.UpdateCompanyUserInput
 	companyOwner := &actions.User{}
-	userToUpdate := &actions.User{}
+	userToUpdate := &actions.Users{}
 	companyId := c.Params("id")
 
 	if len(companyId) == 0 {
@@ -597,7 +597,7 @@ func UpdateCompanyUser(c *fiber.Ctx) error {
 		})
 	}
 
-	err = userToUpdate.UpdateCompanyUser(companyId, userId, input)
+	err = userToUpdate.UpdateCompanyUsers(companyId, input)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

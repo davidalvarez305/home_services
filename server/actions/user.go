@@ -28,6 +28,11 @@ func (user *User) Save() error {
 	return database.DB.Save(&user).First(&user).Error
 }
 
+// Persist users to database.
+func (users *Users) Save() error {
+	return database.DB.Save(&users).Find(&users).Error
+}
+
 // Destroy session.
 func (user *User) Logout(c *fiber.Ctx) error {
 	sess, err := sessions.Sessions.Get(c)
@@ -249,18 +254,31 @@ func (user *User) RemoveUserFromCompany(companyId, userId string) error {
 }
 
 // Set company and role ID's to zero
-func (user *User) UpdateCompanyUser(companyId, userId string, input types.UpdateCompanyUserInput) error {
+func (users *Users) UpdateCompanyUsers(companyId string, input types.UpdateCompanyUserInput) error {
 
-	result := database.DB.Where("id = ? AND company_id = ?", userId, companyId).First(&user)
+	var userIdList []int
+
+	// This is used for querying the users sent from the client from the DB
+	for _, user := range input.Users {
+		userIdList = append(userIdList, user.UserID)
+	}
+
+	result := database.DB.Where("company_id = ? AND id IN = ?", companyId, userIdList).Find(&users)
 
 	if result.Error != nil {
 		return result.Error
 	}
 
-	// If user does not belong to a company, role_id is also null
-	user.RoleID = input.RoleID
-	user.AccountStatusID = input.AccountStatusID
-	user.UpdatedAt = time.Now().Unix()
+	// If User ID (DB) matches ID sent from Client -> Update the Role & Account Status ID.
+	for _, u := range *users {
+		for _, input := range input.Users {
+			if u.ID == input.UserID {
+				u.RoleID = input.RoleID
+				u.AccountStatusID = input.AccountStatusID
+				u.UpdatedAt = time.Now().Unix()
+			}
+		}
+	}
 
-	return user.Save()
+	return users.Save()
 }

@@ -16,7 +16,7 @@ func Company(router fiber.Router) {
 
 	// Manage Company Users
 	company.Get("/:id/user", handlers.GetUsersByCompany)
-	company.Put("/:id/user/:userId", handlers.UpdateCompanyUser)
+	company.Put("/:id/user", handlers.UpdateCompanyUsers)
 	company.Delete("/:id/user/:userId", handlers.RemoveUserFromCompany)
 	company.Post("/:id/user/invite", handlers.InviteUserToCompany)
 	company.Post("/:id/user/invite/:code", handlers.AddNewUserToCompany)

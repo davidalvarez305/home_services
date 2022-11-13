@@ -26,6 +26,9 @@ type CreateServicesInput struct {
 }
 
 type UpdateCompanyUserInput struct {
-	RoleID          int
-	AccountStatusID int
+	Users []struct {
+		UserID          int
+		RoleID          int
+		AccountStatusID int
+	}
 }
