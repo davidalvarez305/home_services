@@ -342,6 +342,20 @@ func AddUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
+	// Fetch company token
+	companyToken := &actions.CompanyToken{}
+
+	err = companyToken.GetCompanyToken(code)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not find company using that token.",
+		})
+	}
+
+	user.RoleID = 2 // Role 2 is "employee".
+	user.CompanyID = companyToken.CompanyID
+
 	// Create with client input
 	err = user.CreateUser()
 
@@ -358,27 +372,11 @@ func AddUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	// Fetch company token
-	companyToken := &actions.CompanyToken{}
-
-	err = companyToken.GetCompanyToken(code, user.Email)
+	err = companyToken.DeleteCompanyToken()
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not find company using that token.",
-		})
-	}
-
-	user.RoleID = 2 // Role 2 is "employee".
-	user.CompanyID = companyToken.CompanyID
-	user.UpdatedAt = time.Now().Unix()
-
-	// Persist to DB
-	err = user.Save()
-
-	if err != nil {
-		return c.Status(404).JSON(fiber.Map{
-			"data": "Could not add user to company.",
+			"data": "Error while creating user.",
 		})
 	}
 

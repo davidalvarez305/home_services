@@ -33,8 +33,8 @@ func (c *CompanyToken) GenerateCompanyToken(companyId int, email string) error {
 	return result.Error
 }
 
-func (CompanyToken *CompanyToken) GetCompanyToken(uuid string, email string) error {
-	result := database.DB.Where("uuid = ? AND email = ?", uuid, email).First(&CompanyToken)
+func (CompanyToken *CompanyToken) GetCompanyToken(uuid string) error {
+	result := database.DB.Where("uuid = ?", uuid).First(&CompanyToken)
 	return result.Error
 }
 

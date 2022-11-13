@@ -13,12 +13,13 @@ import EditModal from "../../../components/EditModal";
 import { UserContext } from "../../../context/UserContext";
 import FormSelect from "../../../components/FormSelect";
 import { Form, Formik } from "formik";
+import RequestErrorMessage from "../../../components/RequestErrorMessage";
 
 const CompanyUsers: React.FC = () => {
   useLoginRequired();
   const ctx = useContext(UserContext);
   const [users, setUsers] = useState<User[]>([]);
-  const { makeRequest, isLoading } = useFetch();
+  const { makeRequest, isLoading, error } = useFetch();
   const [editModal, setEditModal] = useState(false);
   const [editingItem, setEditingItem] = useState("");
   const toast = useToast();
@@ -142,6 +143,7 @@ const CompanyUsers: React.FC = () => {
             </Formik>
           </div>
         </div>
+        <RequestErrorMessage {...error} />
         <div className={styles["save-change-button"]}>
           <Button className={"Dark"} type="submit">
             Save Changes

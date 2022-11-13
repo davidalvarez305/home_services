@@ -14,7 +14,7 @@ import {
 import { Form, Formik, useFormikContext } from "formik";
 import React, { useRef, useState } from "react";
 import ReactSelect, { SingleValue } from "react-select";
-import { capitalizeFirstLetter } from "../utils/toTitleCase";
+import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import { removeOptionAtIndex } from "../utils/removeOptionAtIndex";
 import { SelectType } from "./MultiFormSelect";
 import { SelectedComponent } from "./SelectedComponent";
