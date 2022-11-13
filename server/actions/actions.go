@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/davidalvarez305/home_services/server/sessions"
 	"github.com/davidalvarez305/home_services/server/utils"
@@ -65,10 +66,25 @@ func GetCompanyIdFromSession(c *fiber.Ctx) (int, error) {
 
 // Invite user to company
 func InviteUserToCompany(companyId int, email string) error {
+	user := User{}
+
+	// If the user exists, they will be taken to a page to accept the invitation.
+	// Otherwise, they will be taken to a page to register.
+	clientDestination := "invite"
+
+	err := user.GetUserByEmail(email)
+
+	if err != nil {
+		if strings.Contains(err.Error(), "record not found") {
+			clientDestination = "accept-invite"
+		} else {
+			return err
+		}
+	}
 
 	// Generate a company token
 	companyToken := &CompanyToken{}
-	err := companyToken.GenerateCompanyToken(companyId, email)
+	err = companyToken.GenerateCompanyToken(companyId, email)
 
 	if err != nil {
 		return err
@@ -76,7 +92,7 @@ func InviteUserToCompany(companyId int, email string) error {
 
 	// Send e-mail to the user
 	clientUrl := os.Getenv("CLIENT_URL")
-	url := fmt.Sprintf(`%s/invite/%s?companyId=%v`, clientUrl, companyToken.UUID, companyToken.CompanyID)
+	url := fmt.Sprintf(`%s/%s/%s?companyId=%v`, clientUrl, clientDestination, companyToken.UUID, companyToken.CompanyID)
 	msg := fmt.Sprintf("Click this link to accept your invite, and create your account: %s", url)
 	title := "You have been invited to join Home Services."
 
