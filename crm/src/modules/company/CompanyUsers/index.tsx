@@ -12,7 +12,7 @@ import DeleteButton from "../../../components/DeleteIconButton";
 import EditModal from "../../../components/EditModal";
 import { UserContext } from "../../../context/UserContext";
 import FormSelect from "../../../components/FormSelect";
-import { Form, Formik } from "formik";
+import { FieldArray, Form, Formik } from "formik";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 
 const CompanyUsers: React.FC = () => {
@@ -80,84 +80,92 @@ const CompanyUsers: React.FC = () => {
       <div className={styles["main-container"]}>
         <div>
           <div>
-            <Formik initialValues={users} onSubmit={() => console.log("yo")}>
+            <Formik
+              initialValues={{ users }}
+              onSubmit={(values) => console.log(values)}
+            >
               <Form>
-                <Table>
-                  <Thead>
-                    <Tr>
-                      {["Users", "Actions"].map((header) => (
-                        <Td key={header}>{header}</Td>
-                      ))}
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {users.map((user) => (
-                      <React.Fragment key={user.username}>
-                        <Tr sx={{ minW: "100vw" }}>
-                          <Td sx={{ w: 200 }}>
-                            <SmallTableElement>
-                              <div>{user.username}</div>
-                            </SmallTableElement>
-                          </Td>
-                          <Td
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-around",
-                              alignItems: "center",
-                              minW: 600,
-                              h: 150,
-                            }}
-                          >
-                            <DeleteButton
-                              onClick={() =>
-                                handleRemoveUserFromCompany(user.id)
-                              }
-                              aria-label={"remove"}
-                            />
-                            <FormSelect
-                              options={[
-                                { label: "Owner", value: 1 },
-                                {
-                                  label: "Employee",
-                                  value: 2,
-                                },
-                              ]}
-                              name={"role_id"}
-                            />
-                            <FormSelect
-                              options={[
-                                { label: "Active", value: 1 },
-                                {
-                                  label: "Inactive",
-                                  value: 2,
-                                },
-                              ]}
-                              name={"account_status_id"}
-                            />
-                          </Td>
+                <FieldArray
+                  name="users"
+                  render={(arrayHelpers) => (
+                    <Table>
+                      <Thead>
+                        <Tr>
+                          {["Users", "Actions"].map((header) => (
+                            <Td key={header}>{header}</Td>
+                          ))}
                         </Tr>
-                      </React.Fragment>
-                    ))}
-                  </Tbody>
-                </Table>
+                      </Thead>
+                      <Tbody>
+                        {users.map((user, index) => (
+                          <React.Fragment key={user.username}>
+                            <Tr sx={{ minW: "100vw" }}>
+                              <Td sx={{ w: 200 }}>
+                                <SmallTableElement>
+                                  <div>{user.username}</div>
+                                </SmallTableElement>
+                              </Td>
+                              <Td
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "space-around",
+                                  alignItems: "center",
+                                  minW: 600,
+                                  h: 150,
+                                }}
+                              >
+                                <DeleteButton
+                                  onClick={() =>
+                                    handleRemoveUserFromCompany(user.id)
+                                  }
+                                  aria-label={"remove"}
+                                />
+                                <FormSelect
+                                  options={[
+                                    { label: "Owner", value: 1 },
+                                    {
+                                      label: "Employee",
+                                      value: 2,
+                                    },
+                                  ]}
+                                  name={`users.${index}.role_id`}
+                                />
+                                <FormSelect
+                                  options={[
+                                    { label: "Active", value: 1 },
+                                    {
+                                      label: "Inactive",
+                                      value: 2,
+                                    },
+                                  ]}
+                                  name={`users.${index}.account_status_id`}
+                                />
+                              </Td>
+                            </Tr>
+                          </React.Fragment>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  )}
+                />
+                <div className={styles["save-change-button"]}>
+                  <Button className={"Dark"} type="submit">
+                    Save Changes
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setEditModal(true);
+                    }}
+                    className={"Light"}
+                  >
+                    Add User
+                  </Button>
+                </div>
               </Form>
             </Formik>
           </div>
         </div>
         <RequestErrorMessage {...error} />
-        <div className={styles["save-change-button"]}>
-          <Button className={"Dark"} type="submit">
-            Save Changes
-          </Button>
-          <Button
-            onClick={() => {
-              setEditModal(true);
-            }}
-            className={"Light"}
-          >
-            Add User
-          </Button>
-        </div>
       </div>
       {editModal && (
         <EditModal

@@ -11,6 +11,7 @@ import (
 	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/davidalvarez305/home_services/server/sessions"
+	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/davidalvarez305/home_services/server/utils"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
@@ -248,7 +249,7 @@ func (user *User) RemoveUserFromCompany(companyId, userId string) error {
 }
 
 // Set company and role ID's to zero
-func (user *User) UpdateCompanyUser(companyId, userId string, input *models.User) error {
+func (user *User) UpdateCompanyUser(companyId, userId string, input types.UpdateCompanyUserInput) error {
 
 	result := database.DB.Where("id = ? AND company_id = ?", userId, companyId).First(&user)
 
@@ -257,8 +258,8 @@ func (user *User) UpdateCompanyUser(companyId, userId string, input *models.User
 	}
 
 	// If user does not belong to a company, role_id is also null
-	user.RoleID = int(input.RoleID)
-	user.AccountStatusID = int(input.AccountStatusID)
+	user.RoleID = input.RoleID
+	user.AccountStatusID = input.AccountStatusID
 	user.UpdatedAt = time.Now().Unix()
 
 	return user.Save()
