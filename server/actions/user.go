@@ -27,11 +27,6 @@ func (user *User) Save() error {
 	return database.DB.Save(&user).First(&user).Error
 }
 
-// Persist users to database & returns the users.
-func (users *Users) Save() error {
-	return database.DB.Save(&users).Find(&users).Error
-}
-
 // Destroy session.
 func (user *User) Logout(c *fiber.Ctx) error {
 	sess, err := sessions.Sessions.Get(c)
@@ -262,8 +257,8 @@ func (users *Users) UpdateCompanyUsers(companyId string, clientInput *Users) err
 	}
 
 	// Match client input users to DB users and adjust RoleID & AccountStatusID based on the form values
-	for _, input := range *clientInput {
-		for _, user := range *users {
+	for _, user := range *users {
+		for _, input := range *clientInput {
 			if input.ID == user.ID {
 				user.RoleID = input.RoleID
 				user.AccountStatusID = input.AccountStatusID
@@ -272,5 +267,5 @@ func (users *Users) UpdateCompanyUsers(companyId string, clientInput *Users) err
 		}
 	}
 
-	return users.Save()
+	return database.DB.Where("company_id = ?", companyId).Save(&users).Find(&users).Error
 }

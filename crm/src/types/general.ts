@@ -14,6 +14,11 @@ export type User = {
   role_id: number | null;
 };
 
+export type AccountStatus = {
+  id: number;
+  status: string;
+};
+
 export type CreateCompanyInput = {
   name: string;
   logo: string;

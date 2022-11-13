@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
-import { User } from "../../../types/general";
+import { AccountStatus, User } from "../../../types/general";
 import useFetch from "../../../hooks/useFetch";
-import { COMPANY_ROUTE } from "../../../constants";
+import { COMPANY_ROUTE, ACCOUNT_STATUS_ROUTE } from "../../../constants";
 import styles from "./CompanyUsers.module.css";
 import SmallTableElement from "../../../components/SmallTableElement";
 import Button from "../../../components/Button";
@@ -20,10 +20,22 @@ const CompanyUsers: React.FC = () => {
   useLoginRequired();
   const ctx = useContext(UserContext);
   const [users, setUsers] = useState<User[]>([]);
+  const [accountStatus, setAccountStatus] = useState<AccountStatus[]>([]);
   const { makeRequest, isLoading, error } = useFetch();
   const [editModal, setEditModal] = useState(false);
   const [editingItem, setEditingItem] = useState("");
   const toast = useToast();
+
+  const fetchAccountStatus = useCallback(() => {
+    makeRequest(
+      {
+        url: ACCOUNT_STATUS_ROUTE,
+      },
+      (res) => {
+        setAccountStatus(res.data.data);
+      }
+    );
+  }, [makeRequest]);
 
   useEffect(() => {
     if (ctx?.user.company_id) {
@@ -36,8 +48,11 @@ const CompanyUsers: React.FC = () => {
           setUsers(res.data.data);
         }
       );
+
+      // Fetch account status
+      fetchAccountStatus();
     }
-  }, [makeRequest, ctx?.user.company_id]);
+  }, [makeRequest, ctx?.user.company_id, fetchAccountStatus]);
 
   function handleInviteUser(email: string) {
     makeRequest(
@@ -82,7 +97,7 @@ const CompanyUsers: React.FC = () => {
       {
         url: COMPANY_ROUTE + `/${ctx?.user.company_id}/user`,
         method: "PUT",
-        data: values,
+        data: values.users,
       },
       (res) => {
         setUsers(res.data.data);
@@ -171,13 +186,12 @@ const CompanyUsers: React.FC = () => {
                                     name={`users.${index}.role_id`}
                                   />
                                   <FormSelect
-                                    options={[
-                                      { label: "Active", value: 1 },
-                                      {
-                                        label: "Inactive",
-                                        value: 2,
-                                      },
-                                    ]}
+                                    options={accountStatus.map((status) => {
+                                      return {
+                                        value: status.id,
+                                        label: status.status,
+                                      };
+                                    })}
                                     defaultValue={{
                                       value: user.account_status_id!,
                                       label: "Active",

@@ -24,11 +24,3 @@ type CreateServicesInput struct {
 	CompanyID int `json:"company_id"`
 	ServiceID int `json:"service_id"`
 }
-
-type UpdateCompanyUserInput struct {
-	Users []struct {
-		UserID          int
-		RoleID          int
-		AccountStatusID int
-	}
-}

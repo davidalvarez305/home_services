@@ -577,6 +577,7 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 	err := c.BodyParser(&input)
 
 	if err != nil {
+		fmt.Printf("%+v", err.Error())
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Could not parse client input.",
 		})
