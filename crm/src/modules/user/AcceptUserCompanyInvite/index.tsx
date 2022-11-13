@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
+import { useContext } from "react";
 import Button from "../../../components/Button";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
-import { COMPANY_ROUTE, USER_ROUTE } from "../../../constants";
+import { COMPANY_ROUTE } from "../../../constants";
+import { UserContext } from "../../../context/UserContext";
 import useFetch from "../../../hooks/useFetch";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import PrimaryLayout from "../../../layout/Primary";
@@ -11,19 +13,17 @@ const AcceptUserCompanyInvite = () => {
   useLoginRequired();
   const router = useRouter();
   const { isLoading, makeRequest, error } = useFetch();
+  const ctx = useContext(UserContext);
 
-  function handleSubmit(values: { email: string }) {
-    if (values.email === "") {
-      return;
-    }
-
+  function handleSubmit() {
     makeRequest(
       {
         url: COMPANY_ROUTE + `/${router.query.companyId}/user/invite/${router.query.code}`,
-        method: "POST",
-        data: values,
+        method: "PUT",
       },
-      (_) => {}
+      (res) => {
+        ctx?.SetUser(res.data.data);
+      }
     );
   }
 
@@ -31,7 +31,7 @@ const AcceptUserCompanyInvite = () => {
     <PrimaryLayout screenName={"Accept Invitation"}>
       <div className={styles["form"]}>
         <div className={styles["message"]}>Do you accept this invitation?</div>
-        <Button className={"Dark"} type={"submit"} isLoading={isLoading}>
+        <Button className={"Dark"} onClick={() => handleSubmit()} isLoading={isLoading}>
           Accept
         </Button>
         <RequestErrorMessage {...error} />

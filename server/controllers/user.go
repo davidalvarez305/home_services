@@ -13,9 +13,9 @@ func User(router fiber.Router) {
 	user.Post("/register", handlers.CreateUser)
 	user.Post("/forgot-password", handlers.ForgotPassword)
 	user.Post("/login", handlers.Login)
+	user.Get("/", handlers.GetUser)
 
 	// Login required
-	user.Get("/", handlers.GetUser)
 	user.Put("/", handlers.UpdateUser)
 	user.Delete("/", handlers.DeleteUser)
 	user.Post("/logout", handlers.Logout)
