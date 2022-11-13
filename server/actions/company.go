@@ -66,3 +66,15 @@ func (c *Company) DeleteCompany(companyId string) error {
 func (c *Company) GetCompanyByID(id int) error {
 	return database.DB.Where("id = ?", id).First(&c).Error
 }
+
+// Get Company from DB.
+func (c *Company) CheckCompanyOwners(companyId int) (bool, error) {
+	var numRows = 0
+	sql := `SELECT COUNT(*) FROM "user" WHERE company_id = ? AND role_id = 1`
+
+	res := database.DB.Where(sql, companyId)
+
+	numRows = int(res.RowsAffected)
+
+	return numRows > 1, res.Error
+}
