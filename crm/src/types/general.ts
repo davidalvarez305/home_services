@@ -60,3 +60,16 @@ export type Service = {
   id: number;
   service: string;
 };
+
+export type Location = {
+  id: number;
+  zip_code: string;
+  city_id: number;
+  city: string;
+  county_id: number;
+  county: string;
+  state_id: number;
+  state: string;
+  country_id: number;
+  country: string;
+};
