@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { Table, Tbody, Td, Thead, Tr } from "@chakra-ui/table";
@@ -12,42 +12,24 @@ import SelectMultipleModal from "../../../components/SelectMultipleModal";
 import useFetch from "../../../hooks/useFetch";
 import { COMPANY_ROUTE } from "../../../constants";
 import { UserContext } from "../../../context/UserContext";
+import { CompanyServicesByArea } from "../../../types/general";
 
 const CompanyServices: React.FC = () => {
   useLoginRequired();
   const ctx = useContext(UserContext);
   const [toggleZipCodes, setToggleZipCodes] = useState(false);
-  const [filteredLocations, setFilteredLocations] = useState<any[]>([""]);
+  const [filteredAreas, setFilteredAreas] = useState<CompanyServicesByArea[]>(
+    []
+  );
   const [multipleSelectModal, setMultipleSelectModal] = useState(false);
   const { makeRequest, isLoading, error } = useFetch();
-  const [data, setData] = useState<any[]>([
-    {
-      service: "Kitchen Remodeling",
-      locations: [
-        {
-          dma: "Hialeah",
-          zip_code: 33015,
-        },
-        {
-          dma: "Hialeah",
-          zip_code: 33012,
-        },
-      ],
-    },
-    {
-      service: "Bathroom Remodeling",
-      locations: [
-        {
-          dma: "Miami Lakes",
-          zip_code: 33016,
-        },
-        {
-          dma: "Miami Lakes",
-          zip_code: 33014,
-        },
-      ],
-    },
-  ]);
+  const [services, setServices] = useState<CompanyServicesByArea[]>([]);
+
+  const fetchServices = useCallback(() => {
+    makeRequest({
+      
+    })
+  }, [makeRequest])
 
   useEffect(() => {
     if (ctx?.user.company_id) {
@@ -56,7 +38,7 @@ const CompanyServices: React.FC = () => {
           url: COMPANY_ROUTE + `/${ctx?.user.company_id}/service`,
         },
         (res) => {
-          console.log("data: ", res.data.data);
+          setServices(res.data.data);
         }
       );
     }
@@ -68,15 +50,15 @@ const CompanyServices: React.FC = () => {
         <Table>
           <Thead>
             <Tr>
-              {["DMA", "Zip Code"].map((header) => (
+              {["City", "Zip Code"].map((header) => (
                 <Td key={header}>{header}</Td>
               ))}
             </Tr>
           </Thead>
           <Tbody>
-            {filteredLocations.map((location, index) => (
+            {filteredAreas.map((location, index) => (
               <Tr key={index}>
-                <Td>{location.dma}</Td>
+                <Td>{location.city}</Td>
                 <Td>
                   <div className={styles["zip-code-container"]}>
                     <div>{location.zip_code}</div>
@@ -103,17 +85,17 @@ const CompanyServices: React.FC = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {data.map((row, index) => (
+            {services.map((row, index) => (
               <Tr key={index}>
                 <Td>{row.service}</Td>
                 <Td>
                   <ChakraButton
                     onClick={() => {
-                      setFilteredLocations(() => {
-                        const service = data.filter(
+                      setFilteredAreas(() => {
+                        const service = services.filter(
                           (each) => each.service === row.service
-                        )[0];
-                        return service.locations;
+                        );
+                        return service;
                       });
                       setToggleZipCodes((prev) => !prev);
                     }}

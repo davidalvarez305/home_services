@@ -46,3 +46,12 @@ export type CompanyServiceLocations = {
   zip_codes: number[];
   services: number[];
 };
+
+export type CompanyServicesByArea = {
+  service_id: number;
+  service: string;
+  zip_code_id: number;
+  zip_code: string;
+  city_id: number;
+  city: string;
+};
