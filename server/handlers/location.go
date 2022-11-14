@@ -5,18 +5,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetAllStates(c *fiber.Ctx) error {
-	states := &actions.States{}
+func GetAllLocations(c *fiber.Ctx) error {
+	locations := &actions.Locations{}
 
-	err := states.GetAllStates()
+	err := locations.GetAllLocations()
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not query states.",
+			"data": "Could not query locations.",
 		})
 	}
 
 	return c.Status(200).JSON(fiber.Map{
-		"data": states,
+		"data": locations,
 	})
 }

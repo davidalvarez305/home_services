@@ -5,9 +5,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func State(router fiber.Router) {
+func Location(router fiber.Router) {
 
-	state := router.Group("state")
+	location := router.Group("location")
 
-	state.Get("/", handlers.GetAllStates)
+	location.Get("/", handlers.GetAllLocations)
 }

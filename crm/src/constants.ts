@@ -5,5 +5,6 @@ export const COMPANY_ROUTE = process.env.NEXT_PUBLIC_API_URL + "api/company";
 export const ACCOUNT_STATUS_ROUTE = process.env.NEXT_PUBLIC_API_URL + "api/account-status";
 export const ROLE_ROUTE = process.env.NEXT_PUBLIC_API_URL + "api/role";
 export const SERVICE_ROUTE = process.env.NEXT_PUBLIC_API_URL + "api/service";
+export const LOCATION_ROUTE = process.env.NEXT_PUBLIC_API_URL + "api/zip-code";
 export const CLIENT_DOMAIN = process.env.NEXT_PUBLIC_CLIENT_DOMAIN;
 export const BUCKET_URL = process.env.NEXT_PUBLIC_BUCKET_URL;

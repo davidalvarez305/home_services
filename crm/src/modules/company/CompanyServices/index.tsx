@@ -37,6 +37,17 @@ const CompanyServices: React.FC = () => {
     );
   }, [makeRequest]);
 
+  const fetchLocations = useCallback(() => {
+    makeRequest(
+      {
+        url: LOCATION_ROUTE,
+      },
+      (res) => {
+        setServices(res.data.data);
+      }
+    );
+  }, [makeRequest]);
+
   useEffect(() => {
     if (ctx?.user.company_id) {
       makeRequest(
@@ -136,6 +147,9 @@ const CompanyServices: React.FC = () => {
                 <Button
                   onClick={() => {
                     if (values.service.length === 0) return;
+
+                    fetchLocations();
+
                     setMultipleSelectModal(true);
                   }}
                   className={"Dark"}
