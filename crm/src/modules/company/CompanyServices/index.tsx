@@ -10,9 +10,9 @@ import Button from "../../../components/Button";
 import { Button as ChakraButton } from "@chakra-ui/react";
 import SelectMultipleModal from "../../../components/SelectMultipleModal";
 import useFetch from "../../../hooks/useFetch";
-import { COMPANY_ROUTE } from "../../../constants";
+import { COMPANY_ROUTE, SERVICE_ROUTE } from "../../../constants";
 import { UserContext } from "../../../context/UserContext";
-import { CompanyServicesByArea } from "../../../types/general";
+import { CompanyServicesByArea, Service } from "../../../types/general";
 
 const CompanyServices: React.FC = () => {
   useLoginRequired();
@@ -23,13 +23,19 @@ const CompanyServices: React.FC = () => {
   );
   const [multipleSelectModal, setMultipleSelectModal] = useState(false);
   const { makeRequest, isLoading, error } = useFetch();
-  const [services, setServices] = useState<CompanyServicesByArea[]>([]);
+  const [serviceAreas, setServiceAreas] = useState<CompanyServicesByArea[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
 
   const fetchServices = useCallback(() => {
-    makeRequest({
-      
-    })
-  }, [makeRequest])
+    makeRequest(
+      {
+        url: SERVICE_ROUTE,
+      },
+      (res) => {
+        setServices(res.data.data);
+      }
+    );
+  }, [makeRequest]);
 
   useEffect(() => {
     if (ctx?.user.company_id) {
@@ -38,11 +44,14 @@ const CompanyServices: React.FC = () => {
           url: COMPANY_ROUTE + `/${ctx?.user.company_id}/service`,
         },
         (res) => {
-          setServices(res.data.data);
+          setServiceAreas(res.data.data);
         }
       );
     }
-  }, [makeRequest, ctx?.user.company_id]);
+
+    // Fetch all services
+    fetchServices();
+  }, [makeRequest, ctx?.user.company_id, fetchServices]);
 
   if (toggleZipCodes) {
     return (
@@ -85,14 +94,14 @@ const CompanyServices: React.FC = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {services.map((row, index) => (
+            {serviceAreas.map((row, index) => (
               <Tr key={index}>
                 <Td>{row.service}</Td>
                 <Td>
                   <ChakraButton
                     onClick={() => {
                       setFilteredAreas(() => {
-                        const service = services.filter(
+                        const service = serviceAreas.filter(
                           (each) => each.service === row.service
                         );
                         return service;
@@ -120,10 +129,9 @@ const CompanyServices: React.FC = () => {
               <div className={styles["add-service"]}>
                 <FormSelect
                   name={"service"}
-                  options={[
-                    { value: 1, label: "Roofing" },
-                    { value: 2, label: "Floor Installation" },
-                  ]}
+                  options={services.map((service) => {
+                    return { value: service.id, label: service.service };
+                  })}
                 />
                 <Button
                   onClick={() => {

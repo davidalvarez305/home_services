@@ -55,3 +55,8 @@ export type CompanyServicesByArea = {
   city_id: number;
   city: string;
 };
+
+export type Service = {
+  id: number;
+  service: string;
+};
