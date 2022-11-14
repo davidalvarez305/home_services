@@ -102,11 +102,11 @@ func DeleteLocation(c *fiber.Ctx) error {
 	location := &actions.CompanyServicesLocations{}
 	updatedLocations := &actions.CompanyServicesByArea{}
 
-	companyId, err := actions.GetCompanyIdFromSession(c)
+	companyId := c.Params("id")
 
-	if err != nil {
+	if len(companyId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not identify user.",
+			"data": "Company ID not found in URL Params.",
 		})
 	}
 
@@ -694,5 +694,30 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(fiber.Map{
 		"data": user,
+	})
+}
+
+func GetCompanyServices(c *fiber.Ctx) error {
+	services := &actions.CompanyServicesByArea{}
+
+	companyId := c.Params("id")
+
+	if len(companyId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Company ID not found in URL params.",
+		})
+	}
+
+	err := services.GetCompanyServiceAreas(companyId)
+
+	if err != nil {
+		fmt.Printf("%+v", err)
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Error querying services areas.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": services,
 	})
 }

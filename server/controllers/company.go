@@ -24,4 +24,7 @@ func Company(router fiber.Router) {
 
 	// Manage Company Locations
 	company.Delete("/:id/location", handlers.DeleteLocation)
+
+	// Manage Company Services
+	company.Get("/:id/service", handlers.GetCompanyServices)
 }

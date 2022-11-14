@@ -22,9 +22,9 @@ type CompanyServiceByArea struct {
 
 type CompanyServicesByArea []*CompanyServiceByArea
 
-func (c *CompanyServicesByArea) GetCompanyServiceAreas(companyId int) error {
+func (c *CompanyServicesByArea) GetCompanyServiceAreas(companyId string) error {
 	sql := `
-	SELECT s.id AS service_id, s.name AS service, z.id AS zip_code_id, z.zip_code AS zip_code, c.id AS city_id, c.name AS city
+	SELECT s.id AS service_id, s.name AS service, z.id AS zip_code_id, z.zip_code AS zip_code, c.id AS city_id, c.city AS city
 	FROM company_services_locations AS csl
 	LEFT JOIN zip_code AS z
 	ON z.id = csl.zip_code_id
@@ -36,10 +36,6 @@ func (c *CompanyServicesByArea) GetCompanyServiceAreas(companyId int) error {
 	return database.DB.Raw(sql, companyId).Scan(&c).Error
 }
 
-func (c *CompanyServicesLocationsSlice) GetServicesAreasByCompany(companyId int) error {
-	return database.DB.Raw(`SELECT * FROM company_services_locations WHERE company_id = ?`, companyId).Scan(&c).Error
-}
-
 func (c *CompanyServicesLocationsSlice) CreateCompanyServiceLocations(companyId int) error {
 	return database.DB.Save(&c).Where("company_id = ?", companyId).Find(&c).Error
 }
@@ -48,11 +44,11 @@ func (c *CompanyServicesLocations) DeleteServiceLocation() error {
 	return database.DB.Delete(&c).Error
 }
 
-func (c *CompanyServicesLocations) FindServiceLocationByZipCode(zipCode string, companyId int) error {
-	return database.DB.Where("zip_code_id = ? AND company_id = ?", zipCode).First(&c).Error
+func (c *CompanyServicesLocations) FindServiceLocationByZipCode(zipCode string, companyId string) error {
+	return database.DB.Where("zip_code_id = ? AND company_id = ?", zipCode, companyId).First(&c).Error
 }
 
-func (c *CompanyServicesLocations) DeleteServiceByZipCode(zipCode string, companyId int) error {
+func (c *CompanyServicesLocations) DeleteServiceByZipCode(zipCode string, companyId string) error {
 	err := c.FindServiceLocationByZipCode(zipCode, companyId)
 
 	if err != nil {
@@ -62,7 +58,7 @@ func (c *CompanyServicesLocations) DeleteServiceByZipCode(zipCode string, compan
 	return c.DeleteServiceLocation()
 }
 
-func (c *CompanyServicesLocations) FindServiceLocationByCity(cityId string, companyId int) error {
+func (c *CompanyServicesLocations) FindServiceLocationByCity(cityId string, companyId string) error {
 	sql := `
 	SELECT c.service_id, c.zip_code_id, c.company_id, z.city_id
 	FROM company_services_locations AS c
@@ -73,7 +69,7 @@ func (c *CompanyServicesLocations) FindServiceLocationByCity(cityId string, comp
 	return database.DB.Raw(sql, cityId, companyId).First(&c).Error
 }
 
-func (c *CompanyServicesLocations) DeleteServiceByCity(cityId string, companyId int) error {
+func (c *CompanyServicesLocations) DeleteServiceByCity(cityId string, companyId string) error {
 	err := c.FindServiceLocationByCity(cityId, companyId)
 
 	if err != nil {

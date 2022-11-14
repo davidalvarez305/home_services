@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { Table, Tbody, Td, Thead, Tr } from "@chakra-ui/table";
@@ -9,11 +9,17 @@ import { Form, Formik } from "formik";
 import Button from "../../../components/Button";
 import { Button as ChakraButton } from "@chakra-ui/react";
 import SelectMultipleModal from "../../../components/SelectMultipleModal";
+import useFetch from "../../../hooks/useFetch";
+import { COMPANY_ROUTE } from "../../../constants";
+import { UserContext } from "../../../context/UserContext";
 
 const CompanyServices: React.FC = () => {
+  useLoginRequired();
+  const ctx = useContext(UserContext);
   const [toggleZipCodes, setToggleZipCodes] = useState(false);
   const [filteredLocations, setFilteredLocations] = useState<any[]>([""]);
   const [multipleSelectModal, setMultipleSelectModal] = useState(false);
+  const { makeRequest, isLoading, error } = useFetch();
   const [data, setData] = useState<any[]>([
     {
       service: "Kitchen Remodeling",
@@ -43,7 +49,18 @@ const CompanyServices: React.FC = () => {
     },
   ]);
 
-  useLoginRequired();
+  useEffect(() => {
+    if (ctx?.user.company_id) {
+      makeRequest(
+        {
+          url: COMPANY_ROUTE + `/${ctx?.user.company_id}/service`,
+        },
+        (res) => {
+          console.log("data: ", res.data.data);
+        }
+      );
+    }
+  }, [makeRequest, ctx?.user.company_id]);
 
   if (toggleZipCodes) {
     return (
@@ -63,10 +80,7 @@ const CompanyServices: React.FC = () => {
                 <Td>
                   <div className={styles["zip-code-container"]}>
                     <div>{location.zip_code}</div>
-                    <DeleteButton
-                      aria-label={"remove"}
-                      minusButton={() => console.log("clicked")}
-                    />
+                    <DeleteButton aria-label={"remove"} />
                   </div>
                 </Td>
               </Tr>
