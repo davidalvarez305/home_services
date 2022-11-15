@@ -611,7 +611,7 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 	// Ensure that there must always be one owner
 	// This action presumes that all the company's users will be coming from the client on every request.
 	var count = 0
-	for _, user := range *usersToUpdate {
+	for _, user := range *input {
 
 		if user.RoleID == 1 {
 			count += 1
@@ -620,7 +620,7 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 
 	if count == 0 {
 		return c.Status(403).JSON(fiber.Map{
-			"data": "Invalid action. This would remove all owners from the company.",
+			"data": "Invalid action. There must always be one owner.",
 		})
 	}
 
