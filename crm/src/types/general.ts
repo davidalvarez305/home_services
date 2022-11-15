@@ -14,6 +14,17 @@ export type User = {
   role_id: number | null;
 };
 
+export type Company = {
+  id: number;
+  name: string;
+  logo: string;
+  stripe_customer_id: string;
+  created_at: number;
+  updated_at: number;
+  account_status_id: number;
+  address_id: number;
+};
+
 export type AccountStatus = {
   id: number;
   status: string;

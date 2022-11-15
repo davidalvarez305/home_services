@@ -1,17 +1,20 @@
 import { Form, Formik } from "formik";
+import { useContext } from "react";
 import Button from "../../../components/Button";
 import FormInput from "../../../components/FormInput";
 import FormSelect from "../../../components/FormSelect";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import { COMPANY_ROUTE } from "../../../constants";
+import { UserContext } from "../../../context/UserContext";
 import useFetch from "../../../hooks/useFetch";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import PrimaryLayout from "../../../layout/Primary";
-import { CreateCompanyInput } from "../../../types/general";
+import { Company, CreateCompanyInput } from "../../../types/general";
 import styles from "./CreateCompany.module.css";
 
 const CreateCompany = () => {
   useLoginRequired();
+  const ctx = useContext(UserContext);
   const { isLoading, makeRequest, error } = useFetch();
 
   function handleSubmit(values: CreateCompanyInput) {
@@ -32,7 +35,8 @@ const CreateCompany = () => {
         data: values,
       },
       (res) => {
-        console.log(res.data.data);
+        const company: Company = res.data.data;
+        ctx?.SetUser({ ...ctx.user, company_id: company.id });
       }
     );
   }
