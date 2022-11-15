@@ -12,7 +12,7 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { Form, Formik, useFormikContext } from "formik";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactSelect, { SingleValue } from "react-select";
 import { LOCATION_ROUTE } from "../constants";
 import useFetch from "../hooks/useFetch";
@@ -20,7 +20,7 @@ import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import { removeOptionAtIndex } from "../utils/removeOptionAtIndex";
 import { SelectType } from "./MultiFormSelect";
 import { SelectedComponent } from "./SelectedComponent";
-import { City, Location, State } from "../types/general";
+import { Location, State } from "../types/general";
 
 interface MultiSelectProps {
   options: SelectType[];
@@ -137,9 +137,7 @@ const SelectMultipleModal: React.FC<Props> = ({
   const { makeRequest, isLoading, error } = useFetch();
   const [locations, setLocations] = useState<Location[]>([]);
   const [selectedState, setSelectedState] = useState(0);
-  const [selectedCity, setSelectedCity] = useState(0);
   const [states, setStates] = useState<State[]>([]);
-  const [cities, setCities] = useState<City[]>([]);
 
   const finalRef: React.RefObject<any> = useRef(null);
 
@@ -155,33 +153,20 @@ const SelectMultipleModal: React.FC<Props> = ({
         }
       );
     }
-
-    if (cities.length === 0 && selectedState) {
-      makeRequest(
-        {
-          url: LOCATION_ROUTE + `/city/?stateId=${selectedState}`,
-        },
-        (res) => {
-          setCities(res.data.data);
-        }
-      );
-    }
-  }, [makeRequest, states, selectedState, cities]);
+  }, [makeRequest, states, selectedState]);
 
   useEffect(() => {
-    if (selectedState > 0 && selectedCity > 0) {
+    if (selectedState > 0) {
       makeRequest(
         {
-          url:
-            LOCATION_ROUTE +
-            `/?stateId=${selectedState}&cityId=${selectedCity}`,
+          url: LOCATION_ROUTE + `/?stateId=${selectedState}`,
         },
         (res) => {
           setLocations(res.data.data);
         }
       );
     }
-  }, [makeRequest, selectedState, selectedCity]);
+  }, [makeRequest, selectedState]);
 
   if (!selectedState) {
     return (
@@ -206,7 +191,6 @@ const SelectMultipleModal: React.FC<Props> = ({
               }}
             >
               <Box sx={{ width: 250 }}>
-                <FormLabel>Select A State</FormLabel>
                 <ReactSelect
                   options={states.map(({ id, state }) => {
                     return { value: id, label: state };
@@ -216,19 +200,6 @@ const SelectMultipleModal: React.FC<Props> = ({
                   }}
                 />
               </Box>
-              {cities.length > 0 && (
-                <Box sx={{ width: 250 }}>
-                  <FormLabel>Select A City</FormLabel>
-                  <ReactSelect
-                    options={cities.map(({ id, city }) => {
-                      return { value: id, label: city };
-                    })}
-                    onChange={(selected) => {
-                      setSelectedCity(selected!.value);
-                    }}
-                  />
-                </Box>
-              )}
             </Box>
           </ModalBody>
           <ModalFooter>

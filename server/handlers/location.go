@@ -9,15 +9,14 @@ func GetAllLocations(c *fiber.Ctx) error {
 	locations := &actions.Locations{}
 
 	stateId := c.Query("stateId")
-	cityId := c.Query("cityId")
 
-	if len(stateId) == 0 || len(cityId) == 0 {
+	if len(stateId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Include state and city in query string.",
+			"data": "Include state in query string.",
 		})
 	}
 
-	err := locations.GetAllLocations(stateId, cityId)
+	err := locations.GetAllLocations(stateId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -43,29 +42,5 @@ func GetAllStates(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(fiber.Map{
 		"data": states,
-	})
-}
-
-func GetCitiesByState(c *fiber.Ctx) error {
-	cities := &actions.Cities{}
-
-	stateId := c.Query("stateId")
-
-	if len(stateId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Include state in query string.",
-		})
-	}
-
-	err := cities.GetCitiesByState(stateId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not query cities.",
-		})
-	}
-
-	return c.Status(200).JSON(fiber.Map{
-		"data": cities,
 	})
 }
