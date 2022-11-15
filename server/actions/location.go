@@ -22,6 +22,8 @@ type Locations []*Location
 
 type States []*models.State
 
+type Cities []*models.City
+
 func (l *Locations) GetAllLocations(stateId, cityId string) error {
 	sql := `
 	SELECT z.id AS zip_code, c.id AS city_id, c.city AS city,
@@ -44,4 +46,16 @@ func (l *Locations) GetAllLocations(stateId, cityId string) error {
 
 func (s *States) GetAllStates() error {
 	return database.DB.Find(&s).Error
+}
+
+func (c *Cities) GetCitiesByState(stateId string) error {
+
+	sql := `
+	SELECT c.id AS id, c.city AS city
+	FROM zip_code AS z
+	LEFT JOIN city AS c
+	ON z.city_id = c.id
+	WHERE z.state_id = ?;
+	`
+	return database.DB.Raw(sql, stateId).Scan(&c).Error
 }

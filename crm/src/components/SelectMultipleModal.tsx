@@ -20,7 +20,7 @@ import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import { removeOptionAtIndex } from "../utils/removeOptionAtIndex";
 import { SelectType } from "./MultiFormSelect";
 import { SelectedComponent } from "./SelectedComponent";
-import { Location, State } from "../types/general";
+import { City, Location, State } from "../types/general";
 
 interface MultiSelectProps {
   options: SelectType[];
@@ -137,33 +137,51 @@ const SelectMultipleModal: React.FC<Props> = ({
   const { makeRequest, isLoading, error } = useFetch();
   const [locations, setLocations] = useState<Location[]>([]);
   const [selectedState, setSelectedState] = useState(0);
+  const [selectedCity, setSelectedCity] = useState(0);
   const [states, setStates] = useState<State[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
 
   const finalRef: React.RefObject<any> = useRef(null);
 
+  // Fetch states && cities depending on selections
   useEffect(() => {
-    makeRequest(
-      {
-        url: LOCATION_ROUTE + "/state",
-      },
-      (res) => {
-        setStates(res.data.data);
-      }
-    );
-  }, [makeRequest]);
-
-  useEffect(() => {
-    if (selectedState > 0) {
+    if (states.length === 0) {
       makeRequest(
         {
-          url: LOCATION_ROUTE + `/?stateId=${selectedState}`,
+          url: LOCATION_ROUTE + "/state",
+        },
+        (res) => {
+          setStates(res.data.data);
+        }
+      );
+    }
+
+    if (cities.length === 0 && selectedState) {
+      makeRequest(
+        {
+          url: LOCATION_ROUTE + `/city/?stateId=${selectedState}`,
+        },
+        (res) => {
+          setCities(res.data.data);
+        }
+      );
+    }
+  }, [makeRequest, states, selectedState, cities]);
+
+  useEffect(() => {
+    if (selectedState > 0 && selectedCity > 0) {
+      makeRequest(
+        {
+          url:
+            LOCATION_ROUTE +
+            `/?stateId=${selectedState}&cityId=${selectedCity}`,
         },
         (res) => {
           setLocations(res.data.data);
         }
       );
     }
-  }, [makeRequest, selectedState]);
+  }, [makeRequest, selectedState, selectedCity]);
 
   if (!selectedState) {
     return (
@@ -175,17 +193,43 @@ const SelectMultipleModal: React.FC<Props> = ({
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{`Select a state...`}</ModalHeader>
+          <ModalHeader>{`Select a location...`}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <ReactSelect
-              options={states.map(({ id, state }) => {
-                return { value: id, label: state };
-              })}
-              onChange={(selected) => {
-                setSelectedState(selected!.value);
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: 700,
+                gap: 20,
               }}
-            />
+            >
+              <Box sx={{ width: 250 }}>
+                <FormLabel>Select A State</FormLabel>
+                <ReactSelect
+                  options={states.map(({ id, state }) => {
+                    return { value: id, label: state };
+                  })}
+                  onChange={(selected) => {
+                    setSelectedState(selected!.value);
+                  }}
+                />
+              </Box>
+              {cities.length > 0 && (
+                <Box sx={{ width: 250 }}>
+                  <FormLabel>Select A City</FormLabel>
+                  <ReactSelect
+                    options={cities.map(({ id, city }) => {
+                      return { value: id, label: city };
+                    })}
+                    onChange={(selected) => {
+                      setSelectedCity(selected!.value);
+                    }}
+                  />
+                </Box>
+              )}
+            </Box>
           </ModalBody>
           <ModalFooter>
             <Button
@@ -221,14 +265,6 @@ const SelectMultipleModal: React.FC<Props> = ({
                   <ModalHeader>{`Adding Locations...`}</ModalHeader>
                   <ModalCloseButton />
                   <ModalBody>
-                    <ReactSelect
-                      options={states.map(({ id, state }) => {
-                        return { value: id, label: state };
-                      })}
-                      onChange={(selected) => {
-                        setSelectedState(selected!.value);
-                      }}
-                    />
                     <MultiSelect
                       options={values.locations.map((location) => {
                         return {

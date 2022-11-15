@@ -89,3 +89,8 @@ export type State = {
   id: number;
   state: string;
 };
+
+export type City = {
+  id: number;
+  city: string;
+};
