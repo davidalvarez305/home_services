@@ -517,6 +517,30 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 		})
 	}
 
+	// Ensure that there must always be one owner
+	companyOwners := &actions.Users{}
+	err = companyOwners.GetCompanyOwners(companyId)
+
+	if err != nil {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Cannot delete because there must always be at least one owner.",
+		})
+	}
+
+	var count = 0
+	for _, user := range *companyOwners {
+		if user.RoleID == 1 {
+			count += 1
+		}
+	}
+
+	// If this logic is correct, the count will never be zero, so it's safe to index the ID below.
+	if count <= 1 && userId == fmt.Sprintf("%+v", (*companyOwners)[0].ID) {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Invalid action. This would remove all owners from the company.",
+		})
+	}
+
 	err = userToUpdate.RemoveUserFromCompany(companyId, userId)
 
 	if err != nil {

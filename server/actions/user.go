@@ -326,3 +326,7 @@ func (user *User) CheckCanAcceptInvitation(companyId string, companyToken *Compa
 
 	return true
 }
+
+func (users *Users) GetCompanyOwners(companyId string) error {
+	return database.DB.Where("company_id = ? AND role_id = 1", companyId).Find(&users).Error
+}
