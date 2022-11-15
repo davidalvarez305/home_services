@@ -13,4 +13,6 @@ type Company struct {
 	Service          []*Service     `gorm:"many2many:company_services_locations" json:"-"`
 	ZipCode          []*ZipCode     `gorm:"many2many:company_services_locations" json:"-"`
 	User             []*User        `gorm:"many2many:user_company_role" json:"-"`
+	AddressID        int            `json:"address_id"`
+	Address          *Address       `gorm:"not null;column:address_id;foreignKey:AddressID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 }

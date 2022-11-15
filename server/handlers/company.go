@@ -31,65 +31,13 @@ func CreateCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	// Create New Company With Default Status as 'Pending Approval'
-	co := &actions.Company{}
-	company := models.Company{
-		Name:            input.Name,
-		Logo:            input.Logo,
-		AccountStatusID: 2,
-		CreatedAt:       time.Now().Unix(),
-		UpdatedAt:       time.Now().Unix(),
-	}
-	co.Company = &company
+	company := &actions.Company{}
 
-	err = co.CreateCompany()
+	err = company.CreateCompany(user, input)
 
 	if err != nil {
-
-		if strings.Contains(err.Error(), "23505") {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Cannot have more than one company.",
-			})
-		}
-
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not create that company.",
-		})
-	}
-
-	// Insert Company Address
-	address := &actions.Address{}
-	addr := models.Address{
-		CityID:             input.City,
-		StateID:            input.State,
-		ZipCodeID:          input.ZipCode,
-		CountryID:          1,
-		StreetAddressLine1: input.StreetAddressLine1,
-		StreetAddressLine2: input.StreetAddressLine2,
-		StreetAddressLine3: input.StreetAddressLine3,
-		CompanyID:          co.ID,
-	}
-	address.Address = &addr
-
-	err = address.CreateAddress()
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not save address.",
-		})
-	}
-
-	// Create company with authenticated user set as 'Owner' as default
-	user.CompanyID = co.ID
-	user.RoleID = 1 // Role 2 is "owner".
-	user.UpdatedAt = time.Now().Unix()
-
-	// Persist to DB
-	err = user.Save()
-
-	if err != nil {
-		return c.Status(404).JSON(fiber.Map{
-			"data": "Could not add user to company.",
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Could not create company.",
 		})
 	}
 

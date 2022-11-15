@@ -5,8 +5,6 @@ type Address struct {
 	StreetAddressLine1 string   `json:"street_address_line_1"`
 	StreetAddressLine2 string   `json:"street_address_line_2"`
 	StreetAddressLine3 string   `json:"street_address_line_3"`
-	CompanyID          int      `json:"company_id"`
-	Company            *Company `gorm:"not null;column:company_id;foreignKey:CompanyID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 	CityID             int      `json:"city_id"`
 	City               *City    `gorm:"not null;column:city_id;foreignKey:CityID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 	StateID            int      `json:"state_id"`

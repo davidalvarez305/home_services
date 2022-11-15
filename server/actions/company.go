@@ -6,6 +6,7 @@ import (
 
 	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
+	"github.com/davidalvarez305/home_services/server/types"
 )
 
 type Company struct {
@@ -13,10 +14,45 @@ type Company struct {
 }
 
 // Create and return company model.
-func (c *Company) CreateCompany() error {
+func (c *Company) CreateCompany(user *User, input *types.CreateCompanyInput) error {
+
+	// Create New Company With Default Status as 'inactive'
+	// By attaching the address like this, it will create a START TRANSACTION, where both the company and address insertion must be successful.
+	co := &Company{}
+	company := models.Company{
+		Name:            input.Name,
+		Logo:            input.Logo,
+		AccountStatusID: 2,
+		CreatedAt:       time.Now().Unix(),
+		UpdatedAt:       time.Now().Unix(),
+		Address: &models.Address{
+			CityID:             input.City,
+			StateID:            input.State,
+			ZipCodeID:          input.ZipCode,
+			CountryID:          1,
+			StreetAddressLine1: input.StreetAddressLine1,
+			StreetAddressLine2: input.StreetAddressLine2,
+			StreetAddressLine3: input.StreetAddressLine3,
+		},
+	}
+
+	co.Company = &company
+
+	// Create company with authenticated user set as 'Owner' as default
+	user.CompanyID = co.ID
+	user.RoleID = 1 // Role 2 is "owner".
+	user.UpdatedAt = time.Now().Unix()
+
 	result := database.DB.Save(&c).First(&c)
 
-	return result.Error
+	if result.Error != nil {
+		return result.Error
+	}
+
+	// Persist to DB
+	err := user.Save()
+
+	return err
 }
 
 // Update and return company model.
