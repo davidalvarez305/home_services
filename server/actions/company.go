@@ -14,11 +14,10 @@ type Company struct {
 }
 
 // Create and return company model.
-func (c *Company) CreateCompany(user *User, input *types.CreateCompanyInput) error {
+func (c *Company) CreateCompany(input *types.CreateCompanyInput) error {
 
 	// Create New Company With Default Status as 'inactive'
 	// By attaching the address like this, it will create a START TRANSACTION, where both the company and address insertion must be successful.
-	co := &Company{}
 	company := models.Company{
 		Name:            input.Name,
 		Logo:            input.Logo,
@@ -36,23 +35,9 @@ func (c *Company) CreateCompany(user *User, input *types.CreateCompanyInput) err
 		},
 	}
 
-	co.Company = &company
+	c.Company = &company
 
-	// Create company with authenticated user set as 'Owner' as default
-	user.CompanyID = co.ID
-	user.RoleID = 1 // Role 2 is "owner".
-	user.UpdatedAt = time.Now().Unix()
-
-	result := database.DB.Save(&c).First(&c)
-
-	if result.Error != nil {
-		return result.Error
-	}
-
-	// Persist to DB
-	err := user.Save()
-
-	return err
+	return database.DB.Save(&c).First(&c).Error
 }
 
 // Update and return company model.

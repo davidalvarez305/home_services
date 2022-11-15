@@ -33,11 +33,25 @@ func CreateCompany(c *fiber.Ctx) error {
 
 	company := &actions.Company{}
 
-	err = company.CreateCompany(user, input)
+	err = company.CreateCompany(input)
 
 	if err != nil {
 		return c.Status(403).JSON(fiber.Map{
 			"data": "Could not create company.",
+		})
+	}
+
+	// Create company with authenticated user set as 'Owner' as default
+	user.CompanyID = company.ID
+	user.RoleID = 1 // Role 2 is "owner".
+	user.UpdatedAt = time.Now().Unix()
+
+	// Persist to DB
+	err = user.Save()
+
+	if err != nil {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Could not attach company to user.",
 		})
 	}
 
