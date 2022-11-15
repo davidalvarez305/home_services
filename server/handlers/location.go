@@ -8,7 +8,16 @@ import (
 func GetAllLocations(c *fiber.Ctx) error {
 	locations := &actions.Locations{}
 
-	err := locations.GetAllLocations()
+	stateId := c.Query("stateId")
+	cityId := c.Query("cityId")
+
+	if len(stateId) == 0 || len(cityId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Include state and city in query string.",
+		})
+	}
+
+	err := locations.GetAllLocations(stateId, cityId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -18,5 +27,21 @@ func GetAllLocations(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(fiber.Map{
 		"data": locations,
+	})
+}
+
+func GetAllStates(c *fiber.Ctx) error {
+	states := &actions.States{}
+
+	err := states.GetAllStates()
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not query states.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": states,
 	})
 }

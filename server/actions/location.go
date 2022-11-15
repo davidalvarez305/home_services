@@ -1,6 +1,9 @@
 package actions
 
-import "github.com/davidalvarez305/home_services/server/database"
+import (
+	"github.com/davidalvarez305/home_services/server/database"
+	"github.com/davidalvarez305/home_services/server/models"
+)
 
 type Location struct {
 	ID        int    `json:"id"`
@@ -17,7 +20,9 @@ type Location struct {
 
 type Locations []*Location
 
-func (l *Locations) GetAllLocations() error {
+type States []*models.State
+
+func (l *Locations) GetAllLocations(stateId, cityId string) error {
 	sql := `
 	SELECT z.id AS zip_code, c.id AS city_id, c.city AS city,
 	s.id AS state_id, s.state AS state,
@@ -31,7 +36,12 @@ func (l *Locations) GetAllLocations() error {
 	LEFT JOIN state AS s
 	ON s.id = z.state_id
 	LEFT JOIN country AS ctry
-	ON ctry.id = z.country_id;
+	ON ctry.id = z.country_id
+	WHERE s.id = ? AND c.id = ?;
 	`
-	return database.DB.Raw(sql).Scan(&l).Error
+	return database.DB.Raw(sql, stateId, cityId).Scan(&l).Error
+}
+
+func (s *States) GetAllStates() error {
+	return database.DB.Find(&s).Error
 }

@@ -10,17 +10,9 @@ import Button from "../../../components/Button";
 import { Button as ChakraButton } from "@chakra-ui/react";
 import SelectMultipleModal from "../../../components/SelectMultipleModal";
 import useFetch from "../../../hooks/useFetch";
-import {
-  COMPANY_ROUTE,
-  LOCATION_ROUTE,
-  SERVICE_ROUTE,
-} from "../../../constants";
+import { COMPANY_ROUTE, SERVICE_ROUTE } from "../../../constants";
 import { UserContext } from "../../../context/UserContext";
-import {
-  CompanyServicesByArea,
-  Service,
-  Location,
-} from "../../../types/general";
+import { CompanyServicesByArea, Service } from "../../../types/general";
 
 const CompanyServices: React.FC = () => {
   useLoginRequired();
@@ -33,7 +25,6 @@ const CompanyServices: React.FC = () => {
   const { makeRequest, isLoading, error } = useFetch();
   const [serviceAreas, setServiceAreas] = useState<CompanyServicesByArea[]>([]);
   const [services, setServices] = useState<Service[]>([]);
-  const [locations, setLocations] = useState<Location[]>([]);
 
   const fetchServices = useCallback(() => {
     makeRequest(
@@ -42,17 +33,6 @@ const CompanyServices: React.FC = () => {
       },
       (res) => {
         setServices(res.data.data);
-      }
-    );
-  }, [makeRequest]);
-
-  const fetchLocations = useCallback(() => {
-    makeRequest(
-      {
-        url: LOCATION_ROUTE,
-      },
-      (res) => {
-        setLocations(res.data.data);
       }
     );
   }, [makeRequest]);
@@ -156,9 +136,6 @@ const CompanyServices: React.FC = () => {
                 <Button
                   onClick={() => {
                     if (values.service.length === 0) return;
-
-                    fetchLocations();
-
                     setMultipleSelectModal(true);
                   }}
                   className={"Dark"}
@@ -174,10 +151,6 @@ const CompanyServices: React.FC = () => {
         <SelectMultipleModal
           selectMultipleModal={multipleSelectModal}
           setSelectMultipleModal={setMultipleSelectModal}
-          handleSubmit={(values) => console.log("submit: ", values)}
-          options={locations.map(({ city_id, city }) => {
-            return { value: city_id, label: city };
-          })}
         />
       )}
     </PrimaryLayout>

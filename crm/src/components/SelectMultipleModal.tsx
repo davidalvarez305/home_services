@@ -12,12 +12,15 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { Form, Formik, useFormikContext } from "formik";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactSelect, { SingleValue } from "react-select";
+import { LOCATION_ROUTE } from "../constants";
+import useFetch from "../hooks/useFetch";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import { removeOptionAtIndex } from "../utils/removeOptionAtIndex";
 import { SelectType } from "./MultiFormSelect";
 import { SelectedComponent } from "./SelectedComponent";
+import { Location, State } from "../types/general";
 
 interface MultiSelectProps {
   options: SelectType[];
@@ -123,58 +126,142 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
 };
 
 interface Props {
-  handleSubmit: (values: { locations: SelectType[] }) => void;
   setSelectMultipleModal: React.Dispatch<React.SetStateAction<boolean>>;
   selectMultipleModal: boolean;
-  options: SelectType[];
 }
 
 const SelectMultipleModal: React.FC<Props> = ({
-  handleSubmit,
   setSelectMultipleModal,
   selectMultipleModal,
-  options,
 }) => {
+  const { makeRequest, isLoading, error } = useFetch();
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [selectedState, setSelectedState] = useState(0);
+  const [states, setStates] = useState<State[]>([]);
+
   const finalRef: React.RefObject<any> = useRef(null);
+
+  useEffect(() => {
+    makeRequest(
+      {
+        url: LOCATION_ROUTE + "/state",
+      },
+      (res) => {
+        setStates(res.data.data);
+      }
+    );
+  }, [makeRequest]);
+
+  useEffect(() => {
+    if (selectedState > 0) {
+      makeRequest(
+        {
+          url: LOCATION_ROUTE + `/?stateId=${selectedState}`,
+        },
+        (res) => {
+          setLocations(res.data.data);
+        }
+      );
+    }
+  }, [makeRequest, selectedState]);
+
+  if (!selectedState) {
+    return (
+      <Modal
+        size="3xl"
+        finalFocusRef={finalRef}
+        isOpen={selectMultipleModal}
+        onClose={() => setSelectMultipleModal(false)}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{`Select a state...`}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <ReactSelect
+              options={states.map(({ id, state }) => {
+                return { value: id, label: state };
+              })}
+              onChange={(selected) => {
+                setSelectedState(selected!.value);
+              }}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="red"
+              mr={3}
+              onClick={() => setSelectMultipleModal(false)}
+            >
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
   return (
-    <Formik initialValues={{ locations: options }} onSubmit={handleSubmit}>
-      {({ values, submitForm }) => (
-        <Form>
-          <Modal
-            size="3xl"
-            finalFocusRef={finalRef}
-            isOpen={selectMultipleModal}
-            onClose={() => setSelectMultipleModal(false)}
-          >
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>{`Adding Locations...`}</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <MultiSelect options={values.locations} />
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  colorScheme="blue"
-                  mr={3}
-                  type="submit"
-                  onClick={submitForm}
-                >
-                  Submit
-                </Button>
-                <Button
-                  colorScheme="red"
-                  mr={3}
-                  onClick={() => setSelectMultipleModal(false)}
-                >
-                  Close
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </Form>
+    <>
+      {locations.length > 0 && (
+        <Formik
+          initialValues={{ locations }}
+          onSubmit={(values) => console.log(values)}
+        >
+          {({ values, submitForm }) => (
+            <Form>
+              <Modal
+                size="3xl"
+                finalFocusRef={finalRef}
+                isOpen={selectMultipleModal}
+                onClose={() => setSelectMultipleModal(false)}
+              >
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader>{`Adding Locations...`}</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    <ReactSelect
+                      options={states.map(({ id, state }) => {
+                        return { value: id, label: state };
+                      })}
+                      onChange={(selected) => {
+                        setSelectedState(selected!.value);
+                      }}
+                    />
+                    <MultiSelect
+                      options={values.locations.map((location) => {
+                        return {
+                          value: location.city_id,
+                          label: location.city,
+                        };
+                      })}
+                    />
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button
+                      colorScheme="blue"
+                      mr={3}
+                      type="submit"
+                      onClick={submitForm}
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      colorScheme="red"
+                      mr={3}
+                      onClick={() => setSelectMultipleModal(false)}
+                    >
+                      Close
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
+            </Form>
+          )}
+        </Formik>
       )}
-    </Formik>
+    </>
   );
 };
 

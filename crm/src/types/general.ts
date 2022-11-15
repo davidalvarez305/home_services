@@ -84,3 +84,8 @@ export type Location = {
   country_id: number;
   country: string;
 };
+
+export type State = {
+  id: number;
+  state: string;
+};

@@ -10,4 +10,5 @@ func Location(router fiber.Router) {
 	location := router.Group("location")
 
 	location.Get("/", handlers.GetAllLocations)
+	location.Get("/state", handlers.GetAllStates)
 }
