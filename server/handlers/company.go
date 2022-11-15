@@ -585,6 +585,7 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 	}
 
 	// Ensure that there must always be one owner
+	// This action presumes that all the company's users will be coming from the client on every request.
 	var count = 0
 	for _, user := range *usersToUpdate {
 
