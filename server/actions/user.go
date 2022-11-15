@@ -239,6 +239,18 @@ func (user *User) RemoveUserFromCompany(companyId, userId string) error {
 		return result.Error
 	}
 
+	// Fetch company to ensure that there's at least another owner.
+	companyOwners := &Users{}
+	res := database.DB.Where("company_id = ? AND role_id = 1", companyId).Find(&companyOwners)
+
+	if res.Error != nil {
+		return res.Error
+	}
+
+	if len(*companyOwners) < 2 {
+		return errors.New("cannot delete user, there must be at least one other owner")
+	}
+
 	// If user does not belong to a company, role_id is also null
 	user.CompanyID = 0
 	user.RoleID = 0

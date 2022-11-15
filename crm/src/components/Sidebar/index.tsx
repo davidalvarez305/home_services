@@ -67,7 +67,7 @@ function Sidebar() {
         {navLinks.map((link) => (
           <React.Fragment key={link.link}>
             <SidebarElement
-              handleClick={() => router.push(link.link)}
+              handleClick={() => router.push("/" + link.link)}
               {...link}
             />
           </React.Fragment>
@@ -78,7 +78,7 @@ function Sidebar() {
         {balances.map((balance) => (
           <React.Fragment key={balance.link}>
             <SidebarElement
-              handleClick={() => router.push(balance.link)}
+              handleClick={() => router.push("/" + balance.link)}
               {...balance}
             />
           </React.Fragment>
