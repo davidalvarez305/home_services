@@ -31,6 +31,18 @@ func CreateCompany(c *fiber.Ctx) error {
 		})
 	}
 
+	if user.RoleID != 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Cannot be assigned to more than one company.",
+		})
+	}
+
+	if user.AccountStatusID != 1 {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Account status ID not active.",
+		})
+	}
+
 	company := &actions.Company{}
 
 	err = company.CreateCompany(input)
