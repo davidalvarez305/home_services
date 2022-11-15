@@ -291,18 +291,12 @@ func InviteUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	// Check that user has permission to invite
-	if user.RoleID != 1 {
-		return c.Status(403).JSON(fiber.Map{
-			"data": "Not allowed to invite other users.",
-		})
-	}
+	// Check user permissions
+	canInvite := user.CheckInvitePermissions(companyId, input.Email)
 
-	// Check that user company && companyId from URL are EQUAL
-
-	if companyId != fmt.Sprintf("%+v", user.CompanyID) {
-		return c.Status(403).JSON(fiber.Map{
-			"data": "Cannot invite users to companies that you're not a part of.",
+	if !canInvite {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Cannot invite that user.",
 		})
 	}
 

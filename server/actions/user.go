@@ -269,3 +269,24 @@ func (users *Users) UpdateCompanyUsers(companyId string, clientInput *Users) err
 
 	return database.DB.Where("company_id = ?", companyId).Save(&users).Find(&users).Error
 }
+
+// Check for user invite permissions
+func (user *User) CheckInvitePermissions(companyId string, clientEmail string) bool {
+
+	// Check that user has permission to invite
+	if user.RoleID != 1 {
+		return false
+	}
+
+	// Check that user company && companyId from URL are EQUAL
+	if companyId != fmt.Sprintf("%+v", user.CompanyID) {
+		return false
+	}
+
+	// User cannot invite themselves
+	if user.Email == clientEmail {
+		return false
+	}
+
+	return true
+}
