@@ -290,3 +290,27 @@ func (user *User) CheckInvitePermissions(companyId string, clientEmail string) b
 
 	return true
 }
+
+func (user *User) CheckCanAcceptInvitation(companyId string, companyToken *CompanyToken) bool {
+
+	// Token expires after 5 minutes.
+	if time.Now().Unix()-companyToken.CreatedAt > 300 {
+		err := companyToken.DeleteCompanyToken()
+		if err != nil {
+			return false
+		}
+		return false
+	}
+
+	// Check that user from session's e-mail and user from token's e-mail are the same
+	if companyToken.Email != user.Email {
+		return false
+	}
+
+	// Check that company in resource path is the same as both the one associated with the token, and the current user
+	if companyId != fmt.Sprintf("%+v", user.CompanyID) || companyId != fmt.Sprintf("%+v", companyToken.CompanyID) {
+		return false
+	}
+
+	return true
+}

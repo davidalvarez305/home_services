@@ -325,6 +325,14 @@ func AddNewUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
+	companyId := c.Params("id")
+
+	if len(companyId) == 0 {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "No company id found in URL params.",
+		})
+	}
+
 	err := c.BodyParser(&user)
 
 	if err != nil {
@@ -344,25 +352,12 @@ func AddNewUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	// Token expires after 5 minutes.
-	if time.Now().Unix()-companyToken.CreatedAt > 300 {
-		err = companyToken.DeleteCompanyToken()
-
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Error validating token.",
-			})
-		}
-
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Token expired.",
-		})
-	}
-
 	// Check that user from session's e-mail and user from token's e-mail are the same
-	if companyToken.Email != user.Email {
-		return c.Status(403).JSON(fiber.Map{
-			"data": "Token was generated for a different e-mail address.",
+	canAccept := user.CheckCanAcceptInvitation(companyId, companyToken)
+
+	if !canAccept {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Cannot accept invitation using that token.",
 		})
 	}
 
@@ -604,19 +599,20 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 
 func AddExistingUserToCompany(c *fiber.Ctx) error {
 	user := &actions.User{}
-	companyId := c.Params("id")
-
-	if len(companyId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Company ID not found in params.",
-		})
-	}
 
 	code := c.Params("code")
 
 	if len(code) == 0 {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "No code found in params.",
+		})
+	}
+
+	companyId := c.Params("id")
+
+	if len(companyId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Company ID not found in params.",
 		})
 	}
 
@@ -639,25 +635,11 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	// Token expires after 5 minutes.
-	if time.Now().Unix()-companyToken.CreatedAt > 300 {
-		err = companyToken.DeleteCompanyToken()
+	canAccept := user.CheckCanAcceptInvitation(companyId, companyToken)
 
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Error validating token.",
-			})
-		}
-
+	if !canAccept {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Token expired.",
-		})
-	}
-
-	// Check that user from session's e-mail and user from token's e-mail are the same
-	if companyToken.Email != user.Email {
-		return c.Status(403).JSON(fiber.Map{
-			"data": "Token was generated for a different e-mail address.",
+			"data": "Cannot accept invitation using that token.",
 		})
 	}
 
