@@ -15,8 +15,8 @@ export default function useAuth() {
     updated_at: 0,
     api_token: "",
     account_status_id: 0,
-    company_id: null,
-    role_id: null,
+    company_id: 0,
+    role_id: 0,
   };
   const [user, setUser] = useState(userProps);
 

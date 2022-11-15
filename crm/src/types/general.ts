@@ -10,8 +10,8 @@ export type User = {
   updated_at: number;
   api_token: string;
   account_status_id: number;
-  company_id: number | null;
-  role_id: number | null;
+  company_id: number;
+  role_id: number;
 };
 
 export type Company = {

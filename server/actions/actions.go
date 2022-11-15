@@ -82,6 +82,11 @@ func InviteUserToCompany(companyId int, email string) error {
 		}
 	}
 
+	// Assert that invitee doesn't own another company
+	if user.Role.ID != 1 {
+		return errors.New("cannot invite users that own other companies")
+	}
+
 	// Generate a company token
 	companyToken := &CompanyToken{}
 	err = companyToken.GenerateCompanyToken(companyId, email)
