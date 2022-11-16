@@ -23,7 +23,7 @@ func Company(router fiber.Router) {
 	company.Put("/:id/user/invite/:code", handlers.AddExistingUserToCompany)
 
 	// Manage Company Locations
-	company.Delete("/:id/location", handlers.GetCompanyServices)
+	company.Delete("/:id/location", handlers.DeleteCompanyLocation)
 
 	// Manage Company Services
 	company.Get("/:id/service", handlers.GetCompanyServices)

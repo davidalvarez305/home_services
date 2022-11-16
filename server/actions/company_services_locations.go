@@ -7,6 +7,10 @@ import (
 	"github.com/davidalvarez305/home_services/server/models"
 )
 
+type CompanyLocation struct {
+	*models.CompanyServicesLocations
+}
+
 type CompanyServicesLocations []*models.CompanyServicesLocations
 
 type CompanyServiceByArea struct {
@@ -36,7 +40,7 @@ func (c *CompanyServicesByArea) GetCompanyServiceAreas(companyId string) error {
 
 // Create service areas only. Doesn't return anything.
 func (c *CompanyServicesLocations) CreateCompanyServiceAreas() error {
-	return database.DB.Save(c).Error
+	return database.DB.Save(&c).Error
 }
 
 func (c *CompanyServicesLocations) CheckPermissions(companyId string, user *User) bool {
@@ -58,4 +62,9 @@ func (c *CompanyServicesLocations) CheckPermissions(companyId string, user *User
 	}
 
 	return true
+}
+
+// Deletes a single location
+func (c *CompanyLocation) DeleteCompanyServiceArea() error {
+	return database.DB.Delete(&c).Error
 }

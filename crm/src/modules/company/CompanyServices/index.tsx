@@ -78,7 +78,12 @@ const CompanyServices: React.FC = () => {
                 <Td>
                   <div className={styles["zip-code-container"]}>
                     <div>{location.zip_code}</div>
-                    <DeleteButton aria-label={"remove"} />
+                    <DeleteButton
+                      aria-label={"remove"}
+                      onClick={() => {
+                        console.log("yo: ", location);
+                      }}
+                    />
                   </div>
                 </Td>
               </Tr>

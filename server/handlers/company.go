@@ -629,7 +629,70 @@ func CreateCompanyServices(c *fiber.Ctx) error {
 	err = updatedServices.GetCompanyServiceAreas(companyId)
 
 	if err != nil {
-		fmt.Printf("%+v", err)
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Error querying services areas.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": updatedServices,
+	})
+}
+
+func DeleteCompanyLocation(c *fiber.Ctx) error {
+	location := &actions.CompanyLocation{}
+
+	companyId := c.Params("id")
+
+	if len(companyId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Company ID not found in URL params.",
+		})
+	}
+	user := &actions.User{}
+
+	err := user.GetUserFromSession(c)
+
+	if err != nil {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Not logged in.",
+		})
+	}
+
+	err = c.BodyParser(&location)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not parse client input.",
+		})
+	}
+
+	// Check that user's company is the same as the company in the URL params
+	if fmt.Sprintf("%+v", user.CompanyID) != companyId {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Not allowed to make changes to that company's services.",
+		})
+	}
+
+	if user.RoleID != 1 || user.AccountStatusID != 1 {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "User doesn't have permissions for that action.",
+		})
+	}
+
+	err = location.DeleteCompanyServiceArea()
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Error querying services areas.",
+		})
+	}
+
+	updatedServices := &actions.CompanyServicesByArea{}
+
+	err = updatedServices.GetCompanyServiceAreas(companyId)
+
+	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Error querying services areas.",
 		})
