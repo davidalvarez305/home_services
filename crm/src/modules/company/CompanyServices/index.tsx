@@ -7,16 +7,23 @@ import styles from "./CompanyServices.module.css";
 import FormSelect from "../../../components/FormSelect";
 import { Form, Formik } from "formik";
 import Button from "../../../components/Button";
-import { Button as ChakraButton } from "@chakra-ui/react";
+import { Button as ChakraButton, useToast } from "@chakra-ui/react";
 import SelectMultipleModal from "../../../components/SelectMultipleModal";
 import useFetch from "../../../hooks/useFetch";
 import { COMPANY_ROUTE, SERVICE_ROUTE } from "../../../constants";
 import { UserContext } from "../../../context/UserContext";
-import { CompanyServicesByArea, Service } from "../../../types/general";
+import {
+  CompanyServicesByArea,
+  Service,
+  Location,
+} from "../../../types/general";
+import { SelectType } from "../../../components/MultiFormSelect";
+import { createServices } from "../../../utils/createServices";
 
 const CompanyServices: React.FC = () => {
   useLoginRequired();
   const ctx = useContext(UserContext);
+  const toast = useToast();
   const [toggleZipCodes, setToggleZipCodes] = useState(false);
   const [filteredAreas, setFilteredAreas] = useState<CompanyServicesByArea[]>(
     []
@@ -82,6 +89,31 @@ const CompanyServices: React.FC = () => {
     );
   }
 
+  function handleSubmit(values: {
+    service: number;
+    locations: SelectType[];
+    service_areas: Location[];
+  }) {
+    makeRequest(
+      {
+        url: COMPANY_ROUTE + `/${ctx?.user.company_id}/service`,
+        method: "POST",
+        data: createServices(values, ctx!.user.company_id),
+      },
+      (res) => {
+        setServices(res.data.data);
+        toast({
+          title: "Success!",
+          description: "Services have been added to the chosen locations.",
+          status: "success",
+          isClosable: true,
+          duration: 5000,
+          variant: "left-accent",
+        });
+      }
+    );
+  }
+
   return (
     <PrimaryLayout screenName="Company Services">
       <div className={styles["main-container"]}>
@@ -119,9 +151,9 @@ const CompanyServices: React.FC = () => {
           </Tbody>
         </Table>
         <Formik
-          initialValues={{ service: "", locations: [] }}
+          initialValues={{ service: 0, locations: [], service_areas: [] }}
           onSubmit={(values) => {
-            console.log("submitted: ", values);
+            handleSubmit(values);
           }}
         >
           {({ values }) => (
@@ -135,7 +167,7 @@ const CompanyServices: React.FC = () => {
                 />
                 <Button
                   onClick={() => {
-                    if (values.service.length === 0) return;
+                    if (!values.service) return;
                     setMultipleSelectModal(true);
                   }}
                   className={"Dark"}

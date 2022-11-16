@@ -46,7 +46,8 @@ export type CreateCompanyInput = {
   zip_code: number;
 };
 
-export type CompanyServiceLocations = {
+// Do I use this anywhere?
+export type CSL = {
   name: string;
   logo: string;
   street_address_line_1: string;
@@ -93,4 +94,10 @@ export type State = {
 export type City = {
   id: number;
   city: string;
+};
+
+export type CompanyServiceLocations = {
+  service_id: number;
+  company_id: number;
+  zip_code_id: number;
 };

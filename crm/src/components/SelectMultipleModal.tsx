@@ -140,6 +140,7 @@ const SelectMultipleModal: React.FC<Props> = ({
   const [selectedState, setSelectedState] = useState(0);
   const [states, setStates] = useState<State[]>([]);
   const formikCtx = useFormikContext();
+  const { setFieldValue } = formikCtx;
 
   const finalRef: React.RefObject<any> = useRef(null);
 
@@ -165,10 +166,14 @@ const SelectMultipleModal: React.FC<Props> = ({
         },
         (res) => {
           setLocations(res.data.data);
+
+          // Set locations to formik form when new locations are set
+          setFieldValue("service_areas", res.data.data);
         }
       );
     }
-  }, [makeRequest, selectedState]);
+  }, [makeRequest, selectedState, setFieldValue]);
+
 
   if (!selectedState) {
     return (

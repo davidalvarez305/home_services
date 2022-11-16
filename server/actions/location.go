@@ -24,7 +24,7 @@ type States []*models.State
 
 func (l *Locations) GetAllLocations(stateId string) error {
 	sql := `
-	SELECT z.id AS zip_code, c.id AS city_id, c.city AS city,
+	SELECT z.id AS id, z.zip_code AS zip_code, c.id AS city_id, c.city AS city,
 	s.id AS state_id, s.state AS state,
 	cty.id AS county_id, cty.county AS county,
 	ctry.id AS country_id, ctry.country AS county
