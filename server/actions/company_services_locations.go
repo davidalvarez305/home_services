@@ -34,8 +34,9 @@ func (c *CompanyServicesByArea) GetCompanyServiceAreas(companyId string) error {
 	return database.DB.Raw(sql, companyId).Scan(&c).Error
 }
 
+// Create service areas only. Doesn't return anything.
 func (c *CompanyServicesLocations) CreateCompanyServiceAreas() error {
-	return database.DB.Save(c).Find(&c).Error
+	return database.DB.Save(c).Error
 }
 
 func (c *CompanyServicesLocations) CheckPermissions(companyId string, user *User) bool {

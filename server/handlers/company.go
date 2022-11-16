@@ -624,7 +624,18 @@ func CreateCompanyServices(c *fiber.Ctx) error {
 		})
 	}
 
+	updatedServices := &actions.CompanyServicesByArea{}
+
+	err = updatedServices.GetCompanyServiceAreas(companyId)
+
+	if err != nil {
+		fmt.Printf("%+v", err)
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Error querying services areas.",
+		})
+	}
+
 	return c.Status(200).JSON(fiber.Map{
-		"data": services,
+		"data": updatedServices,
 	})
 }
