@@ -1,15 +1,13 @@
 package actions
 
 import (
+	"fmt"
+
 	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
 )
 
-type CompanyServicesLocations struct {
-	*models.CompanyServicesLocations
-}
-
-type CompanyServicesLocationsSlice []*models.CompanyServicesLocations
+type CompanyServicesLocations []*models.CompanyServicesLocations
 
 type CompanyServiceByArea struct {
 	ServiceID int    `json:"service_id"`
@@ -36,45 +34,27 @@ func (c *CompanyServicesByArea) GetCompanyServiceAreas(companyId string) error {
 	return database.DB.Raw(sql, companyId).Scan(&c).Error
 }
 
-func (c *CompanyServicesLocationsSlice) CreateCompanyServiceLocations(companyId int) error {
-	return database.DB.Save(&c).Where("company_id = ?", companyId).Find(&c).Error
+func (c *CompanyServicesLocations) CreateCompanyServiceAreas() error {
+	return database.DB.Save(c).Find(&c).Error
 }
 
-func (c *CompanyServicesLocations) DeleteServiceLocation() error {
-	return database.DB.Delete(&c).Error
-}
+func (c *CompanyServicesLocations) CheckPermissions(companyId string, user *User) bool {
 
-func (c *CompanyServicesLocations) FindServiceLocationByZipCode(zipCode string, companyId string) error {
-	return database.DB.Where("zip_code_id = ? AND company_id = ?", zipCode, companyId).First(&c).Error
-}
-
-func (c *CompanyServicesLocations) DeleteServiceByZipCode(zipCode string, companyId string) error {
-	err := c.FindServiceLocationByZipCode(zipCode, companyId)
-
-	if err != nil {
-		return err
+	// Check that the services are all being added to the company from the URL params
+	for _, service := range *c {
+		if fmt.Sprintf("%+v", service.CompanyID) != companyId {
+			return false
+		}
 	}
 
-	return c.DeleteServiceLocation()
-}
-
-func (c *CompanyServicesLocations) FindServiceLocationByCity(cityId string, companyId string) error {
-	sql := `
-	SELECT c.service_id, c.zip_code_id, c.company_id, z.city_id
-	FROM company_services_locations AS c
-	LEFT JOIN zip_code AS z
-	ON z.id = c.zip_code_id
-	WHERE z.city_id = ? AND c.company_id = ?
-	`
-	return database.DB.Raw(sql, cityId, companyId).First(&c).Error
-}
-
-func (c *CompanyServicesLocations) DeleteServiceByCity(cityId string, companyId string) error {
-	err := c.FindServiceLocationByCity(cityId, companyId)
-
-	if err != nil {
-		return err
+	// Check that user's company is the same as the company in the URL params
+	if fmt.Sprintf("%+v", user.CompanyID) != companyId {
+		return false
 	}
 
-	return c.DeleteServiceLocation()
+	if user.RoleID != 1 || user.AccountStatusID != 1 {
+		return false
+	}
+
+	return true
 }

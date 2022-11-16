@@ -78,8 +78,9 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
                 label: e!.label,
               });
               setSelectOptions(newOptions);
-              setSelectedValues((prev) => [...prev, e]);
-              setFieldValue("locations", selectedValues);
+              const newValues = [...selectedValues, e];
+              setSelectedValues(newValues);
+              setFieldValue("locations", newValues);
             }}
             options={selectOptions.map((op) => {
               return {

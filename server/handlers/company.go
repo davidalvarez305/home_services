@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/actions"
-	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/gofiber/fiber/v2"
 )
@@ -69,160 +68,6 @@ func CreateCompany(c *fiber.Ctx) error {
 
 	return c.Status(201).JSON(fiber.Map{
 		"data": company,
-	})
-}
-
-func DeleteLocation(c *fiber.Ctx) error {
-	location := &actions.CompanyServicesLocations{}
-	updatedLocations := &actions.CompanyServicesByArea{}
-
-	companyId := c.Params("id")
-
-	if len(companyId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Company ID not found in URL Params.",
-		})
-	}
-
-	zipCode := c.Query("zip_code")
-
-	// Delete Location by Using Zip Code
-	if len(zipCode) > 0 {
-		err := location.DeleteServiceByZipCode(zipCode, companyId)
-
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Could not delete the location associated with that service.",
-			})
-		}
-
-		err = updatedLocations.GetCompanyServiceAreas(companyId)
-
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Could not retrieve updated locations.",
-			})
-		}
-
-		return c.Status(200).JSON(fiber.Map{
-			"data": updatedLocations,
-		})
-	}
-
-	city := c.Query("city")
-
-	// Delete Location by Using City
-	if len(zipCode) > 0 {
-		err := location.DeleteServiceByCity(city, companyId)
-
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Could not delete the location associated with that service.",
-			})
-		}
-
-		err = updatedLocations.GetCompanyServiceAreas(companyId)
-
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Could not retrieve updated locations.",
-			})
-		}
-
-		return c.Status(200).JSON(fiber.Map{
-			"data": updatedLocations,
-		})
-	}
-
-	return c.Status(400).JSON(fiber.Map{
-		"data": "Bad Input.",
-	})
-}
-
-// This endpoint expects a slice of company_services_locations. Single structs will not work.
-func CreateServicesByZipCode(c *fiber.Ctx) error {
-	services := &actions.CompanyServicesLocationsSlice{}
-
-	err := c.BodyParser(&services)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Unable to Parse Request Body.",
-		})
-	}
-
-	companyId, err := actions.GetCompanyIdFromSession(c)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Unable to Find Company By User Session.",
-		})
-	}
-
-	err = services.CreateCompanyServiceLocations(companyId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Unable to Create Services.",
-		})
-	}
-
-	return c.Status(200).JSON(fiber.Map{
-		"data": services,
-	})
-}
-
-func CreateServicesByCity(c *fiber.Ctx) error {
-	var input []types.CreateServicesInput
-	var services actions.CompanyServicesLocationsSlice
-
-	err := c.BodyParser(&input)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Unable to Parse Request Body.",
-		})
-	}
-
-	for _, service := range input {
-		var zipCodes actions.ZipCodes
-
-		err = zipCodes.GetZipCodesByCity(service.CityID)
-
-		if err != nil {
-			fmt.Printf("Could not get zip codes for city: %v", service.CityID)
-			continue
-		}
-
-		for _, zipCode := range zipCodes {
-			service := models.CompanyServicesLocations{
-				ZipCodeID: zipCode.ID,
-				ServiceID: service.ServiceID,
-				CompanyID: service.CompanyID,
-			}
-
-			services = append(services, &service)
-		}
-	}
-
-	if len(services) == 0 {
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Unable to Create Services.",
-			})
-		}
-	}
-
-	err = services.CreateCompanyServiceLocations(services[0].CompanyID)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Unable to Create Services.",
-		})
-	}
-
-	return c.Status(200).JSON(fiber.Map{
-		"data": services,
 	})
 }
 
@@ -587,7 +432,6 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 	err := c.BodyParser(&input)
 
 	if err != nil {
-		fmt.Printf("%+v", err.Error())
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Could not parse client input.",
 		})
@@ -725,6 +569,56 @@ func GetCompanyServices(c *fiber.Ctx) error {
 
 	if err != nil {
 		fmt.Printf("%+v", err)
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Error querying services areas.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": services,
+	})
+}
+
+func CreateCompanyServices(c *fiber.Ctx) error {
+	services := &actions.CompanyServicesLocations{}
+
+	companyId := c.Params("id")
+
+	if len(companyId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Company ID not found in URL params.",
+		})
+	}
+	user := &actions.User{}
+
+	err := user.GetUserFromSession(c)
+
+	if err != nil {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Not logged in.",
+		})
+	}
+
+	err = c.BodyParser(&services)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not parse client input.",
+		})
+	}
+
+	// Check Permissions
+	canCreate := services.CheckPermissions(companyId, user)
+
+	if !canCreate {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Not allowed to add services.",
+		})
+	}
+
+	err = services.CreateCompanyServiceAreas()
+
+	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Error querying services areas.",
 		})
