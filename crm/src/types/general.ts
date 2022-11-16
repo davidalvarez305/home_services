@@ -60,6 +60,7 @@ export type CSL = {
 };
 
 export type CompanyServicesByArea = {
+  id: number;
   service_id: number;
   service: string;
   zip_code_id: number;
@@ -97,6 +98,7 @@ export type City = {
 };
 
 export type CompanyServiceLocations = {
+  id: number;
   service_id: number;
   company_id: number;
   zip_code_id: number;

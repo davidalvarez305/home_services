@@ -7,13 +7,10 @@ import (
 	"github.com/davidalvarez305/home_services/server/models"
 )
 
-type CompanyLocation struct {
-	*models.CompanyServicesLocations
-}
-
 type CompanyServicesLocations []*models.CompanyServicesLocations
 
 type CompanyServiceByArea struct {
+	ID        int    `json:"id"`
 	ServiceID int    `json:"service_id"`
 	Service   string `json:"service"`
 	ZipCodeID int    `json:"zip_code_id"`
@@ -26,7 +23,7 @@ type CompanyServicesByArea []*CompanyServiceByArea
 
 func (c *CompanyServicesByArea) GetCompanyServiceAreas(companyId string) error {
 	sql := `
-	SELECT s.id AS service_id, s.service AS service, z.id AS zip_code_id, z.zip_code AS zip_code, c.id AS city_id, c.city AS city
+	SELECT csl.id AS id, s.id AS service_id, s.service AS service, z.id AS zip_code_id, z.zip_code AS zip_code, c.id AS city_id, c.city AS city
 	FROM company_services_locations AS csl
 	LEFT JOIN zip_code AS z
 	ON z.id = csl.zip_code_id
@@ -65,6 +62,6 @@ func (c *CompanyServicesLocations) CheckPermissions(companyId string, user *User
 }
 
 // Deletes a single location
-func (c *CompanyLocation) DeleteCompanyServiceArea() error {
+func (c *CompanyServicesLocations) DeleteCompanyServiceAreas() error {
 	return database.DB.Delete(&c).Error
 }

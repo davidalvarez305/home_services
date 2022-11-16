@@ -16,9 +16,11 @@ import {
   CompanyServicesByArea,
   Service,
   Location,
+  CompanyServiceLocations,
 } from "../../../types/general";
 import { SelectType } from "../../../components/MultiFormSelect";
 import { createServices } from "../../../utils/createServices";
+import RequestErrorMessage from "../../../components/RequestErrorMessage";
 
 const CompanyServices: React.FC = () => {
   useLoginRequired();
@@ -60,37 +62,45 @@ const CompanyServices: React.FC = () => {
     fetchServices();
   }, [makeRequest, ctx?.user.company_id, fetchServices]);
 
-  if (toggleZipCodes) {
-    return (
-      <PrimaryLayout screenName="Company Services">
-        <Table>
-          <Thead>
-            <Tr>
-              {["City", "Zip Code"].map((header) => (
-                <Td key={header}>{header}</Td>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {filteredAreas.map((location, index) => (
-              <Tr key={index}>
-                <Td>{location.city}</Td>
-                <Td>
-                  <div className={styles["zip-code-container"]}>
-                    <div>{location.zip_code}</div>
-                    <DeleteButton
-                      aria-label={"remove"}
-                      onClick={() => {
-                        console.log("yo: ", location);
-                      }}
-                    />
-                  </div>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </PrimaryLayout>
+  function handleDeleteLocation(location: CompanyServicesByArea) {
+    makeRequest(
+      {
+        url: COMPANY_ROUTE + `/${ctx?.user.company_id}/location`,
+        method: "DELETE",
+        data: [
+          {
+            id: location.id,
+            service_id: location.service_id,
+            company_id: ctx?.user.company_id,
+            zip_code_id: location.zip_code_id,
+          },
+        ],
+      },
+      (res) => {
+        setServices(res.data.data);
+        setToggleZipCodes(false);
+      }
+    );
+  }
+  function handleMultipleDeleteLocation(locations: CompanyServicesByArea[]) {
+    const { company_id } = ctx!.user;
+    const payload: CompanyServiceLocations[] = locations.map(
+      ({ id, service_id, zip_code_id }) => {
+        // Build payload
+        return { id, company_id, service_id, zip_code_id };
+      }
+    );
+
+    makeRequest(
+      {
+        url: COMPANY_ROUTE + `/${ctx?.user.company_id}/location`,
+        method: "DELETE",
+        data: payload,
+      },
+      (res) => {
+        setServices(res.data.data);
+        setToggleZipCodes(false);
+      }
     );
   }
 
@@ -119,6 +129,38 @@ const CompanyServices: React.FC = () => {
     );
   }
 
+  if (toggleZipCodes) {
+    return (
+      <PrimaryLayout screenName="Company Services">
+        <Table>
+          <Thead>
+            <Tr>
+              {["City", "Zip Code"].map((header) => (
+                <Td key={header}>{header}</Td>
+              ))}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {filteredAreas.map((location, index) => (
+              <Tr key={index}>
+                <Td>{location.city}</Td>
+                <Td>
+                  <div className={styles["zip-code-container"]}>
+                    <div>{location.zip_code}</div>
+                    <DeleteButton
+                      aria-label={"remove"}
+                      onClick={() => handleDeleteLocation(location)}
+                    />
+                  </div>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </PrimaryLayout>
+    );
+  }
+
   return (
     <PrimaryLayout screenName="Company Services">
       <div className={styles["main-container"]}>
@@ -135,21 +177,28 @@ const CompanyServices: React.FC = () => {
               <Tr key={index}>
                 <Td>{row.service}</Td>
                 <Td>
-                  <ChakraButton
-                    onClick={() => {
-                      setFilteredAreas(() => {
-                        const service = serviceAreas.filter(
-                          (each) => each.service === row.service
-                        );
-                        return service;
-                      });
-                      setToggleZipCodes((prev) => !prev);
-                    }}
-                    variant={"outline"}
-                    colorScheme={"teal"}
-                  >
-                    See
-                  </ChakraButton>
+                  <div className={styles["zip-code-container"]}>
+                    <ChakraButton
+                      onClick={() => {
+                        setFilteredAreas(() => {
+                          const service = serviceAreas.filter(
+                            (each) => each.service === row.service
+                          );
+                          return service;
+                        });
+                        setToggleZipCodes((prev) => !prev);
+                      }}
+                      variant={"outline"}
+                      colorScheme={"teal"}
+                    >
+                      See
+                    </ChakraButton>
+                    <DeleteButton
+                      aria-label={"remove"}
+                      onClick={() => handleMultipleDeleteLocation([row])}
+                      isLoading={isLoading}
+                    />
+                  </div>
                 </Td>
               </Tr>
             ))}
@@ -170,6 +219,7 @@ const CompanyServices: React.FC = () => {
                     return { value: service.id, label: service.service };
                   })}
                 />
+                <RequestErrorMessage {...error} />
                 <Button
                   onClick={() => {
                     if (!values.service) return;

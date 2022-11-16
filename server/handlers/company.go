@@ -640,7 +640,7 @@ func CreateCompanyServices(c *fiber.Ctx) error {
 }
 
 func DeleteCompanyLocation(c *fiber.Ctx) error {
-	location := &actions.CompanyLocation{}
+	locations := &actions.CompanyServicesLocations{}
 
 	companyId := c.Params("id")
 
@@ -659,7 +659,7 @@ func DeleteCompanyLocation(c *fiber.Ctx) error {
 		})
 	}
 
-	err = c.BodyParser(&location)
+	err = c.BodyParser(&locations)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -680,7 +680,7 @@ func DeleteCompanyLocation(c *fiber.Ctx) error {
 		})
 	}
 
-	err = location.DeleteCompanyServiceArea()
+	err = locations.DeleteCompanyServiceAreas()
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
