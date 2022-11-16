@@ -96,7 +96,6 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
             <SelectedComponent
               selected={value}
               onClick={() => {
-
                 // Remove the deleted option from the selected values ('the list')
                 const newSelectedValues = removeOptionAtIndex(
                   selectedValues as any,
@@ -139,6 +138,7 @@ const SelectMultipleModal: React.FC<Props> = ({
   const [locations, setLocations] = useState<Location[]>([]);
   const [selectedState, setSelectedState] = useState(0);
   const [states, setStates] = useState<State[]>([]);
+  const formikCtx = useFormikContext();
 
   const finalRef: React.RefObject<any> = useRef(null);
 
@@ -220,54 +220,45 @@ const SelectMultipleModal: React.FC<Props> = ({
   return (
     <>
       {locations.length > 0 && (
-        <Formik
-          initialValues={{ locations }}
-          onSubmit={(values) => console.log(values)}
+        <Modal
+          size="3xl"
+          finalFocusRef={finalRef}
+          isOpen={selectMultipleModal}
+          onClose={() => setSelectMultipleModal(false)}
         >
-          {({ values, submitForm }) => (
-            <Form>
-              <Modal
-                size="3xl"
-                finalFocusRef={finalRef}
-                isOpen={selectMultipleModal}
-                onClose={() => setSelectMultipleModal(false)}
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>{`Adding Locations...`}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <MultiSelect
+                options={locations.map((location) => {
+                  return {
+                    value: location.city_id,
+                    label: location.city,
+                  };
+                })}
+              />
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                type="submit"
+                onClick={formikCtx.submitForm}
               >
-                <ModalOverlay />
-                <ModalContent>
-                  <ModalHeader>{`Adding Locations...`}</ModalHeader>
-                  <ModalCloseButton />
-                  <ModalBody>
-                    <MultiSelect
-                      options={values.locations.map((location) => {
-                        return {
-                          value: location.city_id,
-                          label: location.city,
-                        };
-                      })}
-                    />
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button
-                      colorScheme="blue"
-                      mr={3}
-                      type="submit"
-                      onClick={submitForm}
-                    >
-                      Submit
-                    </Button>
-                    <Button
-                      colorScheme="red"
-                      mr={3}
-                      onClick={() => setSelectMultipleModal(false)}
-                    >
-                      Close
-                    </Button>
-                  </ModalFooter>
-                </ModalContent>
-              </Modal>
-            </Form>
-          )}
-        </Formik>
+                Submit
+              </Button>
+              <Button
+                colorScheme="red"
+                mr={3}
+                onClick={() => setSelectMultipleModal(false)}
+              >
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       )}
     </>
   );

@@ -119,9 +119,9 @@ const CompanyServices: React.FC = () => {
           </Tbody>
         </Table>
         <Formik
-          initialValues={{ service: "" }}
-          onSubmit={() => {
-            console.log("submitted");
+          initialValues={{ service: "", locations: [] }}
+          onSubmit={(values) => {
+            console.log("submitted: ", values);
           }}
         >
           {({ values }) => (
@@ -143,16 +143,16 @@ const CompanyServices: React.FC = () => {
                   Add
                 </Button>
               </div>
+              {multipleSelectModal && (
+                <SelectMultipleModal
+                  selectMultipleModal={multipleSelectModal}
+                  setSelectMultipleModal={setMultipleSelectModal}
+                />
+              )}
             </Form>
           )}
         </Formik>
       </div>
-      {multipleSelectModal && (
-        <SelectMultipleModal
-          selectMultipleModal={multipleSelectModal}
-          setSelectMultipleModal={setMultipleSelectModal}
-        />
-      )}
     </PrimaryLayout>
   );
 };
