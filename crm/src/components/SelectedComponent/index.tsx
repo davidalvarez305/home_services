@@ -9,7 +9,7 @@ interface Props {
     value?: string | number;
     label?: string;
   }>;
-  onClick: MouseEventHandler<SVGElement>;
+  onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const SelectedComponent: React.FC<Props> = ({ selected, onClick }) => {
@@ -24,7 +24,7 @@ export const SelectedComponent: React.FC<Props> = ({ selected, onClick }) => {
               height={9}
               aria-label={"removeUsers"}
               className={styles["line"]}
-              minusButton={onClick}
+              onClick={onClick}
             />
           </div>
           <div className={styles["label"]}>

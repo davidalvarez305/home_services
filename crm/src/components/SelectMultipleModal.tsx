@@ -68,12 +68,12 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
             }}
             htmlFor={"locations"}
           >
-            {"Select Locations"}
+            {"Search for a city..."}
           </FormLabel>
           <ReactSelect
             value={emptyValue}
             onChange={(e) => {
-              const newOptions = removeOptionAtIndex(options, {
+              const newOptions = removeOptionAtIndex(selectOptions, {
                 value: e!.value,
                 label: e!.label,
               });
@@ -96,6 +96,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
             <SelectedComponent
               selected={value}
               onClick={() => {
+
                 // Remove the deleted option from the selected values ('the list')
                 const newSelectedValues = removeOptionAtIndex(
                   selectedValues as any,
