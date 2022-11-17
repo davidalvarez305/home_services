@@ -30,6 +30,7 @@ const CompanyServices: React.FC = () => {
   const [filteredAreas, setFilteredAreas] = useState<CompanyServicesByArea[]>(
     []
   );
+  const [filterService, setFilterService] = useState("");
   const [multipleSelectModal, setMultipleSelectModal] = useState(false);
   const { makeRequest, isLoading, error } = useFetch();
   const [serviceAreas, setServiceAreas] = useState<CompanyServicesByArea[]>([]);
@@ -77,8 +78,15 @@ const CompanyServices: React.FC = () => {
         ],
       },
       (res) => {
-        setServices(res.data.data);
+        setServiceAreas(res.data.data);
         setToggleZipCodes(false);
+
+        // This updates the filtered locations by using the state in the "clicked" service.
+        setFilteredAreas(() => {
+          const data: CompanyServicesByArea[] = res.data.data;
+          const service = data.filter((each) => each.service === filterService);
+          return service;
+        });
       }
     );
   }
@@ -98,8 +106,15 @@ const CompanyServices: React.FC = () => {
         data: payload,
       },
       (res) => {
-        setServices(res.data.data);
+        setServiceAreas(res.data.data);
         setToggleZipCodes(false);
+
+        // This updates the filtered locations by using the state in the "clicked" service.
+        setFilteredAreas(() => {
+          const data: CompanyServicesByArea[] = res.data.data;
+          const service = data.filter((each) => each.service === filterService);
+          return service;
+        });
       }
     );
   }
@@ -116,7 +131,8 @@ const CompanyServices: React.FC = () => {
         data: createServices(values, ctx!.user.company_id),
       },
       (res) => {
-        setServices(res.data.data);
+        setServiceAreas(res.data.data);
+        setMultipleSelectModal(false);
         toast({
           title: "Success!",
           description: "Services have been added to the chosen locations.",
@@ -180,6 +196,7 @@ const CompanyServices: React.FC = () => {
                   <div className={styles["zip-code-container"]}>
                     <ChakraButton
                       onClick={() => {
+                        setFilterService(row.service);
                         setFilteredAreas(() => {
                           const service = serviceAreas.filter(
                             (each) => each.service === row.service

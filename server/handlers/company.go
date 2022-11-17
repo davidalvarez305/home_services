@@ -568,7 +568,6 @@ func GetCompanyServices(c *fiber.Ctx) error {
 	err := services.GetCompanyServiceAreas(companyId)
 
 	if err != nil {
-		fmt.Printf("%+v", err)
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Error querying services areas.",
 		})
