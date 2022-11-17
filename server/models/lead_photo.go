@@ -1,6 +1,6 @@
 package models
 
-type LeadPhotos struct {
+type LeadPhoto struct {
 	ID          int    `json:"id"`
 	ImageURL    string `gorm:"unique;not null" json:"image_url"`
 	Description string `json:"description"`

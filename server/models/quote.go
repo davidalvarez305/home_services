@@ -7,4 +7,6 @@ type Quote struct {
 	CreatedAt int64      `gorm:"not null;column:created_at" json:"created_at"`
 	UpdatedAt int64      `gorm:"not null;column:updated_at" json:"updated_at"`
 	Service   []*Service `gorm:"many2many:quote_services" json:"-"`
+	LeadID    int        `gorm:"column:lead_id" json:"lead_id"`
+	Lead      *Lead      `gorm:"not null;column:lead_id;foreignKey:LeadID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 }
