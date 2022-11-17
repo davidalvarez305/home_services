@@ -15,7 +15,13 @@ export const createServices = (
   values.service_areas.forEach((area) => {
     values.locations.forEach((location) => {
       if (area.city_id === location.value) {
-        zipCodes.push(area.zip_code);
+        // Split zip codes by comma && push them to the array one by one
+        const zip_codes = area.zip_codes.split(",");
+        if (zip_codes.length > 0) {
+          zip_codes.forEach((zip_code) => {
+            zipCodes.push(zip_code);
+          });
+        }
       }
     });
   });

@@ -174,7 +174,6 @@ const SelectMultipleModal: React.FC<Props> = ({
     }
   }, [makeRequest, selectedState, setFieldValue]);
 
-
   if (!selectedState) {
     return (
       <Modal

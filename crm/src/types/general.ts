@@ -74,7 +74,7 @@ export type Service = {
 };
 
 export type ZipCode = {
-  zip_code: string;
+  zip_codes: string;
   city_id: number;
   city: string;
   county_id: number;
