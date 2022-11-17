@@ -36,6 +36,17 @@ const CompanyServices: React.FC = () => {
   const { makeRequest, isLoading, error } = useFetch();
   const [serviceAreas, setServiceAreas] = useState<CompanyServicesByArea[]>([]);
   const [services, setServices] = useState<Service[]>([]);
+  const [uniqueCompanyServices, setUniqueCompanyServices] = useState<string[]>(
+    []
+  );
+
+  function adjustData(serviceAreas: CompanyServicesByArea[]) {
+    const unique = [
+      ...new Set(serviceAreas.map((location) => location.service)),
+    ] as string[];
+    setUniqueCompanyServices(unique);
+    setServiceAreas(serviceAreas);
+  }
 
   const fetchServices = useCallback(() => {
     makeRequest(
@@ -55,7 +66,7 @@ const CompanyServices: React.FC = () => {
           url: COMPANY_ROUTE + `/${ctx?.user.company_id}/service`,
         },
         (res) => {
-          setServiceAreas(res.data.data);
+          adjustData(res.data.data);
         }
       );
     }
@@ -79,19 +90,25 @@ const CompanyServices: React.FC = () => {
         ],
       },
       (res) => {
-        setServiceAreas(res.data.data);
+        adjustData(res.data.data);
         setToggleZipCodes(false);
 
         // This updates the filtered locations by using the state in the "clicked" service.
-        setFilteredAreas(() => {
-          const data: CompanyServicesByArea[] = res.data.data;
-          const service = data.filter((each) => each.service === filterService);
-          return service;
-        });
+        if (filterService.length > 0) {
+          setFilteredAreas(() => {
+            const data: CompanyServicesByArea[] = res.data.data;
+            const service = data.filter(
+              (each) => each.service === filterService
+            );
+            return service;
+          });
+        }
       }
     );
   }
-  function handleMultipleDeleteLocation(locations: CompanyServicesByArea[]) {
+  function handleMultipleDeleteLocation(service: string) {
+    const locations = serviceAreas.filter((serviceArea) => serviceArea.service === service);
+
     const { company_id } = ctx!.user;
     const payload: CompanyServiceLocations[] = locations.map(
       ({ id, service_id, zip_code }) => {
@@ -107,15 +124,19 @@ const CompanyServices: React.FC = () => {
         data: payload,
       },
       (res) => {
-        setServiceAreas(res.data.data);
+        adjustData(res.data.data);
         setToggleZipCodes(false);
 
         // This updates the filtered locations by using the state in the "clicked" service.
-        setFilteredAreas(() => {
-          const data: CompanyServicesByArea[] = res.data.data;
-          const service = data.filter((each) => each.service === filterService);
-          return service;
-        });
+        if (filterService.length > 0) {
+          setFilteredAreas(() => {
+            const data: CompanyServicesByArea[] = res.data.data;
+            const service = data.filter(
+              (each) => each.service === filterService
+            );
+            return service;
+          });
+        }
       }
     );
   }
@@ -190,19 +211,19 @@ const CompanyServices: React.FC = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {serviceAreas.map((row, index) => (
+            {uniqueCompanyServices.map((service, index) => (
               <Tr key={index}>
-                <Td>{row.service}</Td>
+                <Td>{service}</Td>
                 <Td>
                   <div className={styles["zip-code-container"]}>
                     <ChakraButton
                       onClick={() => {
-                        setFilterService(row.service);
+                        setFilterService(service);
                         setFilteredAreas(() => {
-                          const service = serviceAreas.filter(
-                            (each) => each.service === row.service
+                          const services = serviceAreas.filter(
+                            (each) => each.service === service
                           );
-                          return service;
+                          return services;
                         });
                         setToggleZipCodes((prev) => !prev);
                       }}
@@ -213,7 +234,7 @@ const CompanyServices: React.FC = () => {
                     </ChakraButton>
                     <DeleteButton
                       aria-label={"remove"}
-                      onClick={() => handleMultipleDeleteLocation([row])}
+                      onClick={() => handleMultipleDeleteLocation(service)}
                       isLoading={isLoading}
                     />
                   </div>
