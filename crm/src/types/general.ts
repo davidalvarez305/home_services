@@ -63,7 +63,6 @@ export type CompanyServicesByArea = {
   id: number;
   service_id: number;
   service: string;
-  zip_code_id: number;
   zip_code: string;
   city_id: number;
   city: string;
@@ -75,8 +74,7 @@ export type Service = {
 };
 
 export type Location = {
-  id: number;
-  zip_code: string;
+  zip_codes: string;
   city_id: number;
   city: string;
   county_id: number;
@@ -101,5 +99,5 @@ export type CompanyServiceLocations = {
   id: number;
   service_id: number;
   company_id: number;
-  zip_code_id: number;
+  zip_code: string;
 };

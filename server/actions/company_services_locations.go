@@ -13,7 +13,6 @@ type CompanyServiceByArea struct {
 	ID        int    `json:"id"`
 	ServiceID int    `json:"service_id"`
 	Service   string `json:"service"`
-	ZipCodeID int    `json:"zip_code_id"`
 	ZipCode   string `json:"zip_code"`
 	CityID    int    `json:"city_id"`
 	City      string `json:"city"`
@@ -23,10 +22,10 @@ type CompanyServicesByArea []*CompanyServiceByArea
 
 func (c *CompanyServicesByArea) GetCompanyServiceAreas(companyId string) error {
 	sql := `
-	SELECT csl.id AS id, s.id AS service_id, s.service AS service, z.id AS zip_code_id, z.zip_code AS zip_code, c.id AS city_id, c.city AS city
+	SELECT csl.id AS id, s.id AS service_id, s.service AS service, z.zip_code AS zip_code, c.id AS city_id, c.city AS city
 	FROM company_services_locations AS csl
 	LEFT JOIN zip_code AS z
-	ON z.id = csl.zip_code_id
+	ON z.zip_code = csl.zip_code
 	LEFT JOIN city AS c
 	ON c.id = z.city_id
 	LEFT JOIN service AS s

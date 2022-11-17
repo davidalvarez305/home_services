@@ -73,7 +73,7 @@ const CompanyServices: React.FC = () => {
             id: location.id,
             service_id: location.service_id,
             company_id: ctx?.user.company_id,
-            zip_code_id: location.zip_code_id,
+            zip_code: location.zip_code,
           },
         ],
       },
@@ -93,9 +93,9 @@ const CompanyServices: React.FC = () => {
   function handleMultipleDeleteLocation(locations: CompanyServicesByArea[]) {
     const { company_id } = ctx!.user;
     const payload: CompanyServiceLocations[] = locations.map(
-      ({ id, service_id, zip_code_id }) => {
+      ({ id, service_id, zip_code }) => {
         // Build payload
-        return { id, company_id, service_id, zip_code_id };
+        return { id, company_id, service_id, zip_code };
       }
     );
 

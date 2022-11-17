@@ -6,8 +6,7 @@ import (
 )
 
 type Location struct {
-	ID        int    `json:"id"`
-	ZipCode   string `json:"zip_code"`
+	ZipCodes  string `json:"zip_codes"`
 	CityID    int    `json:"city_id"`
 	City      string `json:"city"`
 	CountyID  int    `json:"county_id"`
@@ -24,10 +23,11 @@ type States []*models.State
 
 func (l *Locations) GetAllLocations(stateId string) error {
 	sql := `
-	SELECT z.id AS id, z.zip_code AS zip_code, c.id AS city_id, c.city AS city,
+	SELECT c.id AS city_id, c.city AS city,
 	s.id AS state_id, s.state AS state,
 	cty.id AS county_id, cty.county AS county,
-	ctry.id AS country_id, ctry.country AS county
+	ctry.id AS country_id, ctry.country AS county,
+	string_agg(z.zip_code, ',') AS zip_codes
 	FROM zip_code AS z
 	LEFT JOIN city AS c
 	ON c.id = z.city_id
@@ -37,7 +37,8 @@ func (l *Locations) GetAllLocations(stateId string) error {
 	ON s.id = z.state_id
 	LEFT JOIN country AS ctry
 	ON ctry.id = z.country_id
-	WHERE s.id = ?;
+	WHERE s.id = ?
+	GROUP BY c.id, c.city, s.id, s.state, cty.id, cty.county , ctry.id, ctry.country;
 	`
 	return database.DB.Raw(sql, stateId).Scan(&l).Error
 }
