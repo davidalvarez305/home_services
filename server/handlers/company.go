@@ -619,7 +619,7 @@ func CreateCompanyServices(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Error querying services areas.",
+			"data": "Error deleting service areas.",
 		})
 	}
 
@@ -683,7 +683,7 @@ func DeleteCompanyLocation(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Error querying services areas.",
+			"data": "Error deleting service area.",
 		})
 	}
 

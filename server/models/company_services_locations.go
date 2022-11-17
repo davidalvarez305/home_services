@@ -7,5 +7,5 @@ type CompanyServicesLocations struct {
 	CompanyID int      `json:"company_id"`
 	Company   *Company `gorm:"uniqueIndex:compositeindex;not null;column:company_id;foreignKey:CompanyID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 	Zip       string   `json:"zip_code"`
-	ZipCode   *ZipCode `gorm:"uniqueIndex:compositeindex;not null;column:zip_code;foreignKey:ZipCodeID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
+	ZipCode   *ZipCode `gorm:"uniqueIndex:compositeindex;not null;column:zip_code;foreignKey:Zip;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 }
