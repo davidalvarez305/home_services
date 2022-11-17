@@ -17,6 +17,7 @@ import {
   Service,
   Location,
   CompanyServiceLocations,
+  ZipCode,
 } from "../../../types/general";
 import { SelectType } from "../../../components/MultiFormSelect";
 import { createServices } from "../../../utils/createServices";
@@ -122,7 +123,7 @@ const CompanyServices: React.FC = () => {
   function handleSubmit(values: {
     service: number;
     locations: SelectType[];
-    service_areas: Location[];
+    service_areas: ZipCode[];
   }) {
     makeRequest(
       {
