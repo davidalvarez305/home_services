@@ -72,7 +72,7 @@ func GetLeadInfo(c *fiber.Ctx) error {
 		})
 	}
 
-	err := lead.GetLeadDetails(leadId)
+	err := lead.GetLead(leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -144,5 +144,44 @@ func UpdateLead(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(fiber.Map{
 		"data": lead,
+	})
+}
+
+func DeleteLead(c *fiber.Ctx) error {
+	leadId := c.Params("id")
+	lead := &actions.Lead{}
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	err := lead.Delete(leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not delete lead.",
+		})
+	}
+
+	return c.Status(204).JSON(fiber.Map{
+		"data": "OK!",
+	})
+}
+
+func LeadLogout(c *fiber.Ctx) error {
+	lead := &actions.Lead{}
+
+	err := lead.LeadLogout(c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not logout.",
+		})
+	}
+
+	return c.Status(204).JSON(fiber.Map{
+		"data": "OK!",
 	})
 }

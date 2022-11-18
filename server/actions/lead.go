@@ -5,7 +5,9 @@ import (
 
 	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
+	"github.com/davidalvarez305/home_services/server/sessions"
 	"github.com/davidalvarez305/home_services/server/types"
+	"github.com/gofiber/fiber/v2"
 )
 
 type Lead struct {
@@ -14,6 +16,10 @@ type Lead struct {
 
 func (l *Lead) Save() error {
 	return database.DB.Save(&l).First(&l).Error
+}
+
+func (l *Lead) Delete(leadId string) error {
+	return database.DB.Where("id = ?", leadId).Delete(&l).Error
 }
 
 func (l *Lead) GetLead(leadId string) error {
@@ -64,6 +70,15 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 	return nil
 }
 
-func (l *Lead) GetLeadDetails(leadId string) error {
-	return database.DB.Where("id = ?", leadId).Find(&l).Error
+// Destroy session.
+func (l *Lead) LeadLogout(c *fiber.Ctx) error {
+	sess, err := sessions.Sessions.Get(c)
+
+	if err != nil {
+		return err
+	}
+
+	err = sess.Destroy()
+
+	return err
 }
