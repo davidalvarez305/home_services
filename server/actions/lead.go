@@ -1,6 +1,8 @@
 package actions
 
 import (
+	"time"
+
 	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/davidalvarez305/home_services/server/types"
@@ -16,6 +18,7 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 	l.LastName = input.LastName
 	l.Email = input.Email
 	l.PhoneNumber = input.PhoneNumber
+	l.CreatedAt = time.Now().Unix()
 
 	l.LeadMarketing = &models.LeadMarketing{
 		Campaign:     input.Campaign,
