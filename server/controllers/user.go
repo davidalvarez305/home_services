@@ -19,7 +19,7 @@ func User(router fiber.Router) {
 	user.Put("/", handlers.UpdateUser)
 	user.Delete("/", handlers.DeleteUser)
 	user.Post("/logout", handlers.Logout)
-	user.Get("/change-password", handlers.RequestChangePasswordCode)
 	user.Put("/change-picture", handlers.ChangeProfilePicture)
+	user.Get("/change-password", handlers.RequestChangePasswordCode)
 	user.Put("/change-password/:code", handlers.ChangePassword)
 }

@@ -12,6 +12,14 @@ type Lead struct {
 	*models.Lead
 }
 
+func (l *Lead) Save() error {
+	return database.DB.Save(&l).First(&l).Error
+}
+
+func (l *Lead) GetLead(leadId string) error {
+	return database.DB.Where("id = ?", leadId).First(&l).Error
+}
+
 func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 
 	l.FirstName = input.FirstName
@@ -54,4 +62,8 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 	}
 
 	return nil
+}
+
+func (l *Lead) GetLeadDetails(leadId string) error {
+	return database.DB.Where("id = ?", leadId).Find(&l).Error
 }

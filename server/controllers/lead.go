@@ -9,8 +9,9 @@ func Lead(router fiber.Router) {
 
 	lead := router.Group("lead")
 
-	lead.Post("/", handlers.CreateLead)     // Create lead
-	lead.Post("/login", handlers.LeadLogin) // Login portal for leads
+	lead.Post("/", handlers.CreateLead)                                 // Create lead
+	lead.Post("/login", handlers.LeadLogin)                             // Login portal for leads
+	lead.Put("/:id/change-password/:code", handlers.ChangeLeadPassword) // Create password after generating a lead
 
 	// Lead Specific Endpoints
 	lead.Get("/:id", handlers.GetLeadInfo)   // Query user

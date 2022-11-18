@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"time"
+
 	"github.com/davidalvarez305/home_services/server/actions"
+	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/davidalvarez305/home_services/server/utils"
 	"github.com/gofiber/fiber/v2"
@@ -51,6 +54,91 @@ func CreateLead(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Failed to create a lead.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": lead,
+	})
+}
+
+func GetLeadInfo(c *fiber.Ctx) error {
+	leadId := c.Params("id")
+	lead := &actions.Lead{}
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	err := lead.GetLeadDetails(leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to query account details.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": lead,
+	})
+}
+
+func UpdateLead(c *fiber.Ctx) error {
+	leadId := c.Params("id")
+	action := c.Query("action")
+	lead := &actions.Lead{}
+	input := &actions.Lead{}
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	if len(action) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Action desired not included in query string.",
+		})
+	}
+
+	err := c.BodyParser(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not parse request body.",
+		})
+	}
+
+	err = lead.GetLead(leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to query account details.",
+		})
+	}
+
+	// Update fields which are allowed to be updated
+	lead.FirstName = input.FirstName
+	lead.LastName = input.LastName
+	lead.Email = input.Email
+	lead.PhoneNumber = input.PhoneNumber
+
+	// Log user activity
+	log := &actions.LeadLog{
+		LeadLog: &models.LeadLog{
+			Action:    action,
+			CreatedAt: time.Now().Unix(),
+			Lead:      lead.Lead,
+		},
+	}
+
+	err = log.Save()
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not log user activity.",
 		})
 	}
 
