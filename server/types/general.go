@@ -39,4 +39,6 @@ type CreateLeadInput struct {
 	Photos            []string `json:"photos"`
 	PhotoDescriptions []string `json:"photo_descriptions"`
 	Services          []string `json:"services"`
+	Medium            string   `json:"medium"`
+	LeadChannel       string   `json:"lead_channel"`
 }

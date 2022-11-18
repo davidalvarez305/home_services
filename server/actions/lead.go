@@ -17,6 +17,16 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 	l.Email = input.Email
 	l.PhoneNumber = input.PhoneNumber
 
+	l.LeadMarketing = &models.LeadMarketing{
+		Campaign:     input.Campaign,
+		Source:       input.Source,
+		Medium:       input.Medium,
+		CampaignName: input.CampaignName,
+		LeadChannel:  input.LeadChannel,
+		ReferralURL:  input.ReferralURL,
+		Keywords:     input.Keywords,
+	}
+
 	err := database.DB.Save(&l).First(&l).Error
 
 	if err != nil {
