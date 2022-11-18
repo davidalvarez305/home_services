@@ -24,3 +24,19 @@ type CreateServicesInput struct {
 	CompanyID int `json:"company_id"`
 	ServiceID int `json:"service_id"`
 }
+
+type CreateLeadInput struct {
+	FirstName         string   `json:"first_name"`
+	LastName          string   `json:"last_name"`
+	Email             string   `json:"email"`
+	PhoneNumber       string   `json:"phone_number"`
+	Campaign          string   `json:"campaign"`
+	Source            string   `json:"source"`
+	CampaignName      string   `json:"campaign_name"`
+	ReferralURL       string   `json:"referral_url"`
+	Keywords          string   `json:"keywords"`
+	ZipCode           string   `json:"zip_code"`
+	Photos            []string `json:"photos"`
+	PhotoDescriptions []string `json:"photo_descriptions"`
+	Services          []string `json:"services"`
+}
