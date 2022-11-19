@@ -27,7 +27,7 @@ func (c *Company) CreateCompany(input *types.CreateCompanyInput) error {
 		Address: &models.Address{
 			CityID:             input.City,
 			StateID:            input.State,
-			ZipCodeID:          input.ZipCode,
+			ZipCode:            input.ZipCode,
 			CountryID:          1,
 			StreetAddressLine1: input.StreetAddressLine1,
 			StreetAddressLine2: input.StreetAddressLine2,

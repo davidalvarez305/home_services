@@ -8,7 +8,7 @@ type CreateCompanyInput struct {
 	StreetAddressLine3 string `json:"street_address_line_3"`
 	City               int    `json:"city"`
 	State              int    `json:"state"`
-	ZipCode            int    `json:"zip_code"`
+	ZipCode            string `json:"zip_code"`
 }
 
 type UsersByCompany struct {
