@@ -58,7 +58,7 @@ func Connect() {
 		&models.Invoice{},
 		&models.LeadLog{},
 		&models.LeadMarketing{},
-		&models.LeadPhoto{},
+		&models.QuotePhoto{},
 		&models.Lead{},
 		&models.PaymentStatus{},
 		&models.Quote{},

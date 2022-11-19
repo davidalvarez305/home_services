@@ -126,19 +126,18 @@ func UpdateLead(c *fiber.Ctx) error {
 	lead.PhoneNumber = input.PhoneNumber
 
 	// Log user activity
-	log := &actions.LeadLog{
-		LeadLog: &models.LeadLog{
-			Action:    action,
-			CreatedAt: time.Now().Unix(),
-			Lead:      lead.Lead,
-		},
+	log := &models.LeadLog{
+		Action:    action,
+		CreatedAt: time.Now().Unix(),
 	}
 
-	err = log.Save()
+	lead.Log = append(lead.Log, log)
+
+	err = lead.Save()
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not log user activity.",
+			"data": "Failed to save updates.",
 		})
 	}
 
