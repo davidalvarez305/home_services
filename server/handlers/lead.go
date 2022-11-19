@@ -185,3 +185,26 @@ func LeadLogout(c *fiber.Ctx) error {
 		"data": "OK!",
 	})
 }
+
+func GetQuotesByLead(c *fiber.Ctx) error {
+	leadQuotes := &actions.LeadQuotes{}
+	leadId := c.Params("id")
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	err := leadQuotes.GetQuotesByLead(leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to query quotes.",
+		})
+	}
+
+	return c.Status(204).JSON(fiber.Map{
+		"data": leadQuotes,
+	})
+}
