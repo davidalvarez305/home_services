@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/actions"
+	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/davidalvarez305/home_services/server/utils"
@@ -309,12 +311,12 @@ func DeleteLeadQuote(c *fiber.Ctx) error {
 }
 
 func UpdateQuoteAddress(c *fiber.Ctx) error {
-	leadId := c.Params("id")
-	quoteId := c.Params("quoteId")
-	addressId := c.Params("addressId")
 	address := &actions.Address{}
 	addr := &actions.Address{}
 	leadLog := &actions.LeadLog{}
+	addressId := c.Params("addressId")
+	leadId := c.Params("id")
+	quoteId := c.Params("quoteId")
 
 	if len(leadId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
@@ -377,5 +379,83 @@ func UpdateQuoteAddress(c *fiber.Ctx) error {
 
 	return c.Status(202).JSON(fiber.Map{
 		"data": addr,
+	})
+}
+
+func AddQuotePhotos(c *fiber.Ctx) error {
+	leadId := c.Params("id")
+	quoteId := c.Params("quoteId")
+
+	type QuotePhotoInput struct {
+		PhotoDescriptions []string `json:"photo_descriptions"`
+	}
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	if len(quoteId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Quote ID not found in URL params.",
+		})
+	}
+
+	var input QuotePhotoInput
+
+	err := c.BodyParser(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to parse request body.",
+		})
+	}
+
+	// Handle Client Photos
+	form, err := c.MultipartForm()
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to process images.",
+		})
+	}
+
+	clientImages, err := utils.HandleMultipleImages(form)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to upload images.",
+		})
+	}
+
+	quote, err := strconv.Atoi(quoteId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to save images.",
+		})
+	}
+
+	// Append the URLs from the S3 bucket with the description coming from the client
+	var photos []*models.QuotePhoto
+	for index, photo := range clientImages {
+		p := models.QuotePhoto{
+			ImageURL:    photo,
+			Description: input.PhotoDescriptions[index],
+			QuoteID:     quote,
+		}
+		photos = append(photos, &p)
+	}
+
+	res := database.DB.Save(&photos).Find(&photos).Error
+
+	if res != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to save images.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": photos,
 	})
 }
