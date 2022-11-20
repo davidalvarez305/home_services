@@ -529,3 +529,53 @@ func DeleteQuotePhoto(c *fiber.Ctx) error {
 		"data": "OK",
 	})
 }
+
+func AddQuoteServices(c *fiber.Ctx) error {
+	leadId := c.Params("id")
+	quoteId := c.Params("quoteId")
+	var quotePhoto actions.QuoteServices
+	leadLog := &actions.LeadLog{}
+
+	var input actions.CreateQuoteServices
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	if len(quoteId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Quote ID not found in URL params.",
+		})
+	}
+
+	err := c.BodyParser(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to parse input.",
+		})
+	}
+
+	err = quotePhoto.Save(&input, quoteId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to add services.",
+		})
+	}
+
+	// Log activity
+	err = leadLog.Save("Quote services added.", leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to log activity.",
+		})
+	}
+
+	return c.Status(204).JSON(fiber.Map{
+		"data": "OK",
+	})
+}
