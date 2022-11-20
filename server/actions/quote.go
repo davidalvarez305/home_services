@@ -10,6 +10,18 @@ type Quote struct {
 	*models.Quote
 }
 
+func (q *Quote) Save() error {
+	return database.DB.Save(&q).First(&q).Error
+}
+
+func (q *Quote) GetQuote(quoteId string) error {
+	return database.DB.Where("id = ?", quoteId).First(&q).Error
+}
+
+func (q *Quote) DeleteQuote() error {
+	return database.DB.Where("id = ?", q.ID).Delete(&q).Error
+}
+
 func (q *Quote) CreateQuote(input *types.CreateQuoteInput) error {
 
 	// Add address for user's quote
@@ -45,5 +57,5 @@ func (q *Quote) CreateQuote(input *types.CreateQuoteInput) error {
 
 	q.QuoteServices = services
 
-	return database.DB.Save(&q).First(&q).Error
+	return q.Save()
 }
