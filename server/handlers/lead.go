@@ -314,6 +314,7 @@ func UpdateQuoteAddress(c *fiber.Ctx) error {
 	addressId := c.Params("addressId")
 	address := &actions.Address{}
 	addr := &actions.Address{}
+	leadLog := &actions.LeadLog{}
 
 	if len(leadId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
@@ -362,6 +363,15 @@ func UpdateQuoteAddress(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Failed to update address.",
+		})
+	}
+
+	// Log activity
+	err = leadLog.Save("Quote address updated.", leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to log activity.",
 		})
 	}
 
