@@ -50,3 +50,21 @@ func UploadImageToS3(file *multipart.FileHeader) (string, error) {
 
 	return fileName, nil
 }
+
+func HandleMultipleImages(form *multipart.Form) ([]string, error) {
+	var uploadedImages []string
+
+	for _, fileHeaders := range form.File {
+		for _, image := range fileHeaders {
+			uploadedImage, err := UploadImageToS3(image)
+
+			if err != nil {
+				return uploadedImages, err
+			}
+
+			uploadedImages = append(uploadedImages, uploadedImage)
+		}
+	}
+
+	return uploadedImages, nil
+}

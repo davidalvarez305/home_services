@@ -20,8 +20,7 @@ func Lead(router fiber.Router) {
 	lead.Post("/:id", handlers.LeadLogout)   // Logout
 
 	// Lead Quotes
-	lead.Get("/:id/quote", handlers.GetQuotesByLead) // Query all quotes created by a lead
-	lead.Post("/:id/quote", handlers.CreateQuote)    // Create a quote from user profile
+	lead.Post("/:id/quote", handlers.CreateQuote) // Create a quote from user profile
 
 	// Lead Quotes Detail
 	lead.Get("/:id/quote/:quoteId", handlers.GetQuotesByLead)    // Get quote details

@@ -30,20 +30,12 @@ func CreateLead(c *fiber.Ctx) error {
 		})
 	}
 
-	var clientImages []string
+	clientImages, err := utils.HandleMultipleImages(form)
 
-	for _, fileHeaders := range form.File {
-		for _, image := range fileHeaders {
-			uploadedImage, err := utils.UploadImageToS3(image)
-
-			if err != nil {
-				return c.Status(400).JSON(fiber.Map{
-					"data": "Failed to process image.",
-				})
-			}
-
-			clientImages = append(clientImages, uploadedImage)
-		}
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to upload images.",
+		})
 	}
 
 	// Append photos to input for later use
@@ -205,5 +197,64 @@ func GetQuotesByLead(c *fiber.Ctx) error {
 
 	return c.Status(204).JSON(fiber.Map{
 		"data": leadQuotes,
+	})
+}
+
+func CreateQuote(c *fiber.Ctx) error {
+	var input types.CreateQuoteInput
+	leadId := c.Params("id")
+	lead := &actions.Lead{}
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	err := lead.GetLead(leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to retrieve account information.",
+		})
+	}
+
+	err = c.BodyParser(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to parse request body.",
+		})
+	}
+
+	// Handle Client Photos
+	form, err := c.MultipartForm()
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to process images.",
+		})
+	}
+
+	clientImages, err := utils.HandleMultipleImages(form)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to upload images.",
+		})
+	}
+
+	input.Photos = clientImages
+	q := &actions.Quote{}
+
+	err = q.CreateQuote(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to create quote.",
+		})
+	}
+
+	return c.Status(201).JSON(fiber.Map{
+		"data": q,
 	})
 }
