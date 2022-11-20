@@ -634,3 +634,32 @@ func DeleteQuoteServices(c *fiber.Ctx) error {
 		"data": "OK",
 	})
 }
+
+func CreateLog(c *fiber.Ctx) error {
+	type CreateLogInput struct {
+		Action string `json:"action"`
+	}
+
+	var input CreateLogInput
+
+	leadId := c.Params("id")
+	leadLog := &actions.LeadLog{}
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	err := leadLog.Save(input.Action, leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to save log.",
+		})
+	}
+
+	return c.Status(202).JSON(fiber.Map{
+		"data": "OK",
+	})
+}
