@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/actions"
-	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/davidalvarez305/home_services/server/utils"
@@ -385,6 +384,7 @@ func UpdateQuoteAddress(c *fiber.Ctx) error {
 func AddQuotePhotos(c *fiber.Ctx) error {
 	leadId := c.Params("id")
 	quoteId := c.Params("quoteId")
+	leadLog := &actions.LeadLog{}
 
 	type QuotePhotoInput struct {
 		PhotoDescriptions []string `json:"photo_descriptions"`
@@ -437,7 +437,7 @@ func AddQuotePhotos(c *fiber.Ctx) error {
 	}
 
 	// Append the URLs from the S3 bucket with the description coming from the client
-	var photos []*models.QuotePhoto
+	var photos actions.QuotePhotos
 	for index, photo := range clientImages {
 		p := models.QuotePhoto{
 			ImageURL:    photo,
@@ -447,15 +447,85 @@ func AddQuotePhotos(c *fiber.Ctx) error {
 		photos = append(photos, &p)
 	}
 
-	res := database.DB.Save(&photos).Find(&photos).Error
+	err = photos.Save()
 
-	if res != nil {
+	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Failed to save images.",
 		})
 	}
 
+	// Log activity
+	err = leadLog.Save("Quote photos added.", leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to log activity.",
+		})
+	}
+
 	return c.Status(200).JSON(fiber.Map{
 		"data": photos,
+	})
+}
+
+func DeleteQuotePhoto(c *fiber.Ctx) error {
+	leadId := c.Params("id")
+	quoteId := c.Params("quoteId")
+	photoId := c.Params("photoId")
+	quotePhoto := &actions.QuotePhoto{}
+	leadLog := &actions.LeadLog{}
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	if len(quoteId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Quote ID not found in URL params.",
+		})
+	}
+
+	if len(photoId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Quote ID not found in URL params.",
+		})
+	}
+
+	err := quotePhoto.GetQuotePhoto(photoId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to find that photo.",
+		})
+	}
+
+	err = quotePhoto.DeleteQuotePhoto()
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to delete that photo.",
+		})
+	}
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to save images.",
+		})
+	}
+
+	// Log activity
+	err = leadLog.Save("Quote photos deleted.", leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to log activity.",
+		})
+	}
+
+	return c.Status(204).JSON(fiber.Map{
+		"data": "OK",
 	})
 }
