@@ -23,9 +23,27 @@ func (q *Quote) CreateQuote(input *types.CreateQuoteInput) error {
 	}
 
 	// Save S3 URL's as photos
+	var photos []*models.QuotePhoto
+
+	for index, img := range input.Photos {
+		photos = append(photos, &models.QuotePhoto{
+			ImageURL:    img,
+			Description: input.PhotoDescriptions[index],
+		})
+	}
+
 	q.QuotePhoto = photos
 
 	// Append services for quote
+	var services []*models.QuoteServices
+
+	for _, service := range input.Services {
+		services = append(services, &models.QuoteServices{
+			ServiceID: service,
+		})
+	}
+
+	q.QuoteServices = services
 
 	return database.DB.Save(&q).First(&q).Error
 }
