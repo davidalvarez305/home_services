@@ -27,11 +27,11 @@ func Lead(router fiber.Router) {
 	lead.Delete("/:id/quote/:quoteId", handlers.DeleteLeadQuote) // Delete a quote
 
 	// Lead Quotes Actions
-	lead.Put("/:id/quote/:quoteId/address/:addressId", handlers.UpdateQuoteAddress)    // Add photo(s) attached to a lead's quote.
-	lead.Post("/:id/quote/:quoteId/photo", handlers.AddQuotePhotos)                    // Add photo(s) attached to a lead's quote.
-	lead.Delete("/:id/quote/:quoteId/photo/:photoId", handlers.DeleteQuotePhoto)       // Delete photo(s) attached to a lead's quote.
-	lead.Post("/:id/quote/:quoteId/service", handlers.AddQuoteServices)                // Add service(s) attached to a lead's quote.
-	lead.Delete("/:id/quote/:quoteId/service/:serviceId", handlers.DeleteQuoteService) // Delete service(s) attached to a lead's quote.
+	lead.Put("/:id/quote/:quoteId/address/:addressId", handlers.UpdateQuoteAddress)     // Add photo(s) attached to a lead's quote.
+	lead.Post("/:id/quote/:quoteId/photo", handlers.AddQuotePhotos)                     // Add photo(s) attached to a lead's quote.
+	lead.Delete("/:id/quote/:quoteId/photo/:photoId", handlers.DeleteQuotePhoto)        // Delete photo(s) attached to a lead's quote.
+	lead.Post("/:id/quote/:quoteId/service", handlers.AddQuoteServices)                 // Add service(s) attached to a lead's quote.
+	lead.Delete("/:id/quote/:quoteId/service/:serviceId", handlers.DeleteQuoteServices) // Delete service(s) attached to a lead's quote.
 
 	// Lead logs
 	lead.Post("/:id/log", handlers.CreateLog)    // Log user activity

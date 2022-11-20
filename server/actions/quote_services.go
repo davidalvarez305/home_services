@@ -7,6 +7,10 @@ import (
 	"github.com/davidalvarez305/home_services/server/models"
 )
 
+type QuoteService struct {
+	*models.QuoteServices
+}
+
 type QuoteServices []*models.QuoteServices
 
 type CreateQuoteServices struct {
@@ -33,10 +37,10 @@ func (q QuoteServices) Save(input *CreateQuoteServices, quote string) error {
 	return database.DB.Save(&q).Find(&q).Error
 }
 
-func (q *QuoteServices) GetQuoteServices(ServicesId string) error {
-	return database.DB.Where("id = ?", ServicesId).First(&q).Error
+func (q *QuoteService) GetQuoteServices(servicesId string) error {
+	return database.DB.Where("id = ?", servicesId).First(&q).Error
 }
 
-func (q *QuoteServices) DeleteQuoteServices() error {
+func (q *QuoteService) DeleteQuoteServices() error {
 	return database.DB.Delete(&q).Error
 }

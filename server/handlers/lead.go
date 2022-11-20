@@ -575,6 +575,61 @@ func AddQuoteServices(c *fiber.Ctx) error {
 		})
 	}
 
+	return c.Status(201).JSON(fiber.Map{
+		"data": quotePhoto,
+	})
+}
+
+func DeleteQuoteServices(c *fiber.Ctx) error {
+	leadId := c.Params("id")
+	quoteId := c.Params("quoteId")
+	serviceId := c.Params("serviceId")
+	quoteService := &actions.QuoteService{}
+	leadLog := &actions.LeadLog{}
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	if len(quoteId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Quote ID not found in URL params.",
+		})
+	}
+
+	if len(serviceId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Quote ID not found in URL params.",
+		})
+	}
+
+	err := quoteService.GetQuoteServices(serviceId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to find that service.",
+		})
+	}
+
+	err = quoteService.DeleteQuoteServices()
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to delete that service.",
+		})
+	}
+
+	// Log activity
+	err = leadLog.Save("Services deleted from quote.", leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to log activity.",
+		})
+	}
+
 	return c.Status(204).JSON(fiber.Map{
 		"data": "OK",
 	})
