@@ -663,3 +663,26 @@ func CreateLog(c *fiber.Ctx) error {
 		"data": "OK",
 	})
 }
+
+func GetLogsByLead(c *fiber.Ctx) error {
+	leadId := c.Params("id")
+	logs := &actions.LeadLogs{}
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	err := logs.Get(leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to retrieve logs.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": logs,
+	})
+}

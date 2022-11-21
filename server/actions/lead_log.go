@@ -12,6 +12,8 @@ type LeadLog struct {
 	*models.LeadLog
 }
 
+type LeadLogs []*models.LeadLog
+
 func (l *LeadLog) Save(action string, leadId string) error {
 
 	lead, err := strconv.Atoi(leadId)
@@ -25,4 +27,8 @@ func (l *LeadLog) Save(action string, leadId string) error {
 	l.LeadID = lead
 
 	return database.DB.Save(&l).Error
+}
+
+func (logs *LeadLogs) Get(leadId string) error {
+	return database.DB.Where("lead_id = ?", leadId).Find(&logs).Error
 }
