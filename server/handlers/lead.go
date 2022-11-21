@@ -711,3 +711,26 @@ func GetLogsByLead(c *fiber.Ctx) error {
 		"data": logs,
 	})
 }
+
+func RecoverUUIDCode(c *fiber.Ctx) error {
+	leadId := c.Params("id")
+	lead := &actions.Lead{}
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	err := lead.GetLead(leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to query account details.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": lead,
+	})
+}

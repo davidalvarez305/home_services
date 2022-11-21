@@ -1,12 +1,14 @@
 package actions
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/davidalvarez305/home_services/server/sessions"
 	"github.com/davidalvarez305/home_services/server/types"
+	"github.com/davidalvarez305/home_services/server/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -190,4 +192,23 @@ func (lq *LeadQuotes) GetQuotesByLead(leadId string) error {
 	`
 
 	return database.DB.Raw(sql, leadId).Scan(&lq).Error
+}
+
+func (l *Lead) RecoverUUIDCode(uuid string) error {
+
+	err := database.DB.Where("uuid = ?", uuid).First(&l).Error
+
+	if err != nil {
+		return err
+	}
+
+	title := "Your UUID Recovery Request"
+	message := fmt.Sprintf("Your UUID Is: %s", l.UUID)
+	err = utils.SendGmail(message, l.Email, title)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
