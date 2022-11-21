@@ -3,7 +3,7 @@ package models
 type Lead struct {
 	ID              int            `json:"id"`
 	Email           string         `gorm:"unique;not null" json:"email"`
-	Password        string         `json:"password"`
+	UUID            string         `gorm:"unique;not null" json:"uuid"`
 	FirstName       string         `gorm:"unique;not null" json:"first_name"`
 	LastName        string         `gorm:"unique;not null" json:"last_name"`
 	PhoneNumber     string         `gorm:"column:phone_number" json:"phone_number"`

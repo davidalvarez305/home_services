@@ -55,6 +55,31 @@ func CreateLead(c *fiber.Ctx) error {
 	})
 }
 
+func LeadLogin(c *fiber.Ctx) error {
+	lead := &actions.Lead{}
+	var input actions.LeadLogin
+
+	err := c.BodyParser(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not parse request body.",
+		})
+	}
+
+	err = lead.Login(&input, c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to initialize session.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": lead,
+	})
+}
+
 func GetLeadInfo(c *fiber.Ctx) error {
 	leadId := c.Params("id")
 	lead := &actions.Lead{}

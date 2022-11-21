@@ -14,6 +14,10 @@ type Lead struct {
 	*models.Lead
 }
 
+type LeadLogin struct {
+	UUID string `json:"uuid"`
+}
+
 type LeadQuote struct {
 	StreetAddressLine1 string `json:"street_address_line_1"`
 	StreetAddressLine2 string `json:"street_address_line_2"`
@@ -41,6 +45,10 @@ func (l *Lead) Delete(leadId string) error {
 
 func (l *Lead) GetLead(leadId string) error {
 	return database.DB.Where("id = ?", leadId).First(&l).Error
+}
+
+func (l *Lead) GetLeadByUUID(uuid string) error {
+	return database.DB.Where("uuid = ?", uuid).First(&l).Error
 }
 
 func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
@@ -119,6 +127,28 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 	}
 
 	return nil
+}
+
+func (l *Lead) Login(input *LeadLogin, c *fiber.Ctx) error {
+	// Find Lead by UUID
+	err := l.GetLeadByUUID(input.UUID)
+
+	if err != nil {
+		return err
+	}
+
+	// If lead is found -> initialize session & send cookie to browser.
+	sess, err := sessions.Sessions.Get(c)
+
+	if err != nil {
+		return err
+	}
+
+	sess.Set("lead_uuid", l.UUID)
+
+	err = sess.Save()
+
+	return err
 }
 
 // Destroy session.
