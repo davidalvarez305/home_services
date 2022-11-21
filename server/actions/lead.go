@@ -170,9 +170,10 @@ func (l *Lead) LeadLogout(c *fiber.Ctx) error {
 func (lq *LeadQuotes) GetQuotesByLead(leadId string) error {
 	sql := `
 	SELECT a.street_address_line1 AS street_address_line_1, a.street_address_line2 AS street_address_line_2, a.street_address_line3 AS street_address_line_3,
-	c.city, c.id AS city_id, s.state, s.id AS state_id, q.zip_code, ser.service,
-	qp.image_url AS photos string_agg(qp.image_url, ',') AS photos,
-	qp.description AS photo_descriptions string_agg(qp.description, ',') AS photo_descriptions,
+	c.city, c.id AS city_id, s.state, s.id AS state_id, q.zip_code,
+	string_agg(ser.service, ',') AS services,
+	string_agg(qp.image_url, ',') AS photos,
+	string_agg(qp.description, ',') AS photo_descriptions
 	FROM quote AS q
 	LEFT JOIN quote_services AS qs
 	on qs.quote_id  = q.id
@@ -188,7 +189,9 @@ func (lq *LeadQuotes) GetQuotesByLead(leadId string) error {
 	ON c.id = z.city_id
 	LEFT JOIN state AS s
 	ON s.id = z.state_id
-	WHERE q.lead_id = ?;
+	WHERE q.lead_id = ?
+	GROUP BY a.street_address_line1, a.street_address_line2, a.street_address_line3,
+	c.city, c.id, s.id, s.state, q.zip_code;
 	`
 
 	return database.DB.Raw(sql, leadId).Scan(&lq).Error

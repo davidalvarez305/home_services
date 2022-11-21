@@ -16,11 +16,11 @@ type Company struct {
 func (cq *CompanyQuotes) GetCompanyQuotes(companyId string) error {
 	sql := `
 	SELECT z.zip_code, q.created_at,
-	a.street_address_line1 AS street_address_line_1, a.street_address_line2 AS street_address_line_2, a.street_address_line3 AS street_address_line_3
-	c.city, s.state, c.country,
-	ser.service string_agg(ser.service, ',') AS SERVICES,,
-	qp.image_url string_agg(qp.image_url, ',') AS photos,
-	qp.description string_agg(qp.description, ',') AS photo_descriptions,
+	a.street_address_line1 AS street_address_line_1, a.street_address_line2 AS street_address_line_2, a.street_address_line3 AS street_address_line_3,
+	c.city, s.state, ctry.country,
+	string_agg(ser.service, ',') AS services,
+	string_agg(qp.image_url, ',') AS photos,
+	string_agg(qp.description, ',') AS photo_descriptions
 	FROM quote AS q
 	LEFT JOIN address AS a
 	ON a.id = q.address_id
@@ -32,11 +32,15 @@ func (cq *CompanyQuotes) GetCompanyQuotes(companyId string) error {
 	ON s.id = z.state_id
 	LEFT JOIN quote_services AS qs
 	ON qs.quote_id = q.id
-	LEFT JOIN services AS ser
-	ON ser.id IN qs.service_id
+	LEFT JOIN service AS ser
+	ON ser.id = qs.service_id
 	LEFT JOIN quote_photos AS qp
 	ON qp.quote_id = q.id
-	WHERE q.company_id = ?;
+	LEFT JOIN country AS ctry
+	ON ctry.id = z.country_id
+	WHERE q.company_id = ?
+	GROUP BY a.street_address_line1, a.street_address_line2, a.street_address_line3,
+	c.city, s.state, ctry.country, z.zip_code, q.created_at;
 	`
 
 	return database.DB.Raw(sql, companyId).Scan(&cq).Error
