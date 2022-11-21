@@ -13,6 +13,20 @@ type Company struct {
 	*models.Company
 }
 
+type CompanyQuotes struct {
+	ZipCode            string `json:"zip_code"`
+	CreatedAt          int64  `json:"created_at"`
+	StreetAddressLine1 string `json:"street_address_line_1"`
+	StreetAddressLine2 string `json:"street_address_line_2"`
+	StreetAddressLine3 string `json:"street_address_line_3"`
+	City               string `json:"city"`
+	State              string `json:"state"`
+	Country            string `json:"country"`
+	Services           string `json:"services"`           // string agg
+	Photos             string `json:"photos"`             // string agg
+	Photo_Descriptions string `json:"photo_descriptions"` // string agg
+}
+
 // Create and return company model.
 func (c *Company) CreateCompany(input *types.CreateCompanyInput) error {
 

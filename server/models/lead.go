@@ -10,6 +10,6 @@ type Lead struct {
 	CreatedAt       int64          `gorm:"column:created_at" json:"created_at"`
 	LeadMarketingID int            `gorm:"primaryKey;column:lead_marketing_id" json:"lead_marketing_id"`
 	LeadMarketing   *LeadMarketing `gorm:"not null;column:lead_marketing_id;foreignKey:MarketingID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
-	Quote           []*Quote       `gorm:"foreignKey:LeadID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
-	Log             []*LeadLog     `gorm:"foreignKey:LeadID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
+	Quote           []*Quote       `gorm:"foreignKey:QuoteID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
+	Log             []*LeadLog     `gorm:"foreignKey:LogID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 }

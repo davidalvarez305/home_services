@@ -28,4 +28,7 @@ func Company(router fiber.Router) {
 	// Manage Company Services
 	company.Get("/:id/service", handlers.GetCompanyServices)
 	company.Post("/:id/service", handlers.CreateCompanyServices)
+
+	// Manage Quotes Assigned to Company
+	company.Get("/:id/quotes", handlers.GetCompanyQuotes)
 }

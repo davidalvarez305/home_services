@@ -701,3 +701,15 @@ func DeleteCompanyLocation(c *fiber.Ctx) error {
 		"data": updatedServices,
 	})
 }
+
+func GetCompanyQuotes(c *fiber.Ctx) error {
+	quotes := &actions.CompanyQuotes{}
+
+	companyId := c.Params("id")
+
+	if len(companyId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Company ID not found in URL params.",
+		})
+	}
+}
