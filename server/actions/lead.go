@@ -171,8 +171,8 @@ func (lq *LeadQuotes) GetQuotesByLead(leadId string) error {
 	sql := `
 	SELECT a.street_address_line1 AS street_address_line_1, a.street_address_line2 AS street_address_line_2, a.street_address_line3 AS street_address_line_3,
 	c.city, c.id AS city_id, s.state, s.id AS state_id, q.zip_code, ser.service,
-	qp.image_url AS photos string_agg(z.image_url, ',') AS photos,
-	qp.description AS photo_descriptions string_agg(z.description, ',') AS photo_descriptions,
+	qp.image_url AS photos string_agg(qp.image_url, ',') AS photos,
+	qp.description AS photo_descriptions string_agg(qp.description, ',') AS photo_descriptions,
 	FROM quote AS q
 	LEFT JOIN quote_services AS qs
 	on qs.quote_id  = q.id

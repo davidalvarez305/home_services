@@ -712,4 +712,16 @@ func GetCompanyQuotes(c *fiber.Ctx) error {
 			"data": "Company ID not found in URL params.",
 		})
 	}
+
+	err := quotes.GetCompanyQuotes(companyId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to fetch company quotes.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": quotes,
+	})
 }
