@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"os"
 	"strings"
 
 	"github.com/davidalvarez305/home_services/server/actions"
@@ -9,8 +10,9 @@ import (
 
 func AuthMiddleware(c *fiber.Ctx) error {
 	url := c.OriginalURL()
+	headers := c.GetReqHeaders()
 
-	if strings.Contains(url, "/login") || strings.Contains(url, "/register") || strings.Contains(url, "/forgot-password") {
+	if strings.Contains(url, "/login") || strings.Contains(url, "/register") || strings.Contains(url, "/forgot-password") || strings.Contains(headers["Origin"], os.Getenv("DJANGO_URL")) {
 		return c.Next()
 	}
 

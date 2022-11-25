@@ -71,6 +71,8 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 		Keywords:     input.Keywords,
 	}
 
+	fmt.Printf("%+v", l)
+
 	// Assign lead
 	companyId, err := FindCompanyIDByZipCodeAndService(input.ZipCode, input.Service)
 

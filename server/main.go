@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/gob"
+	"fmt"
 	"log"
 	"os"
 
@@ -24,11 +25,14 @@ func main() {
 	}
 
 	CLIENT_URL := os.Getenv("CLIENT_URL")
+	DJANGO_URL := os.Getenv("DJANGO_URL")
 	PORT := os.Getenv("PORT")
+	origins := CLIENT_URL + ", " + DJANGO_URL
+	fmt.Println(origins)
 
 	app := fiber.New()
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     CLIENT_URL,
+		AllowOrigins:     "*",
 		AllowCredentials: true,
 	}))
 
