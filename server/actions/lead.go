@@ -71,13 +71,16 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 		Keywords:     input.Keywords,
 	}
 
-	err := database.DB.Save(&l).First(&l).Error
+	// Assign lead
+	companyId, err := FindCompanyIDByZipCodeAndService(input.ZipCode, input.Service)
 
 	if err != nil {
 		return err
 	}
 
-	return nil
+	l.CompanyID = companyId
+
+	return database.DB.Save(&l).First(&l).Error
 }
 
 func (l *Lead) Login(input *LeadLogin, c *fiber.Ctx) error {

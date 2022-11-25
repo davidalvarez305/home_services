@@ -38,7 +38,7 @@ type CreateLeadInput struct {
 	Keywords     string `json:"keywords"`
 	LeadChannel  string `json:"lead_channel"`
 	ZipCode      string `json:"zip_code"`
-	Services     []int  `json:"services"`
+	Service      int    `json:"service"`
 }
 
 type CreateQuoteInput struct {

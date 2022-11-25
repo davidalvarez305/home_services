@@ -146,3 +146,21 @@ func (cq *CompanyQuotes) GetCompanyQuotes(companyId string) error {
 
 	return database.DB.Raw(sql, companyId).Scan(&cq).Error
 }
+
+// Get Company from DB.
+func FindCompanyIDByZipCodeAndService(zipCode string, serviceID int) (int, error) {
+	var companyId int
+
+	sql := `
+	SELECT c.id
+	FROM company_services_locations AS csl
+	LEFT JOIN company AS c
+	ON csl.company_id = c.id
+	WHERE csl.zip_code = ? AND csl.service_id = ?
+	GROUP BY csl.zip_code, csl.service_id, c.id;
+	`
+
+	res := database.DB.Where(sql, zipCode, serviceID).First(&companyId)
+
+	return companyId, res.Error
+}

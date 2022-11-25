@@ -9,7 +9,6 @@ type Quote struct {
 	LeadID        int              `gorm:"column:lead_id" json:"lead_id"`
 	AddressID     int              `json:"address_id"`
 	Address       *Address         `gorm:"column:address_id;foreignKey:AddressID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
-	CompanyID     int              `gorm:"column:company_id;constraint:OnDelete:SET NULL,OnUpdate:CASCADE" json:"company_id"`
 	Service       []*Service       `gorm:"many2many:quote_services" json:"-"`
 	QuotePhoto    []*QuotePhoto    `gorm:"foreignKey:QuoteID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"quote_photo"`
 	QuoteServices []*QuoteServices `json:"-"`
