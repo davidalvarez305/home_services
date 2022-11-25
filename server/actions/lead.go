@@ -71,57 +71,6 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 		Keywords:     input.Keywords,
 	}
 
-	// Create quote
-	q := &models.Quote{}
-
-	addr := models.Address{
-		ZipCode:            input.ZipCode,
-		StreetAddressLine1: input.StreetAddressLine1,
-		StreetAddressLine2: input.StreetAddressLine2,
-		StreetAddressLine3: input.StreetAddressLine3,
-		CityID:             input.CityID,
-		StateID:            input.StateID,
-		CountryID:          input.CountryID,
-	}
-
-	q.Address = &addr
-	q.CreatedAt = time.Now().Unix()
-	q.UpdatedAt = time.Now().Unix()
-	q.LeadID = l.ID
-	q.ZipCode = input.ZipCode
-
-	// Append the URLs from the S3 bucket with the description coming from the client
-	var photos []*models.QuotePhoto
-	for index, photo := range input.Photos {
-		p := models.QuotePhoto{
-			ImageURL:    photo,
-			Description: input.PhotoDescriptions[index],
-			QuoteID:     q.ID,
-		}
-		photos = append(photos, &p)
-	}
-
-	q.QuotePhoto = photos
-
-	// Append quote services by ID
-	qs := []*models.QuoteServices{}
-	for _, service := range input.Services {
-		qs = append(qs, &models.QuoteServices{
-			ServiceID: service,
-		})
-	}
-
-	q.QuoteServices = qs
-
-	// Append the quote to the lead and save everything in a SQL transaction
-	l.Quote = append(l.Quote, q)
-
-	// Create log for initial lead creation
-	l.Log = append(l.Log, &models.LeadLog{
-		Action:    "Initial lead creation",
-		CreatedAt: time.Now().Unix(),
-	})
-
 	err := database.DB.Save(&l).First(&l).Error
 
 	if err != nil {

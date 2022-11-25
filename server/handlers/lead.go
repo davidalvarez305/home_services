@@ -23,25 +23,6 @@ func CreateLead(c *fiber.Ctx) error {
 		})
 	}
 
-	// Handle Client Photos
-	form, err := c.MultipartForm()
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to process images.",
-		})
-	}
-
-	clientImages, err := utils.HandleMultipleImages(form)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to upload images.",
-		})
-	}
-
-	// Append photos to input for later use
-	input.Photos = clientImages
-
 	err = lead.CreateLead(&input)
 
 	if err != nil {
