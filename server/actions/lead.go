@@ -54,6 +54,10 @@ func (l *Lead) GetLeadByUUID(uuid string) error {
 	return database.DB.Where("uuid = ?", uuid).First(&l).Error
 }
 
+func (l *Lead) GetLeadByEmail(email string) error {
+	return database.DB.Where("email = ?", email).First(&l).Error
+}
+
 // Grabs userId from session, and then performs select query from the database.
 func (lead *Lead) GetLeadFromSession(c *fiber.Ctx) error {
 	sess, err := sessions.Sessions.Get(c)

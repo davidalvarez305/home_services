@@ -136,20 +136,20 @@ func CheckLoginCode(c *fiber.Ctx) error {
 		})
 	}
 
+	err = lead.GetLead(fmt.Sprintf("%+v", lc.LeadID))
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"data": "Could not find that user account.",
+		})
+	}
+
 	// Delete Token
 	err = lc.DeleteCode()
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"data": "Could not delete code.",
-		})
-	}
-
-	err = lead.GetLead(fmt.Sprintf("%+v", lc.LeadID))
-
-	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"data": "Could not find that user account.",
 		})
 	}
 
@@ -810,20 +810,27 @@ func GetLogsByLead(c *fiber.Ctx) error {
 }
 
 func RecoverUUIDCode(c *fiber.Ctx) error {
-	leadId := c.Params("id")
-	lead := &actions.Lead{}
-
-	if len(leadId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Lead ID not found in URL params.",
-		})
+	type RecoverUUIDCodeInput struct {
+		Email string `json:"email"`
 	}
 
-	err := lead.GetLead(leadId)
+	var input RecoverUUIDCodeInput
+
+	err := c.BodyParser(&input)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to query account details.",
+			"data": "Failed to parse request body.",
+		})
+	}
+
+	lead := &actions.Lead{}
+
+	err = lead.GetLeadByEmail(input.Email)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to find account using that e-mail.",
 		})
 	}
 
