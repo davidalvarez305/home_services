@@ -2,6 +2,7 @@ package models
 
 type LeadMarketing struct {
 	ID           int    `json:"id"`
+	LeadID       int    `gorm:"not null;column:lead_id;foreignKey:LeadID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"lead_id"`
 	Campaign     string `gorm:"unique;not null" json:"campaign"`
 	Source       string `json:"source"`
 	Medium       string `json:"medium"`

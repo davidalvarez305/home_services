@@ -10,6 +10,7 @@ import (
 	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/davidalvarez305/home_services/server/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 type Lead struct {
@@ -55,11 +56,14 @@ func (l *Lead) GetLeadByUUID(uuid string) error {
 
 func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 
-	l.FirstName = input.FirstName
-	l.LastName = input.LastName
-	l.Email = input.Email
-	l.PhoneNumber = input.PhoneNumber
-	l.CreatedAt = time.Now().Unix()
+	l.Lead = &models.Lead{
+		FirstName:   input.FirstName,
+		LastName:    input.LastName,
+		UUID:        uuid.New().String(),
+		Email:       input.Email,
+		PhoneNumber: input.PhoneNumber,
+		CreatedAt:   time.Now().Unix(),
+	}
 
 	l.LeadMarketing = &models.LeadMarketing{
 		Campaign:     input.Campaign,
@@ -69,18 +73,17 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 		LeadChannel:  input.LeadChannel,
 		ReferralURL:  input.ReferralURL,
 		Keywords:     input.Keywords,
+		LeadID:       l.Lead.ID,
 	}
-
-	fmt.Printf("%+v", l)
 
 	// Assign lead
 	companyId, err := FindCompanyIDByZipCodeAndService(input.ZipCode, input.Service)
 
 	if err != nil {
-		return err
+		fmt.Printf("%+v\n", "Company not found.")
 	}
 
-	l.CompanyID = companyId
+	l.Lead.CompanyID = companyId
 
 	return database.DB.Save(&l).First(&l).Error
 }

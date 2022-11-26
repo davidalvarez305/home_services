@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -14,6 +15,7 @@ import (
 func CreateLead(c *fiber.Ctx) error {
 	var input types.CreateLeadInput
 	lead := &actions.Lead{}
+	leadLog := &actions.LeadLog{}
 
 	err := c.BodyParser(&input)
 
@@ -28,6 +30,15 @@ func CreateLead(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Failed to create a lead.",
+		})
+	}
+
+	// Log activity
+	err = leadLog.Save("Lead created.", fmt.Sprintf("%+v", lead.ID))
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to log activity.",
 		})
 	}
 
