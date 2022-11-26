@@ -62,7 +62,7 @@ func (lead *Lead) GetLeadFromSession(c *fiber.Ctx) error {
 		return err
 	}
 
-	leadUUID := sess.Get("leadUUID")
+	leadUUID := sess.Get("lead_uuid")
 
 	if leadUUID == nil {
 		return err
