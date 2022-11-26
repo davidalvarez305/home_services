@@ -8,6 +8,7 @@ import (
 
 	"github.com/davidalvarez305/home_services/server/actions"
 	"github.com/davidalvarez305/home_services/server/models"
+	"github.com/davidalvarez305/home_services/server/sessions"
 	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/davidalvarez305/home_services/server/utils"
 	"github.com/gofiber/fiber/v2"
@@ -95,7 +96,7 @@ func LeadLogin(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to initialize session.",
+			"data": "Failed to send login verification code.",
 		})
 	}
 
@@ -148,8 +149,27 @@ func CheckLoginCode(c *fiber.Ctx) error {
 	err = lc.DeleteCode()
 
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
+		return c.Status(500).JSON(fiber.Map{
 			"data": "Could not delete code.",
+		})
+	}
+
+	// If lead is found -> initialize session & send cookie to browser.
+	sess, err := sessions.Sessions.Get(c)
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"data": "Failed to initialize session.",
+		})
+	}
+
+	sess.Set("lead_uuid", lead.UUID)
+
+	err = sess.Save()
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"data": "Failed to save session.",
 		})
 	}
 

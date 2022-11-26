@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { LEAD_ROUTE } from "../constants";
 import { LeadContext } from "../context/LeadContext";
 
-export default function useLoginRequired() {
+export default function useAccountRequired() {
   const router = useRouter();
   const ctx = useContext(LeadContext);
 

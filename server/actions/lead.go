@@ -108,6 +108,7 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 }
 
 func (l *Lead) Login(input *LeadLogin, c *fiber.Ctx) error {
+
 	// Find Lead by UUID
 	err := l.GetLeadByUUID(input.UUID)
 
@@ -115,16 +116,11 @@ func (l *Lead) Login(input *LeadLogin, c *fiber.Ctx) error {
 		return err
 	}
 
-	// If lead is found -> initialize session & send cookie to browser.
-	sess, err := sessions.Sessions.Get(c)
+	err = l.GenerateLeadToken()
 
 	if err != nil {
 		return err
 	}
-
-	sess.Set("lead_uuid", l.UUID)
-
-	err = sess.Save()
 
 	return err
 }

@@ -21,7 +21,7 @@ const Login: React.FC = () => {
   function handleSubmit(values: { uuid: string }) {
     makeRequest(
       {
-        url: LEAD_ROUTE + "login",
+        url: LEAD_ROUTE + "/login",
         method: "POST",
         data: values,
       },
@@ -34,7 +34,7 @@ const Login: React.FC = () => {
   function handleSubmitCode(values: { code: string }) {
     makeRequest(
       {
-        url: LEAD_ROUTE + "login/" + values.code,
+        url: LEAD_ROUTE + "/login/" + values.code,
         method: "POST",
       },
       (res) => {
