@@ -54,6 +54,25 @@ func (l *Lead) GetLeadByUUID(uuid string) error {
 	return database.DB.Where("uuid = ?", uuid).First(&l).Error
 }
 
+// Grabs userId from session, and then performs select query from the database.
+func (lead *Lead) GetLeadFromSession(c *fiber.Ctx) error {
+	sess, err := sessions.Sessions.Get(c)
+
+	if err != nil {
+		return err
+	}
+
+	leadUUID := sess.Get("leadUUID")
+
+	if leadUUID == nil {
+		return err
+	}
+
+	err = lead.GetLeadByUUID(fmt.Sprintf("%v", leadUUID))
+
+	return err
+}
+
 func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 
 	l.Lead = &models.Lead{

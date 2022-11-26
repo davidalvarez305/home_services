@@ -57,6 +57,28 @@ func CreateLead(c *fiber.Ctx) error {
 	})
 }
 
+func GetLeadFromSession(c *fiber.Ctx) error {
+	lead := &actions.Lead{}
+
+	err := lead.GetLeadFromSession(c)
+
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"data": err.Error(),
+		})
+	}
+
+	if lead.Lead == nil {
+		return c.Status(404).JSON(fiber.Map{
+			"data": "Not found.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": lead,
+	})
+}
+
 func LeadLogin(c *fiber.Ctx) error {
 	lead := &actions.Lead{}
 	var input actions.LeadLogin
