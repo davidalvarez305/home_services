@@ -1,5 +1,5 @@
 import { Form, Formik } from "formik";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Checkbox from "../../../components/Checkbox";
 import PrimaryInput from "../../../components/FormInput";
 import { useRouter } from "next/router";
@@ -13,20 +13,25 @@ import styles from "./Login.module.css";
 import Button from "../../../components/Button";
 
 const Login: React.FC = () => {
+  const [enterCode, setEnterCode] = useState(false);
   const { makeRequest, isLoading, error } = useFetch();
   const ctx = useContext(LeadContext);
   const router = useRouter();
 
-  function handleSubmit(values: { email: string; password: string }) {
+  function handleSubmit(values: { uuid: string }) {
     makeRequest(
       {
         url: LEAD_ROUTE + "login",
         method: "POST",
         data: values,
       },
-      (res) => {
+      (_) => {
+        
+        setEnterCode(true);
+
+        /* 
         ctx?.SetLead(res.data.data);
-        router.push("/");
+        router.push("/"); */
       }
     );
   }
@@ -37,7 +42,7 @@ const Login: React.FC = () => {
       h1Subtext="Enter your account details"
     >
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ uuid: "" }}
         onSubmit={handleSubmit}
       >
         <Form>

@@ -100,6 +100,60 @@ func LeadLogin(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{
+		"data": "Enter the code found in your e-mail.",
+	})
+}
+
+func CheckLoginCode(c *fiber.Ctx) error {
+	code := c.Params("code")
+
+	if code == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "No code sent in request.",
+		})
+	}
+
+	// Initialize Structs
+	lead := &actions.Lead{}
+	lc := &actions.LeadCode{}
+
+	// Get User From Session
+	err := lead.GetLeadFromSession(c)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "User was not found.",
+		})
+	}
+
+	// Retrieve Token from DB
+	err = lc.GetLoginCode(code, lc.ID)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Token was not found.",
+		})
+	}
+
+	// Validate Code's Expiry Date
+	difference := time.Now().Unix() - lc.CreatedAt
+
+	if difference > 300 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Token expired.",
+		})
+	}
+
+	// Delete Token
+	err = lc.DeleteCode()
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not delete code.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
 		"data": lead,
 	})
 }
