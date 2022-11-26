@@ -1,9 +1,9 @@
 import React from "react";
 import PrimaryLayout from "../../../layout/Primary";
-import useLoginRequired from "../../../hooks/useLoginRequired";
+import useLeadAuth from "../../../hooks/useLeadAuth";
 
 const Dashboard: React.FC = () => {
-  useLoginRequired();
+  useLeadAuth();
 
   return (
     <PrimaryLayout screenName="Dashboard">

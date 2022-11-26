@@ -7,9 +7,9 @@ interface Props {
   children: React.ReactNode;
   h1Text: string;
   h1Subtext: string | React.ReactNode;
-  bottomTextOne: string;
-  bottomLinkText: string;
-  bottomLinkDestination: string;
+  bottomTextOne?: string;
+  bottomLinkText?: string;
+  bottomLinkDestination?: string;
 }
 
 const UserWrapper: React.FC<Props> = ({
@@ -24,7 +24,9 @@ const UserWrapper: React.FC<Props> = ({
     <div className={"container-center-horizontal"}>
       <div className={styles["registration-sign-in"]}>
         <div className={styles["flex-col"]}>
-          <h1 className={styles["registration-title-heading" + " heading--h1"]}>{h1Text}</h1>
+          <h1 className={styles["registration-title-heading" + " heading--h1"]}>
+            {h1Text}
+          </h1>
           <p
             className={
               typeof h1Subtext === "string" ? styles["form-subtext"] : undefined
@@ -33,14 +35,16 @@ const UserWrapper: React.FC<Props> = ({
             {h1Subtext}
           </p>
           {children}
-          <div className={styles["register-account"]}>
-            <p className={styles["register-account-paragraph"]}>
-              {bottomTextOne}
-            </p>
-            <div className={styles["create-an-account"]}>
-              <Link href={"/" + bottomLinkDestination}>{bottomLinkText}</Link>
+          {bottomLinkText && bottomTextOne && bottomLinkDestination && (
+            <div className={styles["register-account"]}>
+              <p className={styles["register-account-paragraph"]}>
+                {bottomTextOne}
+              </p>
+              <div className={styles["create-an-account"]}>
+                <Link href={"/" + bottomLinkDestination}>{bottomLinkText}</Link>
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className={styles["right-side-container"]}>
           <div className={styles["cta"]}>
@@ -54,8 +58,12 @@ const UserWrapper: React.FC<Props> = ({
                 <div className={styles["oval"]}></div>
                 <div className={styles["oval"]}></div>
               </div>
-              <div className={styles["bottom-text-heading" + " heading--h6"]}>Waiapi Karaka</div>
-              <div className={styles["bottom-text-paragraph" + " x14px--regular"]}>
+              <div className={styles["bottom-text-heading" + " heading--h6"]}>
+                Waiapi Karaka
+              </div>
+              <div
+                className={styles["bottom-text-paragraph" + " x14px--regular"]}
+              >
                 Financial Officer
               </div>
             </div>
