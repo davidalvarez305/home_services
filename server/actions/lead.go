@@ -38,6 +38,10 @@ type LeadQuote struct {
 
 type LeadQuotes []*LeadQuote
 
+type LeadCode struct {
+	*models.LeadCode
+}
+
 func (l *Lead) Save() error {
 	return database.DB.Save(&l).First(&l).Error
 }
@@ -184,6 +188,46 @@ func (l *Lead) RecoverUUIDCode(uuid string) error {
 	title := "Your UUID Recovery Request"
 	message := fmt.Sprintf("Your UUID Is: %s", l.UUID)
 	err = utils.SendGmail(message, l.Email, title)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (lc *LeadCode) GenerateLoginCode(leadId int) error {
+
+	// Create Six Digit Code for Login
+	code := utils.GenerateSixDigitCode(6)
+
+	// Initialize & Generate Token
+	t := models.LeadCode{
+		Code:      code,
+		LeadID:    leadId,
+		CreatedAt: time.Now().Unix(),
+	}
+
+	// Assign token to struct
+	lc.LeadCode = &t
+
+	result := database.DB.Save(&lc).First(&lc)
+
+	return result.Error
+}
+
+// Generates new token to ensure that user at least has access to the user's e-mail.
+func (lead *Lead) GenerateLeadToken() error {
+	lc := &LeadCode{}
+	err := lc.GenerateLoginCode(lead.ID)
+
+	if err != nil {
+		return err
+	}
+
+	title := "Login Account Code"
+	message := fmt.Sprintf("Enter this code: %s", lc.Code)
+	err = utils.SendGmail(message, lead.Email, title)
 
 	if err != nil {
 		return err

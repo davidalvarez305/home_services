@@ -754,7 +754,16 @@ func RecoverUUIDCode(c *fiber.Ctx) error {
 		})
 	}
 
+	// Send e-mail with code
+	title := "Here's your account code"
+	message := fmt.Sprintf("Code: %s", lead.UUID)
+	err = utils.SendGmail(message, lead.Email, title)
+
+	if err != nil {
+		return err
+	}
+
 	return c.Status(200).JSON(fiber.Map{
-		"data": lead,
+		"data": "Account code was sent to your e-mail.",
 	})
 }
