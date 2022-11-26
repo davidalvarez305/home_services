@@ -26,32 +26,53 @@ const Login: React.FC = () => {
         data: values,
       },
       (_) => {
-        
         setEnterCode(true);
-
-        /* 
-        ctx?.SetLead(res.data.data);
-        router.push("/"); */
       }
     );
   }
 
+  function handleSubmitCode(values: { code: string }) {
+    makeRequest(
+      {
+        url: LEAD_ROUTE + "login/" + values.code,
+        method: "POST",
+      },
+      (res) => {
+        ctx?.SetLead(res.data.data);
+        router.push("/");
+      }
+    );
+  }
+
+  if (enterCode) {
+    return (
+      <LoginOrRegister h1Text="Sign In" h1Subtext="Enter your account details">
+        <Formik initialValues={{ code: "" }} onSubmit={handleSubmitCode}>
+          <Form>
+            <div className={styles["form"]}>
+              <PrimaryInput label="Code" name="code" placeholder="Code..." />
+              <div className={styles["flex-row"]}>
+                <div className={styles["recover-password"]}>
+                  <p onClick={() => setEnterCode(false)}>Resend Code</p>
+                </div>
+              </div>
+              <Button type={"submit"} className={"Blue"} isLoading={isLoading}>
+                Sign in
+              </Button>
+              <RequestErrorMessage {...error} />
+            </div>
+          </Form>
+        </Formik>
+      </LoginOrRegister>
+    );
+  }
+
   return (
-    <LoginOrRegister
-      h1Text="Sign In"
-      h1Subtext="Enter your account details"
-    >
-      <Formik
-        initialValues={{ uuid: "" }}
-        onSubmit={handleSubmit}
-      >
+    <LoginOrRegister h1Text="Sign In" h1Subtext="Enter your account details">
+      <Formik initialValues={{ uuid: "" }} onSubmit={handleSubmit}>
         <Form>
           <div className={styles["form"]}>
-            <PrimaryInput
-              label="Code"
-              name="uuid"
-              placeholder="Code..."
-            />
+            <PrimaryInput label="Code" name="uuid" placeholder="Code..." />
             <div className={styles["flex-row"]}>
               <Checkbox>Remember me</Checkbox>
               <div className={styles["recover-password"]}>
