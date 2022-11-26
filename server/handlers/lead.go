@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"time"
 
@@ -31,6 +32,15 @@ func CreateLead(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Failed to create a lead.",
 		})
+	}
+
+	// Send e-mail after account creation
+	title := "Account Creation"
+	message := fmt.Sprintf("Click here to access your account dashboard: %s", os.Getenv("CLIENT_URL")+"/account/"+lead.UUID)
+	err = utils.SendGmail(message, lead.Email, title)
+
+	if err != nil {
+		return err
 	}
 
 	// Log activity
