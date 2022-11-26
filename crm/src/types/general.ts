@@ -14,6 +14,20 @@ export type User = {
   role_id: number;
 };
 
+export type Lead = {
+  id: number;
+  email: string;
+  uuid: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  created_at: number;
+  company_id: number;
+  lead_marketing?: Object;
+  quote?: [];
+  lead_log?: [];
+};
+
 export type Company = {
   id: number;
   name: string;

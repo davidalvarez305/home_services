@@ -2,11 +2,11 @@ import axios from "axios";
 import { useCallback, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import { LEAD_ROUTE } from "../constants";
-import { UserContext } from "../context/UserContext";
+import { LeadContext } from "../context/LeadContext";
 
 export default function useLoginRequired() {
   const router = useRouter();
-  const ctx = useContext(UserContext);
+  const ctx = useContext(LeadContext);
 
   const fetchData = useCallback(() => {
     axios
@@ -14,7 +14,7 @@ export default function useLoginRequired() {
         withCredentials: true,
       })
       .then((res) => {
-        ctx?.SetUser(res.data.data);
+        ctx?.SetLead(res.data.data);
       })
       .catch((_) => {
         router.push("/login");
@@ -22,8 +22,8 @@ export default function useLoginRequired() {
   }, [ctx, router]);
 
   useEffect(() => {
-    if (!ctx?.user.api_token || !ctx?.user.email) {
+    if (!ctx?.lead.uuid || !ctx?.lead.email) {
       fetchData();
     }
-  }, [fetchData, ctx?.user]);
+  }, [fetchData, ctx?.lead]);
 }
