@@ -22,9 +22,11 @@ func (l *LeadLog) Save(action string, leadId string) error {
 		return err
 	}
 
-	l.Action = action
-	l.CreatedAt = time.Now().Unix()
-	l.LeadID = lead
+	l.LeadLog = &models.LeadLog{
+		Action:    action,
+		CreatedAt: time.Now().Unix(),
+		LeadID:    lead,
+	}
 
 	return database.DB.Save(&l).Error
 }

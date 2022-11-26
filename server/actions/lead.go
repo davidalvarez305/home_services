@@ -65,7 +65,7 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 		CreatedAt:   time.Now().Unix(),
 	}
 
-	l.LeadMarketing = &models.LeadMarketing{
+	l.Lead.LeadMarketing = &models.LeadMarketing{
 		Campaign:     input.Campaign,
 		Source:       input.Source,
 		Medium:       input.Medium,
