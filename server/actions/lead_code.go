@@ -32,8 +32,8 @@ func (lc *LeadCode) GenerateLoginCode(leadId int) error {
 	return result.Error
 }
 
-func (lc *LeadCode) GetLoginCode(code string, lead_id int) error {
-	return database.DB.Where("code = ? AND lead_id = ?", code, lead_id).First(&lc).Error
+func (lc *LeadCode) GetLoginCode(code string) error {
+	return database.DB.Where("code = ?", code).First(&lc).Error
 }
 
 func (lc *LeadCode) DeleteCode() error {

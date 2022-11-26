@@ -118,17 +118,8 @@ func CheckLoginCode(c *fiber.Ctx) error {
 	lead := &actions.Lead{}
 	lc := &actions.LeadCode{}
 
-	// Get User From Session
-	err := lead.GetLeadFromSession(c)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "User was not found.",
-		})
-	}
-
 	// Retrieve Token from DB
-	err = lc.GetLoginCode(code, lc.ID)
+	err := lc.GetLoginCode(code)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -154,12 +145,20 @@ func CheckLoginCode(c *fiber.Ctx) error {
 		})
 	}
 
+	err = lead.GetLead(fmt.Sprintf("%+v", lc.LeadID))
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"data": "Could not find that user account.",
+		})
+	}
+
 	// If lead is found -> initialize session & send cookie to browser.
 	sess, err := sessions.Sessions.Get(c)
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
-			"data": "Failed to initialize session.",
+			"data": "Failed to initialize session storage.",
 		})
 	}
 
