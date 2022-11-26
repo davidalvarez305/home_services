@@ -3,7 +3,6 @@ import React, { useContext, useState } from "react";
 import Checkbox from "../../../components/Checkbox";
 import PrimaryInput from "../../../components/FormInput";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import useFetch from "../../../hooks/useFetch";
 import { LEAD_ROUTE } from "../../../constants";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
@@ -14,6 +13,7 @@ import Button from "../../../components/Button";
 
 const Login: React.FC = () => {
   const [enterCode, setEnterCode] = useState(false);
+  const [forgotCode, setForgotCode] = useState(false);
   const { makeRequest, isLoading, error } = useFetch();
   const ctx = useContext(LeadContext);
   const router = useRouter();
@@ -26,6 +26,7 @@ const Login: React.FC = () => {
         data: values,
       },
       (_) => {
+        setForgotCode(false);
         setEnterCode(true);
       }
     );
@@ -44,6 +45,40 @@ const Login: React.FC = () => {
     );
   }
 
+  function handleRecoverCode(values: { email: string }) {
+    makeRequest(
+      {
+        url: LEAD_ROUTE + "/login/code",
+        method: "POST",
+        data: values
+      },
+      (_) => {
+        setForgotCode(false);
+        setEnterCode(false);
+      }
+    );
+  }
+
+  let cursorStyles = { cursor: 'pointer' }
+
+  if (forgotCode) {
+    return (
+      <LoginOrRegister h1Text="Recover account code" h1Subtext="Enter your e-mail to get your code.">
+        <Formik initialValues={{ email: "" }} onSubmit={handleRecoverCode}>
+          <Form>
+            <div className={styles["form"]}>
+              <PrimaryInput label="Email" name="email" placeholder="Enter your email..." />
+              <Button type={"submit"} className={"Blue"} isLoading={isLoading}>
+                Send
+              </Button>
+              <RequestErrorMessage {...error} />
+            </div>
+          </Form>
+        </Formik>
+      </LoginOrRegister>
+    );
+  }
+
   if (enterCode) {
     return (
       <LoginOrRegister h1Text="Sign In" h1Subtext="Enter your account details">
@@ -53,11 +88,11 @@ const Login: React.FC = () => {
               <PrimaryInput label="Code" name="code" placeholder="Code..." />
               <div className={styles["flex-row"]}>
                 <div className={styles["recover-password"]}>
-                  <p onClick={() => setEnterCode(false)}>Resend Code</p>
+                  <p style={cursorStyles} onClick={() => setEnterCode(false)}>Resend Code</p>
                 </div>
               </div>
               <Button type={"submit"} className={"Blue"} isLoading={isLoading}>
-                Sign in
+                Send
               </Button>
               <RequestErrorMessage {...error} />
             </div>
@@ -76,11 +111,11 @@ const Login: React.FC = () => {
             <div className={styles["flex-row"]}>
               <Checkbox>Remember me</Checkbox>
               <div className={styles["recover-password"]}>
-                <Link href={"/forgot-password"}>Forgot Code</Link>
+                <p style={cursorStyles} onClick={() => setForgotCode(true)}>Forgot Code</p>
               </div>
             </div>
             <Button type={"submit"} className={"Blue"} isLoading={isLoading}>
-              Sign in
+              Submit
             </Button>
             <RequestErrorMessage {...error} />
           </div>
