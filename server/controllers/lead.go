@@ -22,11 +22,12 @@ func Lead(router fiber.Router) {
 	lead.Post("/:id", handlers.LeadLogout)   // Logout
 
 	// Lead Quotes
-	lead.Post("/:id/quote", handlers.CreateQuote) // Create a quote from user profile
+	lead.Post("/:id/quote", handlers.CreateQuote)    // Create a quote from user profile
+	lead.Get("/:id/quote", handlers.GetQuotesByLead) // Get quote details
 
 	// Lead Quotes Detail
-	lead.Get("/:id/quote/:quoteId", handlers.GetQuotesByLead)    // Get quote details
 	lead.Delete("/:id/quote/:quoteId", handlers.DeleteLeadQuote) // Delete a quote
+	// lead.Delete("/:id/quote/:quoteId", handlers.GetQuoteByID) // Get single quote details
 
 	// Lead Quotes Actions
 	lead.Put("/:id/quote/:quoteId/address/:addressId", handlers.UpdateQuoteAddress)     // Update address attached to a lead's quote.
