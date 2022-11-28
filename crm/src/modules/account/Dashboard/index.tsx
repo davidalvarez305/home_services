@@ -26,7 +26,6 @@ const Dashboard: React.FC = () => {
         url: `${LEAD_ROUTE}/15/quote`,
       },
       (res) => {
-        console.log(res.data.data);
         setLeadQuotes(res.data.data);
       }
     );
