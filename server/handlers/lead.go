@@ -337,28 +337,12 @@ func CreateQuote(c *fiber.Ctx) error {
 	err := c.BodyParser(&input)
 
 	if err != nil {
+		fmt.Printf("%+v\n", err)
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Failed to parse request body.",
 		})
 	}
 
-	// Handle Client Photos
-	form, err := c.MultipartForm()
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to process images.",
-		})
-	}
-
-	clientImages, err := utils.HandleMultipleImages(form)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to upload images.",
-		})
-	}
-
-	input.Photos = clientImages
 	q := &actions.Quote{}
 
 	err = q.CreateQuote(&input)
@@ -508,10 +492,6 @@ func AddQuotePhotos(c *fiber.Ctx) error {
 	quoteId := c.Params("quoteId")
 	leadLog := &actions.LeadLog{}
 
-	type QuotePhotoInput struct {
-		PhotoDescriptions []string `json:"photo_descriptions"`
-	}
-
 	if len(leadId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Lead ID not found in URL params.",
@@ -524,21 +504,11 @@ func AddQuotePhotos(c *fiber.Ctx) error {
 		})
 	}
 
-	var input QuotePhotoInput
-
-	err := c.BodyParser(&input)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to parse request body.",
-		})
-	}
-
 	// Handle Client Photos
 	form, err := c.MultipartForm()
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to process images.",
+			"data": "Failed to process form.",
 		})
 	}
 
@@ -558,13 +528,12 @@ func AddQuotePhotos(c *fiber.Ctx) error {
 		})
 	}
 
-	// Append the URLs from the S3 bucket with the description coming from the client
+	// Append the URLs from the S3 bucket and save
 	var photos actions.QuotePhotos
-	for index, photo := range clientImages {
+	for _, photo := range clientImages {
 		p := models.QuotePhoto{
-			ImageURL:    photo,
-			Description: input.PhotoDescriptions[index],
-			QuoteID:     quote,
+			ImageURL: photo,
+			QuoteID:  quote,
 		}
 		photos = append(photos, &p)
 	}

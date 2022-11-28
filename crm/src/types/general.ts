@@ -130,8 +130,6 @@ export type CompanyServiceLocations = {
 
 export type CreateQuoteInput = {
   zip_code: string;
-  photos: string[];
-  photo_descriptions: string[];
   services: number[];
   street_address_line_1: string;
   street_address_line_2: string;
@@ -139,4 +137,13 @@ export type CreateQuoteInput = {
   city_id: number;
   state_id: number;
   country_id: number;
+}
+
+export type Quote = {
+  id: number;
+  zip_code: string;
+  created_at: number;
+  updated_at: number;
+  lead_id: number;
+  address_id: number;
 }

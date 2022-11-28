@@ -34,18 +34,6 @@ func (q *Quote) CreateQuote(input *types.CreateQuoteInput) error {
 		CountryID:          input.CountryID,
 	}
 
-	// Save S3 URL's as photos
-	var photos []*models.QuotePhoto
-
-	for index, img := range input.Photos {
-		photos = append(photos, &models.QuotePhoto{
-			ImageURL:    img,
-			Description: input.PhotoDescriptions[index],
-		})
-	}
-
-	q.QuotePhoto = photos
-
 	// Append services for quote
 	var services []*models.QuoteServices
 
