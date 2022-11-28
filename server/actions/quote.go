@@ -1,6 +1,8 @@
 package actions
 
 import (
+	"time"
+
 	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/davidalvarez305/home_services/server/types"
@@ -22,16 +24,24 @@ func (q *Quote) DeleteQuote() error {
 	return database.DB.Where("id = ?", q.ID).Delete(&q).Error
 }
 
-func (q *Quote) CreateQuote(input *types.CreateQuoteInput) error {
+func (q *Quote) CreateQuote(input *types.CreateQuoteInput, leadId int) error {
+
+	var quote models.Quote
+
+	quote.ZipCode = input.ZipCode
+	quote.CreatedAt = time.Now().Unix()
+	quote.UpdatedAt = time.Now().Unix()
+	quote.LeadID = leadId
 
 	// Add address for user's quote
-	q.Address = &models.Address{
+	quote.Address = &models.Address{
 		StreetAddressLine1: input.StreetAddressLine1,
 		StreetAddressLine2: input.StreetAddressLine2,
 		StreetAddressLine3: input.StreetAddressLine3,
 		CityID:             input.CityID,
 		StateID:            input.StateID,
 		CountryID:          input.CountryID,
+		ZipCode:            input.ZipCode,
 	}
 
 	// Append services for quote
@@ -43,7 +53,10 @@ func (q *Quote) CreateQuote(input *types.CreateQuoteInput) error {
 		})
 	}
 
-	q.QuoteServices = services
+	quote.QuoteServices = services
+
+	// Mutate quote pointer && save
+	q.Quote = &quote
 
 	return q.Save()
 }

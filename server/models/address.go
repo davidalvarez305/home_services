@@ -2,9 +2,9 @@ package models
 
 type Address struct {
 	ID                 int      `json:"id"`
-	StreetAddressLine1 string   `gorm:"column:street_address_line_1" json:"street_address_line_1"`
-	StreetAddressLine2 string   `gorm:"column:street_address_line_2" json:"street_address_line_2"`
-	StreetAddressLine3 string   `gorm:"column:street_address_line_3" json:"street_address_line_3"`
+	StreetAddressLine1 string   `gorm:"column:street_address_line1" json:"street_address_line_1"`
+	StreetAddressLine2 string   `gorm:"column:street_address_line2" json:"street_address_line_2"`
+	StreetAddressLine3 string   `gorm:"column:street_address_line3" json:"street_address_line_3"`
 	CityID             int      `json:"city_id"`
 	City               *City    `gorm:"not null;column:city_id;foreignKey:CityID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 	StateID            int      `json:"state_id"`

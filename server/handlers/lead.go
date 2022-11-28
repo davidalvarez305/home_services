@@ -337,7 +337,6 @@ func CreateQuote(c *fiber.Ctx) error {
 	err := c.BodyParser(&input)
 
 	if err != nil {
-		fmt.Printf("%+v\n", err)
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Failed to parse request body.",
 		})
@@ -345,7 +344,15 @@ func CreateQuote(c *fiber.Ctx) error {
 
 	q := &actions.Quote{}
 
-	err = q.CreateQuote(&input)
+	lead, err := strconv.Atoi(leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Invalid Lead ID.",
+		})
+	}
+
+	err = q.CreateQuote(&input, lead)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
