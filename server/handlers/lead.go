@@ -318,7 +318,7 @@ func GetQuotesByLead(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(204).JSON(fiber.Map{
+	return c.Status(200).JSON(fiber.Map{
 		"data": leadQuotes,
 	})
 }

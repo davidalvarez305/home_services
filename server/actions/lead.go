@@ -31,9 +31,8 @@ type LeadQuote struct {
 	State              string `json:"state"`
 	ZipCode            string `json:"zip_code"`
 	CreatedAt          int64  `json:"created_at"`
-	Services           string `json:"services"`           // string separated by commas
-	Photos             string `json:"photos"`             // string separated by commas
-	PhotoDescriptions  string `json:"photo_descriptions"` // string separated by commas
+	Services           string `json:"services"` // string separated by commas
+	Photos             string `json:"photos"`   // string separated by commas
 }
 
 type LeadQuotes []*LeadQuote
@@ -148,8 +147,7 @@ func (lq *LeadQuotes) GetQuotesByLead(leadId string) error {
 	SELECT a.street_address_line1 AS street_address_line_1, a.street_address_line2 AS street_address_line_2, a.street_address_line3 AS street_address_line_3,
 	c.city, c.id AS city_id, s.state, s.id AS state_id, q.zip_code,
 	string_agg(ser.service, ',') AS services,
-	string_agg(qp.image_url, ',') AS photos,
-	string_agg(qp.description, ',') AS photo_descriptions
+	string_agg(qp.image_url, ',') AS photos
 	FROM quote AS q
 	LEFT JOIN quote_services AS qs
 	on qs.quote_id  = q.id

@@ -137,7 +137,7 @@ export type CreateQuoteInput = {
   city_id: number;
   state_id: number;
   country_id: number;
-}
+};
 
 export type Quote = {
   id: number;
@@ -146,4 +146,18 @@ export type Quote = {
   updated_at: number;
   lead_id: number;
   address_id: number;
-}
+};
+
+export type LeadQuote = {
+  street_address_line_1: string;
+  street_address_line_2: string;
+  street_address_line_3: string;
+  city: string;
+  city_id: number;
+  state_id: number;
+  state: string;
+  zip_code: string;
+  created_at: number;
+  services: string;
+  photos: string;
+};
