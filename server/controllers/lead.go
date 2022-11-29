@@ -27,7 +27,6 @@ func Lead(router fiber.Router) {
 
 	// Lead Quotes Detail
 	lead.Delete("/:id/quote/:quoteId", handlers.DeleteLeadQuote) // Delete a quote
-	// lead.Delete("/:id/quote/:quoteId", handlers.GetQuoteByID) // Get single quote details
 
 	// Lead Quotes Actions
 	lead.Put("/:id/quote/:quoteId/address/:addressId", handlers.UpdateQuoteAddress)     // Update address attached to a lead's quote.

@@ -369,8 +369,18 @@ func CreateQuote(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(201).JSON(fiber.Map{
-		"data": q,
+	leadQuotes := &actions.LeadQuotes{}
+
+	err = leadQuotes.GetQuotesByLead(leadId)
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"data": "Failed to get quotes.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": leadQuotes,
 	})
 }
 
@@ -417,8 +427,18 @@ func DeleteLeadQuote(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(204).JSON(fiber.Map{
-		"data": "OK",
+	leadQuotes := &actions.LeadQuotes{}
+
+	err = leadQuotes.GetQuotesByLead(leadId)
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"data": "Failed to get quotes.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": leadQuotes,
 	})
 }
 

@@ -31,8 +31,20 @@ const Dashboard: React.FC = () => {
     );
   }, [makeRequest]);
 
+  function handleDeleteQuote(quoteId: number) {
+    makeRequest(
+      {
+        url: `${LEAD_ROUTE}/15/quote/${quoteId}`,
+        method: "DELETE"
+      },
+      (res) => {
+        setLeadQuotes(res.data.data);
+      }
+    );
+  }
+
   if (addQuote) {
-    return <AddQuote setAddQuote={setAddQuote} />;
+    return <AddQuote setAddQuote={setAddQuote} setLeadQuotes={setLeadQuotes} />;
   }
 
   return (
@@ -47,6 +59,8 @@ const Dashboard: React.FC = () => {
               bottomRightHeader={quote.services}
               topLeftHeader={"Budget Amount"}
               topLeftRegularParagraph={"$5000"}
+              onDelete={() => handleDeleteQuote(quote.id)}
+              onEdit={() => console.log('handle edit')}
             />
           </React.Fragment>
         ))}

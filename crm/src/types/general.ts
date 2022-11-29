@@ -149,6 +149,7 @@ export type Quote = {
 };
 
 export type LeadQuote = {
+  id: number;
   street_address_line_1: string;
   street_address_line_2: string;
   street_address_line_3: string;

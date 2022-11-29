@@ -1,5 +1,8 @@
+import { IconButton } from "@chakra-ui/react";
 import DeleteButton from "../DeleteIconButton";
 import styles from "./LargeBox.module.css";
+import { FiEdit2 } from "react-icons/fi";
+import { MouseEventHandler } from "react";
 
 interface Props {
   bottomLeftHeader: string;
@@ -8,6 +11,8 @@ interface Props {
   bottomRightHeader: string;
   topLeftHeader: string;
   topLeftRegularParagraph: string;
+  onEdit: MouseEventHandler<HTMLButtonElement> | undefined;
+  onDelete: MouseEventHandler<HTMLButtonElement> | undefined
 }
 
 const LargeBox: React.FC<Props> = ({
@@ -17,6 +22,8 @@ const LargeBox: React.FC<Props> = ({
   bottomRightHeader,
   topLeftHeader,
   topLeftRegularParagraph,
+  onEdit,
+  onDelete
 }) => {
   return (
     <div className={styles[`large-box-container`]}>
@@ -35,8 +42,19 @@ const LargeBox: React.FC<Props> = ({
           </div>
         </div>
       </div>
-      <div className={styles["bottom-right-container"]}>
-        <DeleteButton aria-label={"deleteButton"} />
+      <div className={styles["right-container"]}>
+        <div className={styles["top-right-container"]}>
+          <DeleteButton
+            aria-label={"deleteButton"}
+            onClick={onDelete}
+          />
+          <IconButton
+            icon={<FiEdit2 />}
+            aria-label={"edit"}
+            variant={"outline"}
+            onClick={onEdit}
+          />
+        </div>
         <div className={styles["bottom-right-header"]}>{bottomRightHeader}</div>
       </div>
     </div>

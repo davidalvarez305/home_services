@@ -68,7 +68,7 @@
   width: fit-content;
 }
 
-.bottom-right-container {
+.right-container {
   align-items: flex-end;
   align-self: flex-end;
   display: flex;
@@ -86,4 +86,11 @@
   min-width: 38px;
   text-align: right;
   white-space: nowrap;
+}
+
+.top-right-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
 }

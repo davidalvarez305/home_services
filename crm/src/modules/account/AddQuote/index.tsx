@@ -3,7 +3,7 @@ import PrimaryLayout from "../../../layout/Primary";
 import useLeadAuth from "../../../hooks/useLeadAuth";
 import styles from "./AddQuote.module.css";
 import { Form, Formik } from "formik";
-import { CreateQuoteInput, Quote } from "../../../types/general";
+import { CreateQuoteInput, LeadQuote, Quote } from "../../../types/general";
 import Button from "../../../components/Button";
 import PrimaryInput from "../../../components/FormInput";
 import FormSelect from "../../../components/FormSelect";
@@ -14,9 +14,10 @@ import RequestErrorMessage from "../../../components/RequestErrorMessage";
 
 interface Props {
     setAddQuote: React.Dispatch<React.SetStateAction<boolean>>;
+    setLeadQuotes: React.Dispatch<React.SetStateAction<LeadQuote[]>>;
 }
 
-const AddQuote: React.FC<Props> = ({ setAddQuote }) => {
+const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
   const [imagesNum, setImagesNum] = useState(0);
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
@@ -48,8 +49,10 @@ const AddQuote: React.FC<Props> = ({ setAddQuote }) => {
         data: formValues,
       },
       (res) => {
-        const successResponse: Quote = res.data.data;
-        if (successResponse.id && values.photos) {
+        const allQuotes: LeadQuote[] = res.data.data;
+        const lastQuote = allQuotes[allQuotes.length - 1];
+
+        if (lastQuote.id && values.photos) {
           const fd = new FormData();
 
           for (let i = 0; i < values.photos.length; i++) {
@@ -58,12 +61,13 @@ const AddQuote: React.FC<Props> = ({ setAddQuote }) => {
 
           makeRequest(
             {
-              url: `${LEAD_ROUTE}/15/quote/${successResponse.id}/photo`,
+              url: `${LEAD_ROUTE}/15/quote/${lastQuote.id}/photo`,
               method: "POST",
               data: fd,
             },
             (res) => {
               if (res.data.data) {
+                setLeadQuotes(allQuotes);
                 setAddQuote(false);
               }
             }

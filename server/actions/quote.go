@@ -13,7 +13,7 @@ type Quote struct {
 }
 
 func (q *Quote) Save() error {
-	return database.DB.Save(&q).First(&q).Error
+	return database.DB.Save(&q).Error
 }
 
 func (q *Quote) GetQuote(quoteId string) error {
