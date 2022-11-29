@@ -17,21 +17,11 @@ type Props = {
 };
 
 const FormSelect: React.FC<Props> = ({ options, name }) => {
-  let initialProps = useMemo(
-    () =>
-      Object.create({
-        value: "",
-        label: "",
-      }),
-    []
-  );
-  const { setFieldValue, values } = useFormikContext();
+  const { setFieldValue } = useFormikContext();
 
   const [field, meta] = useField(name);
 
-  const [selectedValue, setSelectedValue] = useState<null | SelectType>(
-    initialProps
-  );
+  const [selectedValue, setSelectedValue] = useState<null | SelectType>(null);
 
   return (
     <Box
