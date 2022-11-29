@@ -1,29 +1,25 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import PrimaryLayout from "../../../layout/Primary";
 import useLeadAuth from "../../../hooks/useLeadAuth";
-import styles from "./AddQuote.module.css";
-import { Form, Formik } from "formik";
-import { CreateQuoteInput, LeadQuote, Quote } from "../../../types/general";
-import Button from "../../../components/Button";
-import PrimaryInput from "../../../components/FormInput";
-import FormSelect from "../../../components/FormSelect";
+import { Formik } from "formik";
+import { CreateQuoteInput, LeadQuote } from "../../../types/general";
 import useFetch from "../../../hooks/useFetch";
 import { LEAD_ROUTE } from "../../../constants";
 import { LeadContext } from "../../../context/LeadContext";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
+import QuoteForm from "../../../forms/QuoteForm";
 
 interface Props {
-    setAddQuote: React.Dispatch<React.SetStateAction<boolean>>;
-    setLeadQuotes: React.Dispatch<React.SetStateAction<LeadQuote[]>>;
+  setAddQuote: React.Dispatch<React.SetStateAction<boolean>>;
+  setLeadQuotes: React.Dispatch<React.SetStateAction<LeadQuote[]>>;
 }
 
 const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
-  const [imagesNum, setImagesNum] = useState(0);
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
   useLeadAuth();
 
-  function handleCreateQuote(values: {
+  async function handleCreateQuote(values: {
     zip_code: string;
     photos: FileList | null;
     services: number;
@@ -91,96 +87,12 @@ const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
           state: 0,
           country: 0,
         }}
-        onSubmit={handleCreateQuote}
+        onSubmit={async (values, { setSubmitting }) => {
+          await handleCreateQuote(values);
+          setSubmitting(false);
+        }}
       >
-        {({ setFieldValue }) => (
-          <Form>
-            <div className={styles["form-container"]}>
-              <div className={styles["column-container"]}>
-                <PrimaryInput
-                  label={"Street Address Line 1"}
-                  name={"street_address_line_1"}
-                />
-                <PrimaryInput
-                  label={"Street Address Line 2"}
-                  name={"street_address_line_2"}
-                />
-                <PrimaryInput
-                  label={"Street Address Line 3"}
-                  name={"street_address_line_3"}
-                />
-              </div>
-              <div className={styles["column-container"]}>
-                <FormSelect
-                  name={"city"}
-                  options={[{ value: 1, label: "Hialeah" }]}
-                />
-                <FormSelect
-                  name={"state"}
-                  options={[{ value: 1, label: "Florida" }]}
-                />
-                <FormSelect
-                  name={"country"}
-                  options={[{ value: 1, label: "United States" }]}
-                />
-                <FormSelect
-                  name={"zip_code"}
-                  options={[{ value: "33015", label: "33015" }]}
-                />
-              </div>
-            </div>
-            <div className={styles["bottom-form-container"]}>
-              <div className={styles["image-and-services"]}>
-                <FormSelect
-                  name={"services"}
-                  options={[{ value: 1, label: "Bathroom Remodeling" }]}
-                />
-                <Button
-                  type={"button"}
-                  onClick={() => document.getElementById("image")?.click()}
-                  className={"Blue"}
-                >
-                  Set Image
-                </Button>
-                <input
-                  style={{ display: "none" }}
-                  id="image"
-                  onChange={(e) => {
-                    if (e.target.files) {
-                      setImagesNum(e.target.files.length);
-                      setFieldValue("photos", e.target.files);
-                    }
-                  }}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                />
-              </div>
-              {imagesNum && (
-                <div className={styles["images-container"]}>
-                  {`(${imagesNum}) Selected Images`}
-                </div>
-              )}
-              <div className={styles["buttons-container"]}>
-                <Button
-                  isLoading={isLoading}
-                  type={"submit"}
-                  className={"Dark"}
-                >
-                  Create
-                </Button>
-                <Button
-                  isLoading={isLoading}
-                  onClick={() => setAddQuote(false)}
-                  type={"button"}
-                  className={"Light"}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          </Form>
-        )}
+        <QuoteForm setToggleForm={setAddQuote} />
       </Formik>
       <RequestErrorMessage {...error} />
     </PrimaryLayout>

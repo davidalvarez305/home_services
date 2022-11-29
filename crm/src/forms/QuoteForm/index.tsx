@@ -1,0 +1,105 @@
+import { Button } from "@chakra-ui/react";
+import { Form, useFormikContext } from "formik";
+import { useState } from "react";
+import PrimaryInput from "../../components/FormInput";
+import FormSelect from "../../components/FormSelect";
+import styles from "./QuoteForm.module.css";
+
+interface Props {
+  setToggleForm: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const QuoteForm: React.FC<Props> = ({ setToggleForm }) => {
+  const [imagesNum, setImagesNum] = useState(0);
+  const formik = useFormikContext();
+  return (
+    <Form>
+      <div className={styles["form-container"]}>
+        <div className={styles["column-container"]}>
+          <PrimaryInput
+            label={"Street Address Line 1"}
+            name={"street_address_line_1"}
+          />
+          <PrimaryInput
+            label={"Street Address Line 2"}
+            name={"street_address_line_2"}
+          />
+          <PrimaryInput
+            label={"Street Address Line 3"}
+            name={"street_address_line_3"}
+          />
+        </div>
+        <div className={styles["column-container"]}>
+          <FormSelect
+            name={"city"}
+            options={[{ value: 1, label: "Hialeah" }]}
+          />
+          <FormSelect
+            name={"state"}
+            options={[{ value: 1, label: "Florida" }]}
+          />
+          <FormSelect
+            name={"country"}
+            options={[{ value: 1, label: "United States" }]}
+          />
+          <FormSelect
+            name={"zip_code"}
+            options={[{ value: "33015", label: "33015" }]}
+          />
+        </div>
+      </div>
+      <div className={styles["bottom-form-container"]}>
+        <div className={styles["image-and-services"]}>
+          <FormSelect
+            name={"services"}
+            options={[{ value: 1, label: "Bathroom Remodeling" }]}
+          />
+          <Button
+            type={"button"}
+            onClick={() => document.getElementById("image")?.click()}
+            className={"Blue"}
+          >
+            Set Image
+          </Button>
+          <input
+            style={{ display: "none" }}
+            id="image"
+            onChange={(e) => {
+              if (e.target.files) {
+                setImagesNum(e.target.files.length);
+                formik.setFieldValue("photos", e.target.files);
+              }
+            }}
+            type="file"
+            accept="image/*"
+            multiple
+          />
+        </div>
+        {imagesNum && (
+          <div className={styles["images-container"]}>
+            {`(${imagesNum}) Selected Images`}
+          </div>
+        )}
+        <div className={styles["buttons-container"]}>
+          <Button
+            isLoading={formik.isSubmitting}
+            type={"submit"}
+            className={"Dark"}
+          >
+            Create
+          </Button>
+          <Button
+            isLoading={formik.isSubmitting}
+            onClick={() => setToggleForm(false)}
+            type={"button"}
+            className={"Light"}
+          >
+            Cancel
+          </Button>
+        </div>
+      </div>
+    </Form>
+  );
+};
+
+export default QuoteForm;
