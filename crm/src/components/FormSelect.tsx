@@ -14,10 +14,9 @@ type SelectType = { value: string | number; label: string };
 type Props = {
   options: SelectType[];
   name: string;
-  defaultValue?: SelectType;
 };
 
-const FormSelect: React.FC<Props> = ({ options, name, defaultValue }) => {
+const FormSelect: React.FC<Props> = ({ options, name }) => {
   let initialProps = useMemo(
     () =>
       Object.create({
@@ -33,12 +32,6 @@ const FormSelect: React.FC<Props> = ({ options, name, defaultValue }) => {
   const [selectedValue, setSelectedValue] = useState<null | SelectType>(
     initialProps
   );
-
-  useEffect(() => {
-    if ((values as any).word === "") {
-      setSelectedValue(initialProps);
-    }
-  }, [values, initialProps]);
 
   return (
     <Box
@@ -64,9 +57,7 @@ const FormSelect: React.FC<Props> = ({ options, name, defaultValue }) => {
         <ReactSelect
           name={field.name}
           id={field.name}
-          value={
-            defaultValue && !selectedValue?.value ? defaultValue : selectedValue
-          }
+          value={selectedValue}
           onChange={(e) => {
             setSelectedValue(e);
             setFieldValue(field.name, e?.value);

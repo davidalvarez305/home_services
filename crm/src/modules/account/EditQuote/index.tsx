@@ -27,7 +27,10 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
     city: number;
     state: number;
     country: number;
-  }) {}
+  }) {
+    console.log(values);
+  }
+  console.log(quote);
 
   return (
     <PrimaryLayout screenName="Edit Quote">

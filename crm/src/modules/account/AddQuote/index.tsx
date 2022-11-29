@@ -30,41 +30,42 @@ const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
     state: number;
     country: number;
   }) {
-    const { photos, ...input } = values;
+    return new Promise((resolve) => {
+      const { photos, ...input } = values;
 
-    makeRequest(
-      {
-        url: `${LEAD_ROUTE}/15/quote`,
-        method: "POST",
-        data: input,
-      },
-      (res) => {
-        const allQuotes: LeadQuote[] = res.data.data;
-        const lastQuote = allQuotes[allQuotes.length - 1];
+      makeRequest(
+        {
+          url: `${LEAD_ROUTE}/15/quote`,
+          method: "POST",
+          data: input,
+        },
+        (res) => {
+          const allQuotes: LeadQuote[] = res.data.data;
+          const lastQuote = allQuotes[allQuotes.length - 1];
 
-        if (lastQuote.id && photos) {
-          const fd = new FormData();
+          if (lastQuote.id && photos) {
+            const fd = new FormData();
 
-          for (let i = 0; i < photos.length; i++) {
-            fd.append("images", photos[i], photos[i]?.name);
+            for (let i = 0; i < photos.length; i++) {
+              fd.append("images", photos[i], photos[i]?.name);
+            }
+
+            makeRequest(
+              {
+                url: `${LEAD_ROUTE}/15/quote/${lastQuote.id}/photo`,
+                method: "POST",
+                data: fd,
+              },
+              (_) => {} // TBD
+            );
           }
 
-          makeRequest(
-            {
-              url: `${LEAD_ROUTE}/15/quote/${lastQuote.id}/photo`,
-              method: "POST",
-              data: fd,
-            },
-            (res) => {
-              if (res.data.data) {
-                setLeadQuotes(allQuotes);
-                setAddQuote(false);
-              }
-            }
-          );
+          setLeadQuotes(allQuotes);
+          setAddQuote(false);
+          return resolve(true);
         }
-      }
-    );
+      );
+    });
   }
 
   return (
