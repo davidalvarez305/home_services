@@ -43,13 +43,13 @@ type CreateLeadInput struct {
 
 type CreateQuoteInput struct {
 	ZipCode            string `json:"zip_code"`
-	Services           []int  `json:"services"`
 	StreetAddressLine1 string `json:"street_address_line_1"`
 	StreetAddressLine2 string `json:"street_address_line_2"`
 	StreetAddressLine3 string `json:"street_address_line_3"`
-	CityID             int    `json:"city_id"`
-	StateID            int    `json:"state_id"`
-	CountryID          int    `json:"country_id"`
+	CityID             int    `json:"city"`
+	StateID            int    `json:"state"`
+	CountryID          int    `json:"country"`
+	Service            int    `json:"service"`
 }
 
 type UpdateQuoteInput struct {

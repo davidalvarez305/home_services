@@ -32,6 +32,7 @@ func (q *Quote) CreateQuote(input *types.CreateQuoteInput, leadId int) error {
 	quote.CreatedAt = time.Now().Unix()
 	quote.UpdatedAt = time.Now().Unix()
 	quote.LeadID = leadId
+	quote.ServiceID = input.Service
 
 	// Add address for user's quote
 	quote.Address = &models.Address{
@@ -43,17 +44,6 @@ func (q *Quote) CreateQuote(input *types.CreateQuoteInput, leadId int) error {
 		CountryID:          input.CountryID,
 		ZipCode:            input.ZipCode,
 	}
-
-	// Append services for quote
-	var services []*models.QuoteServices
-
-	for _, service := range input.Services {
-		services = append(services, &models.QuoteServices{
-			ServiceID: service,
-		})
-	}
-
-	quote.QuoteServices = services
 
 	// Mutate quote pointer && save
 	q.Quote = &quote

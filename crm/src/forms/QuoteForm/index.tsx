@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import Button from "../../components/Button";
 import { Form, useFormikContext } from "formik";
 import { useState } from "react";
 import PrimaryInput from "../../components/FormInput";
@@ -51,7 +51,7 @@ const QuoteForm: React.FC<Props> = ({ setToggleForm }) => {
       <div className={styles["bottom-form-container"]}>
         <div className={styles["image-and-services"]}>
           <FormSelect
-            name={"services"}
+            name={"service"}
             options={[{ value: 1, label: "Bathroom Remodeling" }]}
           />
           <Button
@@ -75,7 +75,7 @@ const QuoteForm: React.FC<Props> = ({ setToggleForm }) => {
             multiple
           />
         </div>
-        {imagesNum && (
+        {imagesNum > 0 && (
           <div className={styles["images-container"]}>
             {`(${imagesNum}) Selected Images`}
           </div>

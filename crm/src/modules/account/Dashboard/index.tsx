@@ -12,10 +12,12 @@ import { LEAD_ROUTE } from "../../../constants";
 import { LeadContext } from "../../../context/LeadContext";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import AddQuote from "../AddQuote";
+import EditQuote from "../EditQuote";
 
 const Dashboard: React.FC = () => {
   const [leadQuotes, setLeadQuotes] = useState<LeadQuote[]>([]);
   const [addQuote, setAddQuote] = useState(false);
+  const [quoteToEdit, setQuoteToEdit] = useState<LeadQuote>();
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
   useLeadAuth();
@@ -47,6 +49,10 @@ const Dashboard: React.FC = () => {
     return <AddQuote setAddQuote={setAddQuote} setLeadQuotes={setLeadQuotes} />;
   }
 
+  if (quoteToEdit) {
+    return <EditQuote quote={quoteToEdit} setQuoteToEdit={setQuoteToEdit} />
+  }
+
   return (
     <PrimaryLayout screenName="Dashboard">
       <div className={styles["main-container"]}>
@@ -56,11 +62,11 @@ const Dashboard: React.FC = () => {
               bottomLeftHeader={quote.street_address_line_1}
               bottomLeftRegularParagraph={quote.city}
               bottomLeftBoldedParagraph={quote.state}
-              bottomRightHeader={quote.services}
+              bottomRightHeader={quote.service}
               topLeftHeader={"Budget Amount"}
               topLeftRegularParagraph={"$5000"}
               onDelete={() => handleDeleteQuote(quote.id)}
-              onEdit={() => console.log('handle edit')}
+              onEdit={() => setQuoteToEdit(quote)}
             />
           </React.Fragment>
         ))}

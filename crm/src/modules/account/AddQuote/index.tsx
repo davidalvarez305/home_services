@@ -22,7 +22,7 @@ const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
   async function handleCreateQuote(values: {
     zip_code: string;
     photos: FileList | null;
-    services: number;
+    service: number;
     street_address_line_1: string;
     street_address_line_2: string;
     street_address_line_3: string;
@@ -30,29 +30,23 @@ const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
     state: number;
     country: number;
   }) {
-    let formValues: CreateQuoteInput = {
-      ...values,
-      services: [values.services],
-      city_id: values.city,
-      state_id: values.state,
-      country_id: values.country,
-    };
+    const { photos, ...input } = values;
 
     makeRequest(
       {
         url: `${LEAD_ROUTE}/15/quote`,
         method: "POST",
-        data: formValues,
+        data: input,
       },
       (res) => {
         const allQuotes: LeadQuote[] = res.data.data;
         const lastQuote = allQuotes[allQuotes.length - 1];
 
-        if (lastQuote.id && values.photos) {
+        if (lastQuote.id && photos) {
           const fd = new FormData();
 
-          for (let i = 0; i < values.photos.length; i++) {
-            fd.append("images", values.photos[i], values.photos[i]?.name);
+          for (let i = 0; i < photos.length; i++) {
+            fd.append("images", photos[i], photos[i]?.name);
           }
 
           makeRequest(
@@ -79,7 +73,7 @@ const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
         initialValues={{
           zip_code: "",
           photos: null,
-          services: 0,
+          service: 0,
           street_address_line_1: "",
           street_address_line_2: "",
           street_address_line_3: "",

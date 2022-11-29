@@ -60,19 +60,6 @@ export type CreateCompanyInput = {
   zip_code: number;
 };
 
-// Do I use this anywhere?
-export type CSL = {
-  name: string;
-  logo: string;
-  street_address_line_1: string;
-  street_address_line_2: string;
-  street_address_line_3: string;
-  city: number;
-  state: number;
-  zip_codes: number[];
-  services: number[];
-};
-
 export type CompanyServicesByArea = {
   id: number;
   service_id: number;
@@ -130,14 +117,14 @@ export type CompanyServiceLocations = {
 
 export type CreateQuoteInput = {
   zip_code: string;
-  services: number[];
   street_address_line_1: string;
   street_address_line_2: string;
   street_address_line_3: string;
-  city_id: number;
-  state_id: number;
-  country_id: number;
-};
+  city: number;
+  state: number;
+  country: number;
+  service: number;
+}
 
 export type Quote = {
   id: number;
@@ -157,8 +144,11 @@ export type LeadQuote = {
   city_id: number;
   state_id: number;
   state: string;
+  country: string;
+  country_id: number;
   zip_code: string;
   created_at: number;
-  services: string;
+  service: string;
+  service_id: number;
   photos: string;
 };
