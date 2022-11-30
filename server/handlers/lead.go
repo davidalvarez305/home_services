@@ -324,7 +324,7 @@ func GetQuotesByLead(c *fiber.Ctx) error {
 }
 
 func CreateQuote(c *fiber.Ctx) error {
-	var input types.CreateQuoteInput
+	var input types.QuoteInput
 	leadId := c.Params("id")
 	leadLog := &actions.LeadLog{}
 
@@ -352,7 +352,7 @@ func CreateQuote(c *fiber.Ctx) error {
 		})
 	}
 
-	err = q.CreateQuote(&input, lead)
+	err = q.SaveQuote(&input, lead)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -381,6 +381,57 @@ func CreateQuote(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(fiber.Map{
 		"data": leadQuotes,
+	})
+}
+
+func UpdateLeadQuote(c *fiber.Ctx) error {
+	var input types.QuoteInput
+	leadId := c.Params("id")
+	leadLog := &actions.LeadLog{}
+
+	if len(leadId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Lead ID not found in URL params.",
+		})
+	}
+
+	err := c.BodyParser(&input)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to parse request body.",
+		})
+	}
+
+	q := &actions.Quote{}
+
+	lead, err := strconv.Atoi(leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Invalid Lead ID.",
+		})
+	}
+
+	err = q.SaveQuote(&input, lead)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to create quote.",
+		})
+	}
+
+	// Log activity
+	err = leadLog.Save("Quote details updated.", leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to log activity.",
+		})
+	}
+
+	return c.Status(201).JSON(fiber.Map{
+		"data": q,
 	})
 }
 
@@ -439,78 +490,6 @@ func DeleteLeadQuote(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(fiber.Map{
 		"data": leadQuotes,
-	})
-}
-
-func UpdateQuoteAddress(c *fiber.Ctx) error {
-	address := &actions.Address{}
-	addr := &actions.Address{}
-	leadLog := &actions.LeadLog{}
-	addressId := c.Params("addressId")
-	leadId := c.Params("id")
-	quoteId := c.Params("quoteId")
-
-	if len(leadId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Lead ID not found in URL params.",
-		})
-	}
-
-	if len(quoteId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Quote ID not found in URL params.",
-		})
-	}
-
-	if len(addressId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Address ID not found in URL params.",
-		})
-	}
-
-	err := c.BodyParser(&address)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to parse request body.",
-		})
-	}
-
-	err = addr.GetAddress(addressId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to retrieve quote.",
-		})
-	}
-
-	addr.StreetAddressLine1 = address.StreetAddressLine1
-	addr.StreetAddressLine2 = address.StreetAddressLine2
-	addr.StreetAddressLine3 = address.StreetAddressLine3
-	addr.CityID = address.CityID
-	addr.StateID = address.StateID
-	addr.CountryID = address.CountryID
-	addr.ZipCode = address.ZipCode
-
-	err = addr.Save()
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to update address.",
-		})
-	}
-
-	// Log activity
-	err = leadLog.Save("Quote address updated.", leadId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to log activity.",
-		})
-	}
-
-	return c.Status(202).JSON(fiber.Map{
-		"data": addr,
 	})
 }
 

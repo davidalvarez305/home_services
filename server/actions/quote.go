@@ -24,12 +24,18 @@ func (q *Quote) DeleteQuote() error {
 	return database.DB.Where("id = ?", q.ID).Delete(&q).Error
 }
 
-func (q *Quote) CreateQuote(input *types.CreateQuoteInput, leadId int) error {
+func (q *Quote) SaveQuote(input *types.QuoteInput, leadId int) error {
 
 	var quote models.Quote
 
+	quote.ID = input.ID
 	quote.ZipCode = input.ZipCode
-	quote.CreatedAt = time.Now().Unix()
+
+	// Only set "Created At" if ID is 0. Otherwise, it's an existing quote being updated.
+	if input.ID < 1 {
+		quote.CreatedAt = time.Now().Unix()
+	}
+
 	quote.UpdatedAt = time.Now().Unix()
 	quote.LeadID = leadId
 	quote.ServiceID = input.Service

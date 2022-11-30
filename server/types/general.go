@@ -41,7 +41,8 @@ type CreateLeadInput struct {
 	Service      int    `json:"service"`
 }
 
-type CreateQuoteInput struct {
+type QuoteInput struct {
+	ID                 int    `json:"id"`
 	ZipCode            string `json:"zip_code"`
 	StreetAddressLine1 string `json:"street_address_line_1"`
 	StreetAddressLine2 string `json:"street_address_line_2"`
@@ -51,18 +52,4 @@ type CreateQuoteInput struct {
 	CountryID          int    `json:"country"`
 	Service            int    `json:"service"`
 	Budget             int    `json:"budget"`
-}
-
-type UpdateQuoteInput struct {
-	ID                 int      `json:"id"`
-	ZipCode            string   `json:"zip_code"`
-	Photos             []string `json:"photos"`
-	PhotoDescriptions  []string `json:"photo_descriptions"`
-	Services           []int    `json:"services"`
-	StreetAddressLine1 string   `json:"street_address_line_1"`
-	StreetAddressLine2 string   `json:"street_address_line_2"`
-	StreetAddressLine3 string   `json:"street_address_line_3"`
-	CityID             int      `json:"city_id"`
-	StateID            int      `json:"state_id"`
-	CountryID          int      `json:"country_id"`
 }

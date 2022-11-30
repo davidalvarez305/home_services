@@ -4,14 +4,15 @@ import (
 	"context"
 	"mime/multipart"
 	"os"
-	"strings"
+	"path/filepath"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/google/uuid"
 )
 
 func generateFileName(fileName string) string {
-	return strings.Join(strings.Split(fileName, " "), "_")
+	return uuid.New().String() + filepath.Ext(fileName)
 }
 
 func UploadImageToS3(file *multipart.FileHeader) (string, error) {

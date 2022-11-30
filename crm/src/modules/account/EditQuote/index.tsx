@@ -1,11 +1,16 @@
 import { Formik } from "formik";
-import { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { LeadContext } from "../../../context/LeadContext";
 import QuoteForm from "../../../forms/QuoteForm";
 import useFetch from "../../../hooks/useFetch";
 import useAccountRequired from "../../../hooks/useAccountRequired";
 import PrimaryLayout from "../../../layout/Primary";
-import { LeadQuote } from "../../../types/general";
+import { LeadQuote, Quote } from "../../../types/general";
+import { LEAD_ROUTE } from "../../../constants";
+import { Carousel } from "react-responsive-carousel";
+import Button from "../../../components/Button";
+import Image from "next/image";
+import RequestErrorMessage from "../../../components/RequestErrorMessage";
 
 interface Props {
   quote: LeadQuote;
@@ -15,9 +20,11 @@ interface Props {
 const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
   useAccountRequired();
   const ctx = useContext(LeadContext);
-  const { makeRequest, isLoading, error } = useFetch();
+  const { makeRequest, error } = useFetch();
+  const [openCarousel, setOpenCarousel] = useState(false);
 
   async function handleSubmit(values: {
+    id: number;
     zip_code: string;
     photos: FileList | null;
     service: number;
@@ -29,9 +36,70 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
     country: number;
     budget: number;
   }) {
-    console.log(values);
+    return new Promise((resolve) => {
+      const { photos, ...input } = values;
+
+      makeRequest(
+        {
+          url: `${LEAD_ROUTE}/${ctx?.lead.id}/quote/${values.id}`,
+          method: "PUT",
+          data: input,
+        },
+        (res) => {
+          const quote: Quote = res.data.data;
+
+          if (quote.id && photos) {
+            const fd = new FormData();
+
+            for (let i = 0; i < photos.length; i++) {
+              fd.append("images", photos[i], photos[i]?.name);
+            }
+
+            makeRequest(
+              {
+                url: `${LEAD_ROUTE}/${ctx?.lead.id}/quote/${quote.id}/photo`,
+                method: "POST",
+                data: fd,
+              },
+              (_) => {
+                setQuoteToEdit(undefined);
+                return resolve(true);
+              }
+            );
+          }
+        }
+      );
+    });
   }
-  console.log(quote);
+
+  function onClickItem(index: number, item: React.ReactNode) {
+    alert("clicked img");
+  }
+
+  if (openCarousel) {
+    return (
+      <>
+        <Carousel
+          centerMode
+          showArrows={true}
+          width="700px"
+          onClickItem={onClickItem}
+        >
+          {quote.photos.split(",").map((photo) => (
+            <div key={photo}>
+              <Image
+                src={`https://home-services-app.s3.amazonaws.com/profile-pictures/${photo}`}
+                alt={photo}
+                width={400}
+                height={400}
+              />
+              <p className="legend">Legend 1</p>
+            </div>
+          ))}
+        </Carousel>
+      </>
+    );
+  }
 
   return (
     <PrimaryLayout screenName="Edit Quote">
@@ -49,7 +117,16 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
           setSubmitting(false);
         }}
       >
-        <QuoteForm setToggleForm={() => setQuoteToEdit(undefined)} />
+        <div>
+          <QuoteForm setToggleForm={() => setQuoteToEdit(undefined)} />
+          <RequestErrorMessage {...error} />
+          <Button
+            className="Dark"
+            onClick={() => setOpenCarousel((prev) => !prev)}
+          >
+            see images
+          </Button>
+        </div>
       </Formik>
     </PrimaryLayout>
   );
