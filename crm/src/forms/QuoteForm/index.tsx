@@ -49,6 +49,11 @@ const QuoteForm: React.FC<Props> = ({ setToggleForm }) => {
         </div>
       </div>
       <div className={styles["bottom-form-container"]}>
+          <PrimaryInput
+            label={"Project Budget"}
+            name={"budget"}
+            type={'number'}
+          />
         <div className={styles["image-and-services"]}>
           <FormSelect
             name={"service"}

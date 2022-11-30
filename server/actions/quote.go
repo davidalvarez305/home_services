@@ -33,6 +33,7 @@ func (q *Quote) CreateQuote(input *types.CreateQuoteInput, leadId int) error {
 	quote.UpdatedAt = time.Now().Unix()
 	quote.LeadID = leadId
 	quote.ServiceID = input.Service
+	quote.Budget = input.Budget
 
 	// Add address for user's quote
 	quote.Address = &models.Address{

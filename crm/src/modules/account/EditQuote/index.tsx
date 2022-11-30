@@ -27,6 +27,7 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
     city: number;
     state: number;
     country: number;
+    budget: number;
   }) {
     console.log(values);
   }

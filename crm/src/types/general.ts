@@ -124,6 +124,7 @@ export type CreateQuoteInput = {
   state: number;
   country: number;
   service: number;
+  budget: number;
 }
 
 export type Quote = {
@@ -151,4 +152,5 @@ export type LeadQuote = {
   service: string;
   service_id: number;
   photos: string;
+  budget: number;
 };

@@ -6,6 +6,7 @@ type Quote struct {
 	Zip        *ZipCode      `gorm:"not null;column:zip_code;foreignKey:ZipCode;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 	CreatedAt  int64         `gorm:"not null;column:created_at" json:"created_at"`
 	UpdatedAt  int64         `gorm:"not null;column:updated_at" json:"updated_at"`
+	Budget     int           `gorm:"not null;column:budget" json:"budget"`
 	LeadID     int           `gorm:"column:lead_id;foreignKey:LeadID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"lead_id"`
 	AddressID  int           `json:"address_id"`
 	Address    *Address      `gorm:"column:address_id;foreignKey:AddressID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`

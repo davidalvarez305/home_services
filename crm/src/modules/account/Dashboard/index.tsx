@@ -64,7 +64,7 @@ const Dashboard: React.FC = () => {
               bottomLeftBoldedParagraph={quote.state}
               bottomRightHeader={quote.service}
               topLeftHeader={"Budget Amount"}
-              topLeftRegularParagraph={"$5000"}
+              topLeftRegularParagraph={`$${quote.budget}`}
               onDelete={() => handleDeleteQuote(quote.id)}
               onEdit={() => setQuoteToEdit(quote)}
             />

@@ -50,6 +50,7 @@ type CreateQuoteInput struct {
 	StateID            int    `json:"state"`
 	CountryID          int    `json:"country"`
 	Service            int    `json:"service"`
+	Budget             int    `json:"budget"`
 }
 
 type UpdateQuoteInput struct {
