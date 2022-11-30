@@ -591,19 +591,21 @@ func DeleteQuotePhoto(c *fiber.Ctx) error {
 		})
 	}
 
-	err := quotePhoto.GetQuotePhoto(imageUrl)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to find that photo.",
-		})
-	}
-
-	err = quotePhoto.DeleteQuotePhoto()
+	err := quotePhoto.DeleteQuotePhoto(imageUrl)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Failed to delete that photo.",
+		})
+	}
+
+	photos := &actions.PhotoURLs{}
+
+	err = photos.GetPhotoURLsByQuoteID(quoteId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not get the remaining photos.",
 		})
 	}
 
@@ -616,8 +618,8 @@ func DeleteQuotePhoto(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(204).JSON(fiber.Map{
-		"data": "OK",
+	return c.Status(200).JSON(fiber.Map{
+		"data": photos,
 	})
 }
 

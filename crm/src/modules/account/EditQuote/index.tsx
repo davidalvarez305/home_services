@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { LeadContext } from "../../../context/LeadContext";
 import QuoteForm from "../../../forms/QuoteForm";
 import useFetch from "../../../hooks/useFetch";
@@ -23,6 +23,7 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
   const ctx = useContext(LeadContext);
   const { makeRequest, error } = useFetch();
   const [openCarousel, setOpenCarousel] = useState(false);
+  const [quotePhotos, setQuotePhotos] = useState(() => quote.photos.split(","));
 
   async function handleSubmit(values: {
     id: number;
@@ -84,7 +85,11 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
         method: "DELETE",
       },
       (res) => {
-        console.log(res.data.data);
+        setQuotePhotos(() => {
+          return res.data.data.map(
+            (photo: { image_url: string }) => photo.image_url
+          );
+        });
       }
     );
   }
@@ -99,7 +104,7 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
           width="700px"
           onClickItem={onClickItem}
         >
-          {quote.photos.split(",").map((photo, index) => (
+          {quotePhotos.map((photo, index) => (
             <div key={photo}>
               <div>
                 <DeleteButton
