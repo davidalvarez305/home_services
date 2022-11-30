@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import PrimaryLayout from "../../../layout/Primary";
-import useLeadAuth from "../../../hooks/useLeadAuth";
+import useAccountRequired from "../../../hooks/useAccountRequired";
 import LargeBox from "../../../components/LargeBox";
 import EmptyLargeBox from "../../../components/EmptyLargeBox";
 import styles from "./Dashboard.module.css";
@@ -20,23 +20,23 @@ const Dashboard: React.FC = () => {
   const [quoteToEdit, setQuoteToEdit] = useState<LeadQuote>();
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
-  useLeadAuth();
+  useAccountRequired();
 
   useEffect(() => {
     makeRequest(
       {
-        url: `${LEAD_ROUTE}/15/quote`,
+        url: `${LEAD_ROUTE}/${ctx?.lead.id}/quote`,
       },
       (res) => {
         setLeadQuotes(res.data.data);
       }
     );
-  }, [makeRequest]);
+  }, [makeRequest, ctx?.lead.id]);
 
   function handleDeleteQuote(quoteId: number) {
     makeRequest(
       {
-        url: `${LEAD_ROUTE}/15/quote/${quoteId}`,
+        url: `${LEAD_ROUTE}/${ctx?.lead.id}/quote/${quoteId}`,
         method: "DELETE"
       },
       (res) => {

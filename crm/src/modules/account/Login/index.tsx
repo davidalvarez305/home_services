@@ -10,6 +10,7 @@ import LoginOrRegister from "../../user/UserWrapper";
 import { LeadContext } from "../../../context/LeadContext";
 import styles from "./Login.module.css";
 import Button from "../../../components/Button";
+import { Lead } from "../../../types/general";
 
 const Login: React.FC = () => {
   const [enterCode, setEnterCode] = useState(false);
@@ -39,8 +40,9 @@ const Login: React.FC = () => {
         method: "POST",
       },
       (res) => {
-        ctx?.SetLead(res.data.data);
-        router.push("/");
+        const lead: Lead = res.data.data;
+        ctx?.SetLead(lead);
+        router.push("/account/" + lead.uuid);
       }
     );
   }

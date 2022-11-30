@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { LeadContext } from "../../../context/LeadContext";
 import QuoteForm from "../../../forms/QuoteForm";
 import useFetch from "../../../hooks/useFetch";
-import useLeadAuth from "../../../hooks/useLeadAuth";
+import useAccountRequired from "../../../hooks/useAccountRequired";
 import PrimaryLayout from "../../../layout/Primary";
 import { LeadQuote } from "../../../types/general";
 
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
-  useLeadAuth();
+  useAccountRequired();
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
 

@@ -17,7 +17,7 @@ export default function useAccountRequired() {
         ctx?.SetLead(res.data.data);
       })
       .catch((_) => {
-        router.push("/login");
+        router.push("/account/login");
       });
   }, [ctx, router]);
 

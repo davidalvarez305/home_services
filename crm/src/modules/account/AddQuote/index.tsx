@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import PrimaryLayout from "../../../layout/Primary";
-import useLeadAuth from "../../../hooks/useLeadAuth";
+import useAccountRequired from "../../../hooks/useAccountRequired";
 import { Formik } from "formik";
-import { CreateQuoteInput, LeadQuote } from "../../../types/general";
+import { LeadQuote } from "../../../types/general";
 import useFetch from "../../../hooks/useFetch";
 import { LEAD_ROUTE } from "../../../constants";
 import { LeadContext } from "../../../context/LeadContext";
@@ -17,7 +17,7 @@ interface Props {
 const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
-  useLeadAuth();
+  useAccountRequired();
 
   async function handleCreateQuote(values: {
     zip_code: string;
@@ -35,7 +35,7 @@ const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
 
       makeRequest(
         {
-          url: `${LEAD_ROUTE}/15/quote`,
+          url: `${LEAD_ROUTE}/${ctx?.lead.id}/quote`,
           method: "POST",
           data: input,
         },
@@ -52,7 +52,7 @@ const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
 
             makeRequest(
               {
-                url: `${LEAD_ROUTE}/15/quote/${lastQuote.id}/photo`,
+                url: `${LEAD_ROUTE}/${ctx?.lead.id}/quote/${lastQuote.id}/photo`,
                 method: "POST",
                 data: fd,
               },
