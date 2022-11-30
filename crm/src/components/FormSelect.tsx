@@ -23,6 +23,12 @@ const FormSelect: React.FC<Props> = ({ options, name }) => {
 
   const [selectedValue, setSelectedValue] = useState<null | SelectType>(null);
 
+  useEffect(() => {
+    if (options.length === 1) {
+      setSelectedValue(options[0]);
+    }
+  }, [options]);
+
   return (
     <Box
       sx={{
