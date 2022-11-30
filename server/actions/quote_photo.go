@@ -16,8 +16,8 @@ func (q *QuotePhoto) Save() error {
 	return database.DB.Save(&q).First(&q).Error
 }
 
-func (q *QuotePhoto) GetQuotePhoto(photoId string) error {
-	return database.DB.Where("id = ?", photoId).First(&q).Error
+func (q *QuotePhoto) GetQuotePhoto(imageUrl string) error {
+	return database.DB.Where("image_url = ?", imageUrl).First(&q).Error
 }
 
 func (q *QuotePhoto) DeleteQuotePhoto() error {

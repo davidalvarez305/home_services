@@ -11,6 +11,7 @@ import { Carousel } from "react-responsive-carousel";
 import Button from "../../../components/Button";
 import Image from "next/image";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
+import DeleteButton from "../../../components/DeleteIconButton";
 
 interface Props {
   quote: LeadQuote;
@@ -76,24 +77,43 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
     alert("clicked img");
   }
 
+  function handleDeletePhoto(url: string) {
+    makeRequest(
+      {
+        url: `${LEAD_ROUTE}/${ctx?.lead.id}/quote/${quote.id}/photo/${url}`,
+        method: "DELETE",
+      },
+      (res) => {
+        console.log(res.data.data);
+      }
+    );
+  }
+
   if (openCarousel) {
     return (
       <>
         <Carousel
           centerMode
+          autoPlay
           showArrows={true}
           width="700px"
           onClickItem={onClickItem}
         >
-          {quote.photos.split(",").map((photo) => (
+          {quote.photos.split(",").map((photo, index) => (
             <div key={photo}>
+              <div>
+                <DeleteButton
+                  aria-label={"delete photo"}
+                  onClick={() => handleDeletePhoto(photo)}
+                />
+              </div>
               <Image
                 src={`https://home-services-app.s3.amazonaws.com/profile-pictures/${photo}`}
                 alt={photo}
                 width={400}
                 height={400}
               />
-              <p className="legend">Legend 1</p>
+              <p className="legend">Legend {index + 1}</p>
             </div>
           ))}
         </Carousel>

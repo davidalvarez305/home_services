@@ -569,7 +569,7 @@ func AddQuotePhotos(c *fiber.Ctx) error {
 func DeleteQuotePhoto(c *fiber.Ctx) error {
 	leadId := c.Params("id")
 	quoteId := c.Params("quoteId")
-	photoId := c.Params("photoId")
+	imageUrl := c.Params("imageUrl")
 	quotePhoto := &actions.QuotePhoto{}
 	leadLog := &actions.LeadLog{}
 
@@ -585,13 +585,13 @@ func DeleteQuotePhoto(c *fiber.Ctx) error {
 		})
 	}
 
-	if len(photoId) == 0 {
+	if len(imageUrl) == 0 {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Quote ID not found in URL params.",
+			"data": "Image URL not found in URL params.",
 		})
 	}
 
-	err := quotePhoto.GetQuotePhoto(photoId)
+	err := quotePhoto.GetQuotePhoto(imageUrl)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -604,12 +604,6 @@ func DeleteQuotePhoto(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Failed to delete that photo.",
-		})
-	}
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to save images.",
 		})
 	}
 
