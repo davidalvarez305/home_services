@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { LeadContext } from "../../../context/LeadContext";
 import QuoteForm from "../../../forms/QuoteForm";
 import useFetch from "../../../hooks/useFetch";
@@ -7,11 +7,11 @@ import useAccountRequired from "../../../hooks/useAccountRequired";
 import PrimaryLayout from "../../../layout/Primary";
 import { LeadQuote, Quote } from "../../../types/general";
 import { LEAD_ROUTE } from "../../../constants";
-import { Carousel } from "react-responsive-carousel";
 import Button from "../../../components/Button";
 import Image from "next/image";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import DeleteButton from "../../../components/DeleteIconButton";
+import CarouselModal from "../../../components/CarouselModal";
 
 interface Props {
   quote: LeadQuote;
@@ -21,7 +21,7 @@ interface Props {
 const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
   useAccountRequired();
   const ctx = useContext(LeadContext);
-  const { makeRequest, error } = useFetch();
+  const { makeRequest, isLoading, error } = useFetch();
   const [openCarousel, setOpenCarousel] = useState(false);
   const [quotePhotos, setQuotePhotos] = useState(() => quote.photos.split(","));
 
@@ -74,10 +74,6 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
     });
   }
 
-  function onClickItem(index: number, item: React.ReactNode) {
-    alert("clicked img");
-  }
-
   function handleDeletePhoto(url: string) {
     makeRequest(
       {
@@ -91,38 +87,6 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
           );
         });
       }
-    );
-  }
-
-  if (openCarousel) {
-    return (
-      <>
-        <Carousel
-          centerMode
-          autoPlay
-          showArrows={true}
-          width="700px"
-          onClickItem={onClickItem}
-        >
-          {quotePhotos.map((photo, index) => (
-            <div key={photo}>
-              <div>
-                <DeleteButton
-                  aria-label={"delete photo"}
-                  onClick={() => handleDeletePhoto(photo)}
-                />
-              </div>
-              <Image
-                src={`https://home-services-app.s3.amazonaws.com/profile-pictures/${photo}`}
-                alt={photo}
-                width={400}
-                height={400}
-              />
-              <p className="legend">Legend {index + 1}</p>
-            </div>
-          ))}
-        </Carousel>
-      </>
     );
   }
 
@@ -153,6 +117,27 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
           </Button>
         </div>
       </Formik>
+      {openCarousel && (
+        <CarouselModal>
+          {quotePhotos.map((photo, index) => (
+            <div key={photo}>
+              <div>
+                <DeleteButton
+                  aria-label={"delete photo"}
+                  onClick={() => handleDeletePhoto(photo)}
+                  isLoading={isLoading}
+                />
+              </div>
+              <Image
+                src={`https://home-services-app.s3.amazonaws.com/profile-pictures/${photo}`}
+                alt={photo}
+                width={400}
+                height={400}
+              />
+            </div>
+          ))}
+        </CarouselModal>
+      )}
     </PrimaryLayout>
   );
 };
