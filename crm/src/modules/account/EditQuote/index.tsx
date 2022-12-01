@@ -4,7 +4,6 @@ import { LeadContext } from "../../../context/LeadContext";
 import QuoteForm from "../../../forms/QuoteForm";
 import useFetch from "../../../hooks/useFetch";
 import useAccountRequired from "../../../hooks/useAccountRequired";
-import PrimaryLayout from "../../../layout/Primary";
 import { LeadQuote, Quote } from "../../../types/general";
 import { LEAD_ROUTE } from "../../../constants";
 import Button from "../../../components/Button";
@@ -12,6 +11,7 @@ import Image from "next/image";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import DeleteButton from "../../../components/DeleteIconButton";
 import CarouselModal from "../../../components/CarouselModal";
+import AccountLayout from "../../../layout/Account";
 
 interface Props {
   quote: LeadQuote;
@@ -63,13 +63,17 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
                 method: "POST",
                 data: fd,
               },
-              (_) => {} // TBD
+              (_) => {
+                setQuoteToEdit(undefined);
+                return resolve(true);
+              } // TBD
             );
+          } else {
+            setQuoteToEdit(undefined);
+            return resolve(true);
           }
         }
       );
-      setQuoteToEdit(undefined);
-      return resolve(true);
     });
   }
 
@@ -90,7 +94,7 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
   }
 
   return (
-    <PrimaryLayout screenName="Edit Quote">
+    <AccountLayout screenName="Edit Quote">
       <Formik
         initialValues={{
           ...quote,
@@ -137,7 +141,7 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
           ))}
         </CarouselModal>
       )}
-    </PrimaryLayout>
+    </AccountLayout>
   );
 };
 

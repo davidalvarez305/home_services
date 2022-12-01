@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import PrimaryLayout from "../../../layout/Primary";
+import AccountLayout from "../../../layout/Account";
 import useAccountRequired from "../../../hooks/useAccountRequired";
 import LargeBox from "../../../components/LargeBox";
 import EmptyLargeBox from "../../../components/EmptyLargeBox";
@@ -54,7 +54,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <PrimaryLayout screenName="Dashboard">
+    <AccountLayout screenName="Dashboard">
       <div className={styles["main-container"]}>
         {leadQuotes.map((quote, index) => (
           <React.Fragment key={index}>
@@ -83,7 +83,7 @@ const Dashboard: React.FC = () => {
         </EmptyLargeBox>
       </div>
       <RequestErrorMessage {...error} />
-    </PrimaryLayout>
+    </AccountLayout>
   );
 };
 export default Dashboard;

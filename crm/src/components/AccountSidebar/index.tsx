@@ -1,6 +1,5 @@
 import React from "react";
-import styles from "./Sidebar.module.css";
-import { USDFlagIcon } from "../../assets/USDFlagIcon";
+import styles from "./AccountSidebar.module.css";
 import SidebarElement from "../SidebarElement";
 import { ReportsIcon } from "../../assets/ReportsIcon";
 import { PlusIcon } from "../../assets/PlusIcon";
@@ -9,7 +8,7 @@ import { SettingsIcon } from "../../assets/SettingsIcon";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
-function Sidebar() {
+function AccountSidebar() {
   const router = useRouter();
   const navLinks = [
     {
@@ -31,24 +30,6 @@ function Sidebar() {
       icon: <ReportsIcon />,
       link: "company-settings",
       label: "Company Settings",
-    },
-  ];
-
-  const balances = [
-    {
-      icon: <USDFlagIcon />,
-      link: "100,050.75 USD",
-      label: "100,050.75 USD",
-    },
-    {
-      icon: <USDFlagIcon />,
-      link: "2310.40 EUR",
-      label: "100,050.75 USD",
-    },
-    {
-      icon: <USDFlagIcon />,
-      link: "9455.50 GBP",
-      label: "100,050.75 USD",
     },
   ];
 
@@ -74,14 +55,6 @@ function Sidebar() {
       </div>
       <div className={styles["balance"]}>
         <div className={styles["balances"]}>{"Traffic"}</div>
-        {balances.map((balance) => (
-          <React.Fragment key={balance.link}>
-            <SidebarElement
-              handleClick={() => router.push("/" + balance.link)}
-              {...balance}
-            />
-          </React.Fragment>
-        ))}
         <SidebarElement
           handleClick={() => router.push("/create-company")}
           icon={<PlusIcon />}
@@ -99,4 +72,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default AccountSidebar;

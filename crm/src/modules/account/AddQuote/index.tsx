@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import PrimaryLayout from "../../../layout/Primary";
+import AccountLayout from "../../../layout/Account";
 import useAccountRequired from "../../../hooks/useAccountRequired";
 import { Formik } from "formik";
 import { LeadQuote } from "../../../types/general";
@@ -56,19 +56,24 @@ const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
                 method: "POST",
                 data: fd,
               },
-              (_) => {} // TBD
+              (_) => {
+                setLeadQuotes(allQuotes);
+                setAddQuote(false);
+                return resolve(true);
+              } // TBD
             );
+          } else {
+            setLeadQuotes(allQuotes);
+            setAddQuote(false);
+            return resolve(true);
           }
-          setLeadQuotes(allQuotes);
         }
       );
-      setAddQuote(false);
-      return resolve(true);
     });
   }
 
   return (
-    <PrimaryLayout screenName="Add Quote">
+    <AccountLayout screenName="Add Quote">
       <Formik
         initialValues={{
           zip_code: "",
@@ -89,7 +94,7 @@ const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
         <QuoteForm setToggleForm={setAddQuote} />
       </Formik>
       <RequestErrorMessage {...error} />
-    </PrimaryLayout>
+    </AccountLayout>
   );
 };
 export default AddQuote;
