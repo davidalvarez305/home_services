@@ -59,12 +59,11 @@ const AddQuote: React.FC<Props> = ({ setAddQuote, setLeadQuotes }) => {
               (_) => {} // TBD
             );
           }
-
           setLeadQuotes(allQuotes);
-          setAddQuote(false);
-          return resolve(true);
         }
       );
+      setAddQuote(false);
+      return resolve(true);
     });
   }
 

@@ -63,14 +63,13 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
                 method: "POST",
                 data: fd,
               },
-              (_) => {
-                setQuoteToEdit(undefined);
-                return resolve(true);
-              }
+              (_) => {} // TBD
             );
           }
         }
       );
+      setQuoteToEdit(undefined);
+      return resolve(true);
     });
   }
 
