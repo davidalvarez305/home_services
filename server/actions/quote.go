@@ -23,7 +23,7 @@ func (q *Quote) GetQuote(quoteId string) error {
 
 func (q *Quote) GetQuoteByPhoneNumber(phoneNumber string) error {
 
-	fmt.Printf("%+v\n", phoneNumber[1:])
+	fmt.Printf("%+v\n", phoneNumber[2:])
 
 	sql := `
 	SELECT q.id FROM quote AS q
@@ -32,7 +32,7 @@ func (q *Quote) GetQuoteByPhoneNumber(phoneNumber string) error {
 	WHERE l.phone_number = ?;
 	`
 
-	return database.DB.Where(sql, phoneNumber[1:]).First(&q).Error
+	return database.DB.Where(sql, phoneNumber[2:]).First(&q).Error
 }
 
 func (q *Quote) DeleteQuote() error {

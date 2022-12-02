@@ -34,33 +34,37 @@ func UploadImagesFromMMS(msg *types.TwillioWebhookRequestBody) error {
 
 	images := []string{msg.MediaUrl0, msg.MediaUrl1, msg.MediaUrl2, msg.MediaUrl3, msg.MediaUrl4, msg.MediaUrl5, msg.MediaUrl6, msg.MediaUrl7, msg.MediaUrl8, msg.MediaUrl9, msg.MediaUrl10}
 
-	for _, img := range images {
-		imageToUpload, err := utils.GetImageFromURL(img)
-
-		if err != nil {
-			fmt.Printf("%+v\n", err)
-			continue
-		}
-
-		var fileName = utils.GenerateFileName("file.jpg")
-
-		err = utils.UploadImageToS3(imageToUpload, fileName)
-
-		if err != nil {
-			fmt.Printf("%+v\n", err)
-			continue
-		}
-
-		uploadImages = append(uploadImages, fileName)
-	}
-
-	// Save images to the quote
+	// First try to see if user is valid before trying to upload anything.
 	q := Quote{}
 
 	err := q.GetQuoteByPhoneNumber(msg.From)
 
 	if err != nil {
 		return err
+	}
+
+	for _, img := range images {
+
+		// Only upload images where the MediaURL is not empty
+		if len(img) > 0 {
+			imageToUpload, err := utils.GetImageFromURL(img)
+
+			if err != nil {
+				fmt.Printf("%+v\n", err)
+				continue
+			}
+
+			var fileName = utils.GenerateFileName("file.jpg")
+
+			err = utils.UploadImageToS3(imageToUpload, fileName)
+
+			if err != nil {
+				fmt.Printf("%+v\n", err)
+				continue
+			}
+
+			uploadImages = append(uploadImages, fileName)
+		}
 	}
 
 	var quotePhotos QuotePhotos
