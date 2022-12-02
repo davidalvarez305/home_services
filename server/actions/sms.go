@@ -47,22 +47,39 @@ func UploadImagesFromMMS(msg *types.TwillioWebhookRequestBody) error {
 
 		// Only upload images where the MediaURL is not empty
 		if len(img) > 0 {
-			imageToUpload, err := utils.GetImageFromURL(img)
-
-			if err != nil {
-				fmt.Printf("%+v\n", err)
-				continue
-			}
 
 			var fileName = utils.GenerateFileName("file.jpg")
+			path, err := utils.ResolveServerPath()
 
-			err = utils.UploadImageToS3(imageToUpload, fileName)
+			var fullPath = path + "/uploads/" + fileName
 
 			if err != nil {
 				fmt.Printf("%+v\n", err)
 				continue
 			}
 
+			err = utils.GetImageFromURL(img, fullPath)
+
+			if err != nil {
+				fmt.Printf("%+v\n", err)
+				continue
+			}
+
+			file, err := os.Open(fullPath)
+
+			if err != nil {
+				fmt.Printf("%+v\n", err)
+				continue
+			}
+
+			err = utils.UploadImageToS3(file, file.Name())
+
+			if err != nil {
+				fmt.Printf("%+v\n", err)
+				continue
+			}
+
+			// Save the FILE NAME in the DB, not the FULL LOCAL PATH
 			uploadImages = append(uploadImages, fileName)
 		}
 	}

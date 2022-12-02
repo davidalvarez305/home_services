@@ -75,18 +75,25 @@ func HandleMultipleImages(form *multipart.Form) ([]string, error) {
 	return uploadedImages, nil
 }
 
-func GetImageFromURL(url string) (io.Reader, error) {
-	var img io.Reader
+func GetImageFromURL(url, filepath string) error {
+
+	out, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
 
 	resp, err := http.Get(url)
 	if err != nil {
-		return img, err
+		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return img, fmt.Errorf("%s", resp.Status)
+		return fmt.Errorf("%s", resp.Status)
 	}
 
-	return resp.Body, nil
+	_, err = io.Copy(out, resp.Body)
+
+	return err
 }
