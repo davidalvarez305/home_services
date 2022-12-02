@@ -9,5 +9,5 @@ func SMS(router fiber.Router) {
 
 	sms := router.Group("sms")
 
-	sms.Post("/", handlers.HandleIncomingSMS)
+	sms.Post("/", handlers.HandleIncomingMMS)
 }

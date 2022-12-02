@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/database"
@@ -18,6 +19,20 @@ func (q *Quote) Save() error {
 
 func (q *Quote) GetQuote(quoteId string) error {
 	return database.DB.Where("id = ?", quoteId).First(&q).Error
+}
+
+func (q *Quote) GetQuoteByPhoneNumber(phoneNumber string) error {
+
+	fmt.Printf("%+v\n", phoneNumber[1:])
+
+	sql := `
+	SELECT q.id FROM quote AS q
+	LEFT JOIN lead AS l
+	ON l.id = q.lead_id
+	WHERE l.phone_number = ?;
+	`
+
+	return database.DB.Where(sql, phoneNumber[1:]).First(&q).Error
 }
 
 func (q *Quote) DeleteQuote() error {

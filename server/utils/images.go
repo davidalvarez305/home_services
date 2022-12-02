@@ -2,7 +2,10 @@ package utils
 
 import (
 	"context"
+	"fmt"
+	"io"
 	"mime/multipart"
+	"net/http"
 	"os"
 	"path/filepath"
 
@@ -11,12 +14,11 @@ import (
 	"github.com/google/uuid"
 )
 
-func generateFileName(fileName string) string {
+func GenerateFileName(fileName string) string {
 	return uuid.New().String() + filepath.Ext(fileName)
 }
 
-func UploadImageToS3(file *multipart.FileHeader) (string, error) {
-	var fileName = generateFileName(file.Filename)
+func UploadImageToS3(file io.Reader, fileName string) error {
 	ctx := context.TODO()
 	var bucketName = os.Getenv("AWS_S3_BUCKET")
 	var key = "profile-pictures/" + fileName
@@ -25,19 +27,13 @@ func UploadImageToS3(file *multipart.FileHeader) (string, error) {
 	cfg, err := config.LoadDefaultConfig(ctx)
 
 	if err != nil {
-		return fileName, err
-	}
-
-	contents, err := file.Open()
-
-	if err != nil {
-		return fileName, err
+		return err
 	}
 
 	params := s3.PutObjectInput{
 		Bucket:       &bucketName,
 		Key:          &key,
-		Body:         contents,
+		Body:         file,
 		CacheControl: &cache,
 	}
 
@@ -46,10 +42,10 @@ func UploadImageToS3(file *multipart.FileHeader) (string, error) {
 	_, err = client.PutObject(ctx, &params)
 
 	if err != nil {
-		return fileName, err
+		return err
 	}
 
-	return fileName, nil
+	return nil
 }
 
 func HandleMultipleImages(form *multipart.Form) ([]string, error) {
@@ -57,15 +53,40 @@ func HandleMultipleImages(form *multipart.Form) ([]string, error) {
 
 	for _, fileHeaders := range form.File {
 		for _, image := range fileHeaders {
-			uploadedImage, err := UploadImageToS3(image)
+
+			contents, err := image.Open()
 
 			if err != nil {
 				return uploadedImages, err
 			}
 
-			uploadedImages = append(uploadedImages, uploadedImage)
+			var fileName = GenerateFileName(image.Filename)
+
+			err = UploadImageToS3(contents, fileName)
+
+			if err != nil {
+				return uploadedImages, err
+			}
+
+			uploadedImages = append(uploadedImages, fileName)
 		}
 	}
 
 	return uploadedImages, nil
+}
+
+func GetImageFromURL(url string) (io.Reader, error) {
+	var img io.Reader
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return img, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return img, fmt.Errorf("%s", resp.Status)
+	}
+
+	return resp.Body, nil
 }

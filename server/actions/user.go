@@ -188,7 +188,15 @@ func (user *User) ChangePassword(password string) error {
 // Takes form data from the client, and sends it to S3 bucket using AWS SDK v2.
 func (user *User) ChangeProfilePicture(file *multipart.FileHeader) error {
 
-	fileName, err := utils.UploadImageToS3(file)
+	contents, err := file.Open()
+
+	if err != nil {
+		return err
+	}
+
+	var fileName = utils.GenerateFileName(file.Filename)
+
+	err = utils.UploadImageToS3(contents, fileName)
 
 	if err != nil {
 		return err
