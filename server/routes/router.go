@@ -15,4 +15,5 @@ func Router(app *fiber.App) {
 	controllers.Service(api)
 	controllers.Location(api)
 	controllers.Lead(api)
+	controllers.SMS(api)
 }

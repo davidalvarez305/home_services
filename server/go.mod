@@ -10,6 +10,9 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.10 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.20 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.19 // indirect
+	github.com/golang/mock v1.6.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
+	github.com/twilio/twilio-go v1.2.2 // indirect
 )
 
 require (
