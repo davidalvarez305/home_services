@@ -9,7 +9,12 @@ type Lead struct {
 	PhoneNumber   string         `gorm:"not null;column:phone_number" json:"phone_number"`
 	CreatedAt     int64          `gorm:"not null;column:created_at" json:"created_at"`
 	CompanyID     int            `gorm:"column:company_id;constraint:OnDelete:SET NULL,OnUpdate:CASCADE" json:"company_id"`
+	Budget        int            `gorm:"column:budget" json:"budget"`
+	AddressID     int            `json:"address_id"`
+	Address       *Address       `gorm:"column:address_id;foreignKey:AddressID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
+	ServiceID     int            `gorm:"column:service_id" json:"service_id"`
+	Service       *Service       `gorm:"not null;column:service_id;foreignKey:ServiceID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
+	LeadPhoto     []*LeadPhoto   `gorm:"foreignKey:LeadID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"lead_photo"`
 	LeadMarketing *LeadMarketing `json:"lead_marketing"`
-	Quote         []*Quote       `json:"quote"`
 	Log           []*LeadLog     `json:"lead_log"`
 }

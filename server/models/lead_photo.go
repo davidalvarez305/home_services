@@ -1,7 +1,7 @@
 package models
 
-type QuotePhoto struct {
+type LeadPhoto struct {
 	ID       int    `json:"id"`
 	ImageURL string `gorm:"unique;not null" json:"image_url"`
-	QuoteID  int    `json:"quote_id"`
+	LeadID   int    `json:"lead_id"`
 }

@@ -200,67 +200,6 @@ func GetLeadInfo(c *fiber.Ctx) error {
 	})
 }
 
-func UpdateLead(c *fiber.Ctx) error {
-	leadId := c.Params("id")
-	action := c.Query("action")
-	lead := &actions.Lead{}
-	input := &actions.Lead{}
-
-	if len(leadId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Lead ID not found in URL params.",
-		})
-	}
-
-	if len(action) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Action desired not included in query string.",
-		})
-	}
-
-	err := c.BodyParser(&input)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not parse request body.",
-		})
-	}
-
-	err = lead.GetLead(leadId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to query account details.",
-		})
-	}
-
-	// Update fields which are allowed to be updated
-	lead.FirstName = input.FirstName
-	lead.LastName = input.LastName
-	lead.Email = input.Email
-	lead.PhoneNumber = input.PhoneNumber
-
-	// Log user activity
-	log := &models.LeadLog{
-		Action:    action,
-		CreatedAt: time.Now().Unix(),
-	}
-
-	lead.Log = append(lead.Log, log)
-
-	err = lead.Save()
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to save updates.",
-		})
-	}
-
-	return c.Status(200).JSON(fiber.Map{
-		"data": lead,
-	})
-}
-
 func DeleteLead(c *fiber.Ctx) error {
 	leadId := c.Params("id")
 	lead := &actions.Lead{}
@@ -300,31 +239,8 @@ func LeadLogout(c *fiber.Ctx) error {
 	})
 }
 
-func GetQuotesByLead(c *fiber.Ctx) error {
-	leadQuotes := &actions.LeadQuotes{}
-	leadId := c.Params("id")
-
-	if len(leadId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Lead ID not found in URL params.",
-		})
-	}
-
-	err := leadQuotes.GetQuotesByLead(leadId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to query quotes.",
-		})
-	}
-
-	return c.Status(200).JSON(fiber.Map{
-		"data": leadQuotes,
-	})
-}
-
-func CreateQuote(c *fiber.Ctx) error {
-	var input types.QuoteInput
+func UpdateLead(c *fiber.Ctx) error {
+	var input types.CreateLeadInput
 	leadId := c.Params("id")
 	leadLog := &actions.LeadLog{}
 
@@ -342,7 +258,7 @@ func CreateQuote(c *fiber.Ctx) error {
 		})
 	}
 
-	q := &actions.Quote{}
+	l := &actions.Lead{}
 
 	lead, err := strconv.Atoi(leadId)
 
@@ -352,77 +268,38 @@ func CreateQuote(c *fiber.Ctx) error {
 		})
 	}
 
-	err = q.SaveQuote(&input, lead)
+	err = l.GetLeadWithAddress(lead)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to create quote.",
+			"data": "Failed to get lead by preloading address.",
+		})
+	}
+
+	l.Address.ZipCode = input.ZipCode
+	l.ServiceID = input.Service
+	l.Address.StreetAddressLine1 = input.StreetAddressLine1
+	l.Address.StreetAddressLine2 = input.StreetAddressLine2
+	l.Address.StreetAddressLine3 = input.StreetAddressLine3
+	l.Address.CityID = input.CityID
+	l.Address.StateID = input.StateID
+	l.Address.CountryID = input.CountryID
+	l.Budget = input.Budget
+	l.FirstName = input.FirstName
+	l.LastName = input.LastName
+	l.Email = input.Email
+	l.PhoneNumber = input.PhoneNumber
+
+	err = l.Save()
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to save lead.",
 		})
 	}
 
 	// Log activity
-	err = leadLog.Save("Quote created.", leadId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to log activity.",
-		})
-	}
-
-	leadQuotes := &actions.LeadQuotes{}
-
-	err = leadQuotes.GetQuotesByLead(leadId)
-
-	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"data": "Failed to get quotes.",
-		})
-	}
-
-	return c.Status(200).JSON(fiber.Map{
-		"data": leadQuotes,
-	})
-}
-
-func UpdateLeadQuote(c *fiber.Ctx) error {
-	var input types.QuoteInput
-	leadId := c.Params("id")
-	leadLog := &actions.LeadLog{}
-
-	if len(leadId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Lead ID not found in URL params.",
-		})
-	}
-
-	err := c.BodyParser(&input)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to parse request body.",
-		})
-	}
-
-	q := &actions.Quote{}
-
-	lead, err := strconv.Atoi(leadId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Invalid Lead ID.",
-		})
-	}
-
-	err = q.SaveQuote(&input, lead)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to create quote.",
-		})
-	}
-
-	// Log activity
-	err = leadLog.Save("Quote details updated.", leadId)
+	err = leadLog.Save("Lead details updated.", leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -431,82 +308,17 @@ func UpdateLeadQuote(c *fiber.Ctx) error {
 	}
 
 	return c.Status(201).JSON(fiber.Map{
-		"data": q,
+		"data": l,
 	})
 }
 
-func DeleteLeadQuote(c *fiber.Ctx) error {
-	quote := &actions.Quote{}
+func AddLeadPhotos(c *fiber.Ctx) error {
 	leadId := c.Params("id")
-	quoteId := c.Params("quoteId")
 	leadLog := &actions.LeadLog{}
 
 	if len(leadId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Lead ID not found in URL params.",
-		})
-	}
-
-	if len(quoteId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Quote ID not found in URL params.",
-		})
-	}
-
-	err := quote.GetQuote(quoteId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to retrieve quote.",
-		})
-	}
-
-	err = quote.DeleteQuote()
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to delete quote.",
-		})
-	}
-
-	// Log activity
-	err = leadLog.Save("Quote deleted.", leadId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to log activity.",
-		})
-	}
-
-	leadQuotes := &actions.LeadQuotes{}
-
-	err = leadQuotes.GetQuotesByLead(leadId)
-
-	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"data": "Failed to get quotes.",
-		})
-	}
-
-	return c.Status(200).JSON(fiber.Map{
-		"data": leadQuotes,
-	})
-}
-
-func AddQuotePhotos(c *fiber.Ctx) error {
-	leadId := c.Params("id")
-	quoteId := c.Params("quoteId")
-	leadLog := &actions.LeadLog{}
-
-	if len(leadId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Lead ID not found in URL params.",
-		})
-	}
-
-	if len(quoteId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Quote ID not found in URL params.",
 		})
 	}
 
@@ -526,20 +338,20 @@ func AddQuotePhotos(c *fiber.Ctx) error {
 		})
 	}
 
-	quote, err := strconv.Atoi(quoteId)
+	lead, err := strconv.Atoi(leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to save images.",
+			"data": "Invalid Lead ID.",
 		})
 	}
 
 	// Append the URLs from the S3 bucket and save
-	var photos actions.QuotePhotos
+	var photos actions.LeadPhotos
 	for _, photo := range clientImages {
-		p := models.QuotePhoto{
+		p := models.LeadPhoto{
 			ImageURL: photo,
-			QuoteID:  quote,
+			LeadID:   lead,
 		}
 		photos = append(photos, &p)
 	}
@@ -566,22 +378,15 @@ func AddQuotePhotos(c *fiber.Ctx) error {
 	})
 }
 
-func DeleteQuotePhoto(c *fiber.Ctx) error {
+func DeleteLeadPhoto(c *fiber.Ctx) error {
 	leadId := c.Params("id")
-	quoteId := c.Params("quoteId")
 	imageUrl := c.Params("imageUrl")
-	quotePhoto := &actions.QuotePhoto{}
+	leadPhoto := &actions.LeadPhoto{}
 	leadLog := &actions.LeadLog{}
 
 	if len(leadId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Lead ID not found in URL params.",
-		})
-	}
-
-	if len(quoteId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Quote ID not found in URL params.",
 		})
 	}
 
@@ -591,7 +396,7 @@ func DeleteQuotePhoto(c *fiber.Ctx) error {
 		})
 	}
 
-	err := quotePhoto.DeleteQuotePhoto(imageUrl)
+	err := leadPhoto.DeleteLeadPhoto(imageUrl)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -601,7 +406,7 @@ func DeleteQuotePhoto(c *fiber.Ctx) error {
 
 	photos := &actions.PhotoURLs{}
 
-	err = photos.GetPhotoURLsByQuoteID(quoteId)
+	err = photos.GetPhotoURLsByLeadID(leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -610,7 +415,7 @@ func DeleteQuotePhoto(c *fiber.Ctx) error {
 	}
 
 	// Log activity
-	err = leadLog.Save("Quote photos deleted.", leadId)
+	err = leadLog.Save("Lead photos deleted.", leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
