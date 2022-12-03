@@ -3,13 +3,13 @@ import { Form, useFormikContext } from "formik";
 import { useState } from "react";
 import PrimaryInput from "../../components/FormInput";
 import FormSelect from "../../components/FormSelect";
-import styles from "./QuoteForm.module.css";
+import styles from "./LeadForm.module.css";
 
 interface Props {
   setToggleForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const QuoteForm: React.FC<Props> = ({ setToggleForm }) => {
+const LeadForm: React.FC<Props> = ({ setToggleForm }) => {
   const [imagesNum, setImagesNum] = useState(0);
   const formik = useFormikContext();
   return (
@@ -107,4 +107,4 @@ const QuoteForm: React.FC<Props> = ({ setToggleForm }) => {
   );
 };
 
-export default QuoteForm;
+export default LeadForm;

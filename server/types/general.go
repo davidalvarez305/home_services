@@ -19,12 +19,6 @@ type UsersByCompany struct {
 	RoleID    int    `json:"role_id"`
 }
 
-type CreateServicesInput struct {
-	CityID    int `json:"city_id"`
-	CompanyID int `json:"company_id"`
-	ServiceID int `json:"service_id"`
-}
-
 type CreateLeadInput struct {
 	ID                 int    `json:"id"`
 	FirstName          string `json:"first_name"`

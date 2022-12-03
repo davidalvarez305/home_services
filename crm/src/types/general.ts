@@ -14,20 +14,6 @@ export type User = {
   role_id: number;
 };
 
-export type Lead = {
-  id: number;
-  email: string;
-  uuid: string;
-  first_name: string;
-  last_name: string;
-  phone_number: string;
-  created_at: number;
-  company_id: number;
-  lead_marketing?: Object;
-  quote?: [];
-  lead_log?: [];
-};
-
 export type Company = {
   id: number;
   name: string;
@@ -115,36 +101,59 @@ export type CompanyServiceLocations = {
   zip_code: string;
 };
 
-export type CreateQuoteInput = {
+export type CreateLeadInput = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  campaign: string;
+  source: string;
+  campaign_name: string;
+  referral_url: string;
+  medium: string;
+  keywords: string;
+  lead_channel: string;
   zip_code: string;
+  service: number;
   street_address_line_1: string;
   street_address_line_2: string;
   street_address_line_3: string;
   city: number;
   state: number;
   country: number;
-  service: number;
   budget: number;
 }
 
-export type Quote = {
+export type Lead = {
   id: number;
-  zip_code: string;
+  email: string;
+  uuid: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
   created_at: number;
-  updated_at: number;
-  lead_id: number;
-  address_id: number;
+  company_id: number;
+  lead_marketing?: Object;
+  quote?: [];
+  lead_log?: [];
 };
 
-export type LeadQuote = {
+export type LeadDetails = {
   id: number;
+  email: string;
+  uuid: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  company_id: number;
   street_address_line_1: string;
   street_address_line_2: string;
   street_address_line_3: string;
   city: string;
   city_id: number;
-  state_id: number;
   state: string;
+  state_id: number;
   country: string;
   country_id: number;
   zip_code: string;
@@ -153,4 +162,4 @@ export type LeadQuote = {
   service_id: number;
   photos: string;
   budget: number;
-};
+}

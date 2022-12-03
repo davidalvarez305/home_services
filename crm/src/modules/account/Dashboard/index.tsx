@@ -2,22 +2,17 @@ import React, { useContext, useEffect, useState } from "react";
 import AccountLayout from "../../../layout/Account";
 import useAccountRequired from "../../../hooks/useAccountRequired";
 import LargeBox from "../../../components/LargeBox";
-import EmptyLargeBox from "../../../components/EmptyLargeBox";
 import styles from "./Dashboard.module.css";
-import { IconButton } from "@chakra-ui/react";
-import { GoPlus } from "react-icons/go";
-import { LeadQuote } from "../../../types/general";
 import useFetch from "../../../hooks/useFetch";
 import { LEAD_ROUTE } from "../../../constants";
 import { LeadContext } from "../../../context/LeadContext";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
-import AddQuote from "../AddQuote";
-import EditQuote from "../EditQuote";
+import EditLead from "../EditLead";
+import { LeadDetails } from "../../../types/general";
 
 const Dashboard: React.FC = () => {
-  const [leadQuotes, setLeadQuotes] = useState<LeadQuote[]>([]);
-  const [addQuote, setAddQuote] = useState(false);
-  const [quoteToEdit, setQuoteToEdit] = useState<LeadQuote>();
+  const [leadDetails, setLeadDetails] = useState<LeadDetails[]>([]);
+  const [leadToEdit, setLeadToEdit] = useState<LeadDetails>();
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
   useAccountRequired();
@@ -25,62 +20,47 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     makeRequest(
       {
-        url: `${LEAD_ROUTE}/${ctx?.lead.id}/quote`,
+        url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
       },
       (res) => {
-        setLeadQuotes(res.data.data);
+        setLeadDetails(res.data.data);
       }
     );
   }, [makeRequest, ctx?.lead.id]);
 
-  function handleDeleteQuote(quoteId: number) {
+  function handleDeleteLead() {
     makeRequest(
       {
-        url: `${LEAD_ROUTE}/${ctx?.lead.id}/quote/${quoteId}`,
+        url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
         method: "DELETE"
       },
       (res) => {
-        setLeadQuotes(res.data.data);
+        setLeadDetails(res.data.data);
       }
     );
   }
 
-  if (addQuote) {
-    return <AddQuote setAddQuote={setAddQuote} setLeadQuotes={setLeadQuotes} />;
-  }
-
-  if (quoteToEdit) {
-    return <EditQuote quote={quoteToEdit} setQuoteToEdit={setQuoteToEdit} />
+  if (leadToEdit) {
+    return <EditLead lead={leadToEdit} setLeadToEdit={setLeadToEdit} />
   }
 
   return (
     <AccountLayout screenName="Dashboard">
       <div className={styles["main-container"]}>
-        {leadQuotes.map((quote, index) => (
+        {leadDetails.map((lead, index) => (
           <React.Fragment key={index}>
             <LargeBox
-              bottomLeftHeader={quote.street_address_line_1}
-              bottomLeftRegularParagraph={quote.city}
-              bottomLeftBoldedParagraph={quote.state}
-              bottomRightHeader={quote.service}
+              bottomLeftHeader={lead.street_address_line_1}
+              bottomLeftRegularParagraph={lead.city}
+              bottomLeftBoldedParagraph={lead.state}
+              bottomRightHeader={lead.service}
               topLeftHeader={"Budget Amount"}
-              topLeftRegularParagraph={`$${quote.budget}`}
-              onDelete={() => handleDeleteQuote(quote.id)}
-              onEdit={() => setQuoteToEdit(quote)}
+              topLeftRegularParagraph={`$${lead.budget}`}
+              onDelete={() => handleDeleteLead()}
+              onEdit={() => setLeadToEdit(lead)}
             />
           </React.Fragment>
         ))}
-        <EmptyLargeBox>
-          <IconButton
-            onClick={() => setAddQuote(true)}
-            colorScheme={"blue"}
-            variant={"ghost"}
-            fontSize={"50px"}
-            size={"lg"}
-            aria-label="add"
-            icon={<GoPlus />}
-          />
-        </EmptyLargeBox>
       </div>
       <RequestErrorMessage {...error} />
     </AccountLayout>
