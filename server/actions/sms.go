@@ -1,17 +1,52 @@
 package actions
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
 	"github.com/davidalvarez305/home_services/server/models"
-	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/davidalvarez305/home_services/server/utils"
 	"github.com/twilio/twilio-go"
 	openapi "github.com/twilio/twilio-go/rest/api/v2010"
 )
 
-func SendSMS(sms string) error {
+// https://www.twilio.com/docs/messaging/guides/webhook-request
+type TwillioWebhookRequestBody struct {
+	MessageSid          string `json:"MessageSid"`
+	SmsSid              string `json:"SmsSid"`
+	AccountSid          string `json:"AccountSid"`
+	MessagingServiceSid string `json:"MessagingServiceSid"`
+	From                string `json:"From"`
+	To                  string `json:"To"`
+	Body                string `json:"Body"`
+	NumMedia            int    `json:"NumMedia"`
+	ReferralNumMedia    string `json:"ReferralNumMedia"`
+	MediaContentType0   string `json:"MediaContentType0"`
+	MediaUrl0           string `json:"MediaUrl0"`
+	MediaContentType1   string `json:"MediaContentType1"`
+	MediaUrl1           string `json:"MediaUrl1"`
+	MediaContentType2   string `json:"MediaContentType2"`
+	MediaUrl2           string `json:"MediaUrl2"`
+	MediaContentType3   string `json:"MediaContentType3"`
+	MediaUrl3           string `json:"MediaUrl3"`
+	MediaContentType4   string `json:"MediaContentType4"`
+	MediaUrl4           string `json:"MediaUrl4"`
+	MediaContentType5   string `json:"MediaContentType5"`
+	MediaUrl5           string `json:"MediaUrl5"`
+	MediaContentType6   string `json:"MediaContentType6"`
+	MediaUrl6           string `json:"MediaUrl6"`
+	MediaContentType7   string `json:"MediaContentType7"`
+	MediaUrl7           string `json:"MediaUrl7"`
+	MediaContentType8   string `json:"MediaContentType8"`
+	MediaUrl8           string `json:"MediaUrl8"`
+	MediaContentType9   string `json:"MediaContentType9"`
+	MediaUrl9           string `json:"MediaUrl9"`
+	MediaContentType10  string `json:"MediaContentType10"`
+	MediaUrl10          string `json:"MediaUrl10"`
+}
+
+func (msg *TwillioWebhookRequestBody) SendSMS(sms string) error {
 	accountSid := os.Getenv("TWILIO_ACCOUNT_SID")
 	authToken := os.Getenv("TWILIO_AUTH_TOKEN")
 	client := twilio.NewRestClientWithParams(twilio.ClientParams{
@@ -20,7 +55,7 @@ func SendSMS(sms string) error {
 	})
 
 	params := &openapi.CreateMessageParams{}
-	params.SetTo(os.Getenv("TO_PHONE_NUMBER"))
+	params.SetTo(msg.From)
 	params.SetFrom(os.Getenv("TWILIO_PHONE_NUMBER"))
 	params.SetBody(sms)
 
@@ -29,7 +64,7 @@ func SendSMS(sms string) error {
 	return err
 }
 
-func UploadImagesFromMMS(msg *types.TwillioWebhookRequestBody) error {
+func (msg *TwillioWebhookRequestBody) UploadImagesFromMMS() error {
 	var uploadImages []string
 
 	images := []string{msg.MediaUrl0, msg.MediaUrl1, msg.MediaUrl2, msg.MediaUrl3, msg.MediaUrl4, msg.MediaUrl5, msg.MediaUrl6, msg.MediaUrl7, msg.MediaUrl8, msg.MediaUrl9, msg.MediaUrl10}
@@ -82,6 +117,10 @@ func UploadImagesFromMMS(msg *types.TwillioWebhookRequestBody) error {
 			// Save the FILE NAME in the DB, not the FULL LOCAL PATH
 			uploadImages = append(uploadImages, fileName)
 		}
+	}
+
+	if len(uploadImages) == 0 {
+		return errors.New("no images sent in message")
 	}
 
 	var quotePhotos QuotePhotos

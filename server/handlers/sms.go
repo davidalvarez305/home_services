@@ -2,14 +2,13 @@ package handlers
 
 import (
 	"github.com/davidalvarez305/home_services/server/actions"
-	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/gofiber/fiber/v2"
 )
 
 func HandleIncomingMMS(c *fiber.Ctx) error {
-	var body types.TwillioWebhookRequestBody
+	input := &actions.TwillioWebhookRequestBody{}
 
-	err := c.BodyParser(&body)
+	err := c.BodyParser(input)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -17,11 +16,19 @@ func HandleIncomingMMS(c *fiber.Ctx) error {
 		})
 	}
 
-	err = actions.UploadImagesFromMMS(&body)
+	err = input.UploadImagesFromMMS()
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not send SMS.",
+			"data": "Could not save images.",
+		})
+	}
+
+	err = input.SendSMS("Your images have been uploaded successfully!")
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not send confirmation message.",
 		})
 	}
 
