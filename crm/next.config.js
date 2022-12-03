@@ -17,6 +17,12 @@ const nextConfig = {
         port: '',
         pathname: '/profile-pictures/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'home-services-app.s3.amazonaws.com',
+        port: '',
+        pathname: '/lead-photos/**',
+      },
     ],
   },
 }

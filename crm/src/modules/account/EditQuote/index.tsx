@@ -132,7 +132,7 @@ const EditQuote: React.FC<Props> = ({ quote, setQuoteToEdit }) => {
                 />
               </div>
               <Image
-                src={`https://home-services-app.s3.amazonaws.com/profile-pictures/${photo}`}
+                src={`https://home-services-app.s3.amazonaws.com/lead-photos/${photo}`}
                 alt={photo}
                 width={400}
                 height={400}
