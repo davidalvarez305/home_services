@@ -196,7 +196,7 @@ func (user *User) ChangeProfilePicture(file *multipart.FileHeader) error {
 
 	var fileName = utils.GenerateFileName(file.Filename)
 
-	err = utils.UploadImageToS3(contents, fileName)
+	err = utils.UploadImageToS3(contents, fileName, "profile-pictures")
 
 	if err != nil {
 		return err

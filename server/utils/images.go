@@ -18,10 +18,11 @@ func GenerateFileName(fileName string) string {
 	return uuid.New().String() + filepath.Ext(fileName)
 }
 
-func UploadImageToS3(file io.Reader, fileName string) error {
+// Bucket param is just a string 'profile-pictures' without the trailing slash.
+func UploadImageToS3(file io.Reader, fileName, bucketParam string) error {
 	ctx := context.TODO()
 	var bucketName = os.Getenv("AWS_S3_BUCKET")
-	var key = "profile-pictures/" + fileName
+	var key = bucketParam + "/" + fileName
 	cache := "31536000"
 
 	cfg, err := config.LoadDefaultConfig(ctx)
@@ -62,7 +63,7 @@ func HandleMultipleImages(form *multipart.Form) ([]string, error) {
 
 			var fileName = GenerateFileName(image.Filename)
 
-			err = UploadImageToS3(contents, fileName)
+			err = UploadImageToS3(contents, fileName, "lead-photos")
 
 			if err != nil {
 				return uploadedImages, err

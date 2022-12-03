@@ -24,7 +24,7 @@ func HandleIncomingMMS(c *fiber.Ctx) error {
 		})
 	}
 
-	err = input.SendSMS("Your images have been uploaded successfully!")
+	err = input.SendSMS("Your images have been uploaded successfully! 📷")
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

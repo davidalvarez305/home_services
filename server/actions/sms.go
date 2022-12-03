@@ -107,7 +107,7 @@ func (msg *TwillioWebhookRequestBody) UploadImagesFromMMS() error {
 				continue
 			}
 
-			err = utils.UploadImageToS3(file, fileName)
+			err = utils.UploadImageToS3(file, fileName, "lead-photos")
 
 			if err != nil {
 				fmt.Printf("%+v\n", err)
