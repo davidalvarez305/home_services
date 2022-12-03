@@ -18,7 +18,17 @@ func HandleIncomingMMS(c *fiber.Ctx) error {
 		})
 	}
 
-	err = input.UploadImagesFromMMS()
+	lead := &actions.Lead{}
+
+	err = lead.GetLeadByPhoneNumber(input.From)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not find lead by phone number.",
+		})
+	}
+
+	err = input.UploadImagesFromMMS(lead)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -31,16 +41,6 @@ func HandleIncomingMMS(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Could not send confirmation message.",
-		})
-	}
-
-	lead := &actions.Lead{}
-
-	err = lead.GetLeadByPhoneNumber(input.From)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not find lead by phone number.",
 		})
 	}
 

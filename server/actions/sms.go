@@ -64,19 +64,10 @@ func (msg *TwillioWebhookRequestBody) SendSMS(sms string) error {
 	return err
 }
 
-func (msg *TwillioWebhookRequestBody) UploadImagesFromMMS() error {
+func (msg *TwillioWebhookRequestBody) UploadImagesFromMMS(l *Lead) error {
 	var uploadImages []string
 
 	images := []string{msg.MediaUrl0, msg.MediaUrl1, msg.MediaUrl2, msg.MediaUrl3, msg.MediaUrl4, msg.MediaUrl5, msg.MediaUrl6, msg.MediaUrl7, msg.MediaUrl8, msg.MediaUrl9, msg.MediaUrl10}
-
-	// First try to see if user is valid before trying to upload anything.
-	l := Lead{}
-
-	err := l.GetLeadByPhoneNumber(msg.From)
-
-	if err != nil {
-		return err
-	}
 
 	for _, img := range images {
 
