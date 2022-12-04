@@ -133,7 +133,7 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 		LandingPage:  input.LandingPage,
 		Keyword:      input.Keyword,
 		Referrer:     input.Referrer,
-		GClid:        input.GClid,
+		Gclid:        input.Gclid,
 		CampaignID:   input.CampaignID,
 		CampaignName: input.CampaignName,
 		AdGroupID:    input.AdGroupID,
@@ -144,8 +144,8 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 		AdHeadline:   input.AdHeadline,
 	}
 
-	// Add address for this lead
-	l.Address = &models.Address{
+	// Add address for this lead -> only for updating
+	/* l.Address = &models.Address{
 		StreetAddressLine1: input.StreetAddressLine1,
 		StreetAddressLine2: input.StreetAddressLine2,
 		StreetAddressLine3: input.StreetAddressLine3,
@@ -153,7 +153,7 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 		StateID:            input.StateID,
 		CountryID:          input.CountryID,
 		ZipCode:            input.ZipCode,
-	}
+	} */
 
 	l.ServiceID = input.Service
 	l.Budget = input.Budget

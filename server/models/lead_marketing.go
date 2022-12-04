@@ -9,7 +9,7 @@ type LeadMarketing struct {
 	LandingPage  string `json:"landing_page"`
 	Keyword      string `json:"keyword"`
 	Referrer     string `json:"referrer"`
-	GClid        string `json:"gclid"`
+	Gclid        string `gorm:"column:gclid" json:"gclid"`
 	CampaignID   string `json:"campaign_id"`
 	CampaignName string `json:"campaign_name"`
 	AdGroupID    string `json:"ad_group_id"`

@@ -31,7 +31,7 @@ type CreateLeadInput struct {
 	LeadChannel        string `json:"lead_channel"`
 	Source             string `json:"source"`
 	Referrer           string `json:"referrer"`
-	GClid              string `json:"gclid"`
+	Gclid              string `json:"gclid"`
 	CampaignID         string `json:"campaign_id"`
 	CampaignName       string `json:"campaign_name"`
 	AdGroupID          string `json:"ad_group_id"`
