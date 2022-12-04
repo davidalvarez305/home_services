@@ -41,8 +41,8 @@ const Dashboard: React.FC = () => {
         url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
         method: "DELETE",
       },
-      (res) => {
-        setLeadDetails(res.data.data);
+      (_) => {
+        handleLogout();
       }
     );
   }
@@ -63,7 +63,6 @@ const Dashboard: React.FC = () => {
               bottomRightHeader={leadDetails.service}
               topLeftHeader={"Budget Amount"}
               topLeftRegularParagraph={`$${leadDetails.budget}`}
-              onDelete={() => handleDeleteLead()}
               onEdit={() => setLeadToEdit(leadDetails)}
             />
           )}
@@ -72,7 +71,7 @@ const Dashboard: React.FC = () => {
           <Button onClick={() => handleLogout()} variant={"outline"}>
             Logout
           </Button>
-          <Button variant={"outline"} colorScheme={"red"}>
+          <Button onClick={() => handleDeleteLead()} variant={"outline"} colorScheme={"red"}>
             Delete Account
           </Button>
         </div>

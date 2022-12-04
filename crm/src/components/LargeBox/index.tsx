@@ -12,7 +12,6 @@ interface Props {
   topLeftHeader: string;
   topLeftRegularParagraph: string;
   onEdit: MouseEventHandler<HTMLButtonElement> | undefined;
-  onDelete: MouseEventHandler<HTMLButtonElement> | undefined
 }
 
 const LargeBox: React.FC<Props> = ({
@@ -22,8 +21,7 @@ const LargeBox: React.FC<Props> = ({
   bottomRightHeader,
   topLeftHeader,
   topLeftRegularParagraph,
-  onEdit,
-  onDelete
+  onEdit
 }) => {
   return (
     <div className={styles[`large-box-container`]}>
@@ -44,10 +42,6 @@ const LargeBox: React.FC<Props> = ({
       </div>
       <div className={styles["right-container"]}>
         <div className={styles["top-right-container"]}>
-          <DeleteButton
-            aria-label={"deleteButton"}
-            onClick={onDelete}
-          />
           <IconButton
             icon={<FiEdit2 />}
             aria-label={"edit"}
