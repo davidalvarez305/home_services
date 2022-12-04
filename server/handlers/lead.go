@@ -44,6 +44,21 @@ func CreateLead(c *fiber.Ctx) error {
 		return err
 	}
 
+	// This is kind of ugly...might need to rework later.
+	sms := &actions.TwillioWebhookRequestBody{}
+
+	sms.From = input.PhoneNumber
+
+	initialMsg := fmt.Sprintf("Welcome %s, this is just a welcome message and as a bonus, you can send images through here, and they'll be added to your account!", lead.FirstName)
+
+	err = sms.SendSMS(initialMsg)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not send welcome message.",
+		})
+	}
+
 	// Log activity
 	err = leadLog.Save("Lead created.", fmt.Sprintf("%+v", lead.ID))
 
