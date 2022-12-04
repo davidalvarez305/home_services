@@ -11,6 +11,7 @@ func Lead(router fiber.Router) {
 
 	lead.Post("/", handlers.CreateLead)                // Create lead
 	lead.Get("/", handlers.GetLeadFromSession)         // Query user
+	lead.Post("/logout", handlers.LeadLogout)          // Logout
 	lead.Post("/login", handlers.LeadLogin)            // Login portal for leads
 	lead.Post("/login/code", handlers.RecoverUUIDCode) // Recover UUID Code if Lost
 	lead.Post("/login/:code", handlers.CheckLoginCode) // Check login code sent from client
@@ -21,7 +22,6 @@ func Lead(router fiber.Router) {
 	lead.Delete("/:id", handlers.DeleteLead)                      // Delete account
 	lead.Post("/:id/photo", handlers.AddLeadPhotos)               // Add photo(s) attached to a lead's quote.
 	lead.Delete("/:id/photo/:imageUrl", handlers.DeleteLeadPhoto) // Delete photo(s) attached to a lead's quote.
-	lead.Post("/:id/logout", handlers.LeadLogout)                 // Logout
 
 	// Lead logs
 	lead.Post("/:id/log", handlers.CreateLog)    // Log user activity

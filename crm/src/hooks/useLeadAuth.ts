@@ -1,9 +1,11 @@
+import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { LEAD_ROUTE } from "../constants";
 import { Lead } from "../types/general";
 import useFetch from "./useFetch";
 
 export default function useAuth() {
+  const router = useRouter();
   const { makeRequest } = useFetch();
   let leadProps = {
     id: 0,
@@ -24,13 +26,11 @@ export default function useAuth() {
   function Logout() {
     makeRequest(
       {
-        url: `${LEAD_ROUTE + "logout"}`,
+        url: `${LEAD_ROUTE + "/logout"}`,
         method: "POST",
       },
-      (res) => {
-        if (res.data.data === "Logged out!") {
-            setLead(leadProps);
-        }
+      (_) => {
+        setLead(leadProps);
       }
     );
   }

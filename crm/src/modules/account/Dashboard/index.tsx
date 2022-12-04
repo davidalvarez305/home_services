@@ -9,6 +9,7 @@ import { LeadContext } from "../../../context/LeadContext";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import EditLead from "../EditLead";
 import { LeadDetails } from "../../../types/general";
+import { Button } from "@chakra-ui/react";
 
 const Dashboard: React.FC = () => {
   const [leadDetails, setLeadDetails] = useState<LeadDetails>();
@@ -16,6 +17,10 @@ const Dashboard: React.FC = () => {
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
   useAccountRequired();
+
+  function handleLogout() {
+    ctx?.Logout();
+  }
 
   useEffect(() => {
     if (ctx?.lead.id) {
@@ -49,20 +54,30 @@ const Dashboard: React.FC = () => {
   return (
     <AccountLayout screenName="Dashboard">
       <div className={styles["main-container"]}>
-        {leadDetails && (
-          <LargeBox
-            bottomLeftHeader={leadDetails.street_address_line_1 || ""}
-            bottomLeftRegularParagraph={leadDetails.city || ""}
-            bottomLeftBoldedParagraph={leadDetails.state || ""}
-            bottomRightHeader={leadDetails.service}
-            topLeftHeader={"Budget Amount"}
-            topLeftRegularParagraph={`$${leadDetails.budget}`}
-            onDelete={() => handleDeleteLead()}
-            onEdit={() => setLeadToEdit(leadDetails)}
-          />
-        )}
+        <div className={styles["box-container"]}>
+          {leadDetails && (
+            <LargeBox
+              bottomLeftHeader={leadDetails.street_address_line_1 || ""}
+              bottomLeftRegularParagraph={leadDetails.city || ""}
+              bottomLeftBoldedParagraph={leadDetails.state || ""}
+              bottomRightHeader={leadDetails.service}
+              topLeftHeader={"Budget Amount"}
+              topLeftRegularParagraph={`$${leadDetails.budget}`}
+              onDelete={() => handleDeleteLead()}
+              onEdit={() => setLeadToEdit(leadDetails)}
+            />
+          )}
+        </div>
+        <div className={styles["buttons"]}>
+          <Button onClick={() => handleLogout()} variant={"outline"}>
+            Logout
+          </Button>
+          <Button variant={"outline"} colorScheme={"red"}>
+            Delete Account
+          </Button>
+        </div>
+        <RequestErrorMessage {...error} />
       </div>
-      <RequestErrorMessage {...error} />
     </AccountLayout>
   );
 };
