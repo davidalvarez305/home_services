@@ -25,13 +25,21 @@ type CreateLeadInput struct {
 	LastName           string `json:"last_name"`
 	Email              string `json:"email"`
 	PhoneNumber        string `json:"phone_number"`
-	Campaign           string `json:"campaign"`
-	Source             string `json:"source"`
-	CampaignName       string `json:"campaign_name"`
-	ReferralURL        string `json:"referral_url"`
+	LandingPage        string `json:"landing_page"`
 	Medium             string `json:"medium"`
-	Keywords           string `json:"keywords"`
+	Keyword            string `json:"keyword"`
 	LeadChannel        string `json:"lead_channel"`
+	Source             string `json:"source"`
+	Referrer           string `json:"referrer"`
+	GClid              string `json:"gclid"`
+	CampaignID         string `json:"campaign_id"`
+	CampaignName       string `json:"campaign_name"`
+	AdGroupID          string `json:"ad_group_id"`
+	AdGroupName        string `json:"ad_group_name"`
+	AdSetID            string `json:"ad_set_id"`
+	AdSetName          string `json:"ad_set_name"`
+	AdID               string `json:"ad_id"`
+	AdHeadline         string `json:"ad_headline"`
 	ZipCode            string `json:"zip_code"`
 	Service            int    `json:"service"`
 	StreetAddressLine1 string `json:"street_address_line_1"`

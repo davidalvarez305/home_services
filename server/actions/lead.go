@@ -126,14 +126,22 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 	}
 
 	l.Lead.LeadMarketing = &models.LeadMarketing{
-		Campaign:     input.Campaign,
+		LeadID:       l.Lead.ID,
 		Source:       input.Source,
 		Medium:       input.Medium,
-		CampaignName: input.CampaignName,
 		LeadChannel:  input.LeadChannel,
-		ReferralURL:  input.ReferralURL,
-		Keywords:     input.Keywords,
-		LeadID:       l.Lead.ID,
+		LandingPage:  input.LandingPage,
+		Keyword:      input.Keyword,
+		Referrer:     input.Referrer,
+		GClid:        input.GClid,
+		CampaignID:   input.CampaignID,
+		CampaignName: input.CampaignName,
+		AdGroupID:    input.AdGroupID,
+		AdGroupName:  input.AdGroupName,
+		AdSetID:      input.AdSetID,
+		AdSetName:    input.AdSetName,
+		AdID:         input.AdID,
+		AdHeadline:   input.AdHeadline,
 	}
 
 	// Add address for this lead
