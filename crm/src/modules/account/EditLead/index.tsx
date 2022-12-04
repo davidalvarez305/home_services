@@ -23,19 +23,24 @@ const EditLead: React.FC<Props> = ({ lead, setLeadToEdit }) => {
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
   const [openCarousel, setOpenCarousel] = useState(false);
-  const [leadPhotos, setLeadPhotos] = useState(() => lead.photos.split(","));
+  const [leadPhotos, setLeadPhotos] = useState(() => {
+    if (lead.photos) {
+      return lead.photos.split(",");
+    }
+    return null;
+  });
 
   async function handleSubmit(values: {
     id: number;
     zip_code: string;
     photos: FileList | null;
     service: number;
-    street_address_line_1: string;
-    street_address_line_2: string;
-    street_address_line_3: string;
-    city: number;
-    state: number;
-    country: number;
+    street_address_line_1: string | null;
+    street_address_line_2: string | null;
+    street_address_line_3: string | null;
+    city: number | null;
+    state: number | null;
+    country: number | null;
     budget: number;
   }) {
     return new Promise((resolve) => {
@@ -112,15 +117,17 @@ const EditLead: React.FC<Props> = ({ lead, setLeadToEdit }) => {
         <div>
           <LeadForm setToggleForm={() => setLeadToEdit(undefined)} />
           <RequestErrorMessage {...error} />
-          <Button
-            className="Dark"
-            onClick={() => setOpenCarousel((prev) => !prev)}
-          >
-            see images
-          </Button>
+          {leadPhotos && (
+            <Button
+              className="Dark"
+              onClick={() => setOpenCarousel((prev) => !prev)}
+            >
+              see images
+            </Button>
+          )}
         </div>
       </Formik>
-      {openCarousel && (
+      {openCarousel && leadPhotos && (
         <CarouselModal>
           {leadPhotos.map((photo, index) => (
             <div key={photo}>

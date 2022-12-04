@@ -134,9 +134,6 @@ export type Lead = {
   phone_number: string;
   created_at: number;
   company_id: number;
-  lead_marketing?: Object;
-  quote?: [];
-  lead_log?: [];
 };
 
 export type LeadDetails = {
@@ -146,20 +143,20 @@ export type LeadDetails = {
   first_name: string;
   last_name: string;
   phone_number: string;
-  company_id: number;
-  street_address_line_1: string;
-  street_address_line_2: string;
-  street_address_line_3: string;
-  city: string;
-  city_id: number;
-  state: string;
-  state_id: number;
-  country: string;
-  country_id: number;
+  company_id: number | null;
+  street_address_line_1: string | null;
+  street_address_line_2: string | null;
+  street_address_line_3: string | null;
+  city: string | null;
+  city_id: number | null;
+  state: string | null;
+  state_id: number | null;
+  country: string | null;
+  country_id: number | null;
   zip_code: string;
   created_at: number;
   service: string;
   service_id: number;
-  photos: string;
+  photos: string | null;
   budget: number;
 }

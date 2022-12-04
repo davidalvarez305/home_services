@@ -18,15 +18,17 @@ const Dashboard: React.FC = () => {
   useAccountRequired();
 
   useEffect(() => {
-    makeRequest(
-      {
-        url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
-      },
-      (res) => {
-        setLeadDetails(res.data.data);
-      }
-    );
-  }, [makeRequest, ctx?.lead.id]);
+    if (ctx?.lead.id) {
+      makeRequest(
+        {
+          url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
+        },
+        (res) => {
+          setLeadDetails(res.data.data);
+        }
+      );
+    }
+  }, [makeRequest, ctx?.lead]);
 
   function handleDeleteLead() {
     makeRequest(
@@ -49,9 +51,9 @@ const Dashboard: React.FC = () => {
       <div className={styles["main-container"]}>
         {leadDetails && (
           <LargeBox
-            bottomLeftHeader={leadDetails.street_address_line_1}
-            bottomLeftRegularParagraph={leadDetails.city}
-            bottomLeftBoldedParagraph={leadDetails.state}
+            bottomLeftHeader={leadDetails.street_address_line_1 || ""}
+            bottomLeftRegularParagraph={leadDetails.city || ""}
+            bottomLeftBoldedParagraph={leadDetails.state || ""}
             bottomRightHeader={leadDetails.service}
             topLeftHeader={"Budget Amount"}
             topLeftRegularParagraph={`$${leadDetails.budget}`}
