@@ -11,7 +11,7 @@ import EditLead from "../EditLead";
 import { LeadDetails } from "../../../types/general";
 
 const Dashboard: React.FC = () => {
-  const [leadDetails, setLeadDetails] = useState<LeadDetails[]>([]);
+  const [leadDetails, setLeadDetails] = useState<LeadDetails>();
   const [leadToEdit, setLeadToEdit] = useState<LeadDetails>();
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
@@ -32,7 +32,7 @@ const Dashboard: React.FC = () => {
     makeRequest(
       {
         url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
-        method: "DELETE"
+        method: "DELETE",
       },
       (res) => {
         setLeadDetails(res.data.data);
@@ -41,26 +41,24 @@ const Dashboard: React.FC = () => {
   }
 
   if (leadToEdit) {
-    return <EditLead lead={leadToEdit} setLeadToEdit={setLeadToEdit} />
+    return <EditLead lead={leadToEdit} setLeadToEdit={setLeadToEdit} />;
   }
 
   return (
     <AccountLayout screenName="Dashboard">
       <div className={styles["main-container"]}>
-        {leadDetails.map((lead, index) => (
-          <React.Fragment key={index}>
-            <LargeBox
-              bottomLeftHeader={lead.street_address_line_1}
-              bottomLeftRegularParagraph={lead.city}
-              bottomLeftBoldedParagraph={lead.state}
-              bottomRightHeader={lead.service}
-              topLeftHeader={"Budget Amount"}
-              topLeftRegularParagraph={`$${lead.budget}`}
-              onDelete={() => handleDeleteLead()}
-              onEdit={() => setLeadToEdit(lead)}
-            />
-          </React.Fragment>
-        ))}
+        {leadDetails && (
+          <LargeBox
+            bottomLeftHeader={leadDetails.street_address_line_1}
+            bottomLeftRegularParagraph={leadDetails.city}
+            bottomLeftBoldedParagraph={leadDetails.state}
+            bottomRightHeader={leadDetails.service}
+            topLeftHeader={"Budget Amount"}
+            topLeftRegularParagraph={`$${leadDetails.budget}`}
+            onDelete={() => handleDeleteLead()}
+            onEdit={() => setLeadToEdit(leadDetails)}
+          />
+        )}
       </div>
       <RequestErrorMessage {...error} />
     </AccountLayout>
