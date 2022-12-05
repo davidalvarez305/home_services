@@ -12,13 +12,15 @@ import DeleteButton from "../../../components/DeleteIconButton";
 import CarouselModal from "../../../components/CarouselModal";
 import AccountLayout from "../../../layout/Account";
 import { Lead, LeadDetails } from "../../../types/general";
+import AccountDetailsForm from "../../../forms/AccountDetailsForm";
 
 interface Props {
   lead: LeadDetails;
   setLeadToEdit: React.Dispatch<React.SetStateAction<LeadDetails | undefined>>;
+  type: "ACCOUNT" | "QUOTE";
 }
 
-const EditLead: React.FC<Props> = ({ lead, setLeadToEdit }) => {
+const EditLead: React.FC<Props> = ({ lead, setLeadToEdit, type }) => {
   useAccountRequired();
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
@@ -109,7 +111,13 @@ const EditLead: React.FC<Props> = ({ lead, setLeadToEdit }) => {
         }}
       >
         <div>
-          <LeadForm setToggleForm={() => setLeadToEdit(undefined)} />
+          {type === "QUOTE" ? (
+            <LeadForm setToggleForm={() => setLeadToEdit(undefined)} />
+          ) : (
+            <AccountDetailsForm
+              setToggleForm={() => setLeadToEdit(undefined)}
+            />
+          )}
           <RequestErrorMessage {...error} />
           {leadPhotos && (
             <Button

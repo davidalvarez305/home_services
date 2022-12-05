@@ -12,8 +12,9 @@ import { LeadDetails } from "../../../types/general";
 import { Button } from "@chakra-ui/react";
 
 const Dashboard: React.FC = () => {
-  const [leadDetails, setLeadDetails] = useState<LeadDetails>();
+  const [type, setType] = useState<"QUOTE" | "ACCOUNT">();
   const [leadToEdit, setLeadToEdit] = useState<LeadDetails>();
+  const [leadDetails, setLeadDetails] = useState<LeadDetails>();
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
   useAccountRequired();
@@ -47,31 +48,54 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  if (leadToEdit) {
-    return <EditLead lead={leadToEdit} setLeadToEdit={setLeadToEdit} />;
+  if (leadToEdit && type) {
+    return <EditLead type={type} lead={leadToEdit} setLeadToEdit={setLeadToEdit} />;
   }
 
   return (
     <AccountLayout screenName="Dashboard">
       <div className={styles["main-container"]}>
-        <div className={styles["box-container"]}>
-          {leadDetails && (
-            <LargeBox
-              bottomLeftHeader={leadDetails.street_address_line_1 || ""}
-              bottomLeftRegularParagraph={leadDetails.city || ""}
-              bottomLeftBoldedParagraph={leadDetails.state || ""}
-              bottomRightHeader={leadDetails.service}
-              topLeftHeader={"Budget Amount"}
-              topLeftRegularParagraph={`$${leadDetails.budget}`}
-              onEdit={() => setLeadToEdit(leadDetails)}
-            />
-          )}
-        </div>
+        {leadDetails && (
+          <div className={styles["box-container"]}>
+            <div>
+              <LargeBox
+                bottomLeftHeader={leadDetails.street_address_line_1 || ""}
+                bottomLeftRegularParagraph={leadDetails.city || ""}
+                bottomLeftBoldedParagraph={leadDetails.state || ""}
+                bottomRightHeader={leadDetails.service}
+                topLeftHeader={"Budget Amount"}
+                topLeftRegularParagraph={`$${leadDetails.budget}`}
+                onEdit={() => {
+                  setLeadToEdit(leadDetails);
+                  setType('QUOTE');
+                }}
+              />
+            </div>
+            <div>
+              <LargeBox
+                bottomLeftHeader={leadDetails.first_name + " " + leadDetails.last_name}
+                bottomLeftRegularParagraph={`(${leadDetails.photos?.split(",").length})` + " Photos"}
+                bottomLeftBoldedParagraph={""}
+                bottomRightHeader={leadDetails.email}
+                topLeftHeader={"Phone Number"}
+                topLeftRegularParagraph={`+1 ${leadDetails.phone_number}`}
+                onEdit={() => {
+                  setLeadToEdit(leadDetails);
+                  setType('ACCOUNT');
+                }}
+              />
+            </div>
+          </div>
+        )}
         <div className={styles["buttons"]}>
           <Button onClick={() => handleLogout()} variant={"outline"}>
             Logout
           </Button>
-          <Button onClick={() => handleDeleteLead()} variant={"outline"} colorScheme={"red"}>
+          <Button
+            onClick={() => handleDeleteLead()}
+            variant={"outline"}
+            colorScheme={"red"}
+          >
             Delete Account
           </Button>
         </div>

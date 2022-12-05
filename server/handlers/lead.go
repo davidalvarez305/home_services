@@ -283,6 +283,10 @@ func UpdateLead(c *fiber.Ctx) error {
 		})
 	}
 
+	l.FirstName = input.FirstName
+	l.LastName = input.LastName
+	l.Email = input.Email
+	l.PhoneNumber = input.PhoneNumber
 	l.Address.ZipCode = input.ZipCode
 	l.Address.StreetAddressLine1 = input.StreetAddressLine1
 	l.Address.StreetAddressLine2 = input.StreetAddressLine2

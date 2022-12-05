@@ -53,6 +53,10 @@ type CreateLeadInput struct {
 
 type UpdateLeadInput struct {
 	ID                 int    `json:"id"`
+	FirstName          string `json:"first_name"`
+	LastName           string `json:"last_name"`
+	Email              string `json:"email"`
+	PhoneNumber        string `json:"phone_number"`
 	ZipCode            string `json:"zip_code"`
 	Service            int    `json:"service"`
 	StreetAddressLine1 string `json:"street_address_line_1"`
