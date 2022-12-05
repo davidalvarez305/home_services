@@ -1,29 +1,29 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./AccountSidebar.module.css";
 import SidebarElement from "../SidebarElement";
-import { ReportsIcon } from "../../assets/ReportsIcon";
-import { PlusIcon } from "../../assets/PlusIcon";
-import { BarsIcon } from "../../assets/BarsIcon";
 import { SettingsIcon } from "../../assets/SettingsIcon";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { DJANGO_DOMAIN } from "../../constants";
+import { LeadContext } from "../../context/LeadContext";
 
 function AccountSidebar() {
   const router = useRouter();
+  const ctx = useContext(LeadContext);
+
+  const qs = new URLSearchParams({
+    source: "crm referral"
+  })
+
   const navLinks = [
     {
       icon: <SettingsIcon />,
-      link: "/profile-settings",
+      link: "/account/" + ctx?.lead.uuid,
       label: "Profile Settings"
     },
     {
       icon: <SettingsIcon />,
-      link: "/quote-settings",
-      label: "Location & Service"
-    },
-    {
-      icon: <SettingsIcon />,
-      link: "http://127.0.0.1:8000/",
+      link: DJANGO_DOMAIN + "?" + qs.toString(),
       label: "Create New"
     },
   ];
