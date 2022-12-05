@@ -260,6 +260,6 @@ func (l *Lead) GetLeadByPhoneNumber(phoneNumber string) error {
 	return database.DB.Raw(sql, phoneNumber[2:]).First(&l).Error
 }
 
-func (l *Lead) GetLeadWithAddress(lead int) error {
-	return database.DB.Where("id = ?", lead).Preload("Address").Find(&l).Error
+func (l *Lead) GetLeadWithAddress(id string) error {
+	return database.DB.Where("id = ?", id).Preload("Address").Find(&l).Error
 }

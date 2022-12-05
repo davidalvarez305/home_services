@@ -275,15 +275,7 @@ func UpdateLead(c *fiber.Ctx) error {
 
 	l := &actions.Lead{}
 
-	lead, err := strconv.Atoi(leadId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Invalid Lead ID.",
-		})
-	}
-
-	err = l.GetLeadWithAddress(lead)
+	err = l.GetLeadWithAddress(leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -292,10 +284,10 @@ func UpdateLead(c *fiber.Ctx) error {
 	}
 
 	l.Address.ZipCode = input.ZipCode
-	l.ServiceID = input.Service
 	l.Address.StreetAddressLine1 = input.StreetAddressLine1
 	l.Address.StreetAddressLine2 = input.StreetAddressLine2
 	l.Address.StreetAddressLine3 = input.StreetAddressLine3
+	l.ServiceID = input.Service
 	l.Budget = input.Budget
 
 	err = l.Save()

@@ -19,6 +19,7 @@ interface Props {
 }
 
 const EditLead: React.FC<Props> = ({ lead, setLeadToEdit }) => {
+  console.log(lead);
   useAccountRequired();
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
