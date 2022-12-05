@@ -13,7 +13,7 @@ type Company struct {
 	*models.Company
 }
 
-type CompanyQuotes struct {
+type CompanyLead struct {
 	ZipCode            string `json:"zip_code"`
 	CreatedAt          int64  `json:"created_at"`
 	StreetAddressLine1 string `json:"street_address_line_1"`
@@ -26,6 +26,8 @@ type CompanyQuotes struct {
 	Photos             string `json:"photos"`             // string agg
 	Photo_Descriptions string `json:"photo_descriptions"` // string agg
 }
+
+type CompanyLeads []*CompanyLead
 
 // Create and return company model.
 func (c *Company) CreateCompany(input *types.CreateCompanyInput) error {
@@ -114,7 +116,7 @@ func (c *Company) CheckCompanyOwners(companyId int) (bool, error) {
 	return numRows > 1, res.Error
 }
 
-func (cq *CompanyQuotes) GetCompanyQuotes(companyId string) error {
+func (cl *CompanyLeads) GetCompanyLeads(companyId string) error {
 	sql := `
 	SELECT z.zip_code, q.created_at,
 	a.street_address_line1 AS street_address_line_1, a.street_address_line2 AS street_address_line_2, a.street_address_line3 AS street_address_line_3,
@@ -144,7 +146,7 @@ func (cq *CompanyQuotes) GetCompanyQuotes(companyId string) error {
 	c.city, s.state, ctry.country, z.zip_code, q.created_at;
 	`
 
-	return database.DB.Raw(sql, companyId).Scan(&cq).Error
+	return database.DB.Raw(sql, companyId).Scan(&cl).Error
 }
 
 // Get Company from DB.

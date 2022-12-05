@@ -702,8 +702,8 @@ func DeleteCompanyLocation(c *fiber.Ctx) error {
 	})
 }
 
-func GetCompanyQuotes(c *fiber.Ctx) error {
-	quotes := &actions.CompanyQuotes{}
+func GetCompanyLeads(c *fiber.Ctx) error {
+	leads := &actions.CompanyLeads{}
 
 	companyId := c.Params("id")
 
@@ -713,15 +713,15 @@ func GetCompanyQuotes(c *fiber.Ctx) error {
 		})
 	}
 
-	err := quotes.GetCompanyQuotes(companyId)
+	err := leads.GetCompanyLeads(companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to fetch company quotes.",
+			"data": "Failed to fetch company leads.",
 		})
 	}
 
 	return c.Status(200).JSON(fiber.Map{
-		"data": quotes,
+		"data": leads,
 	})
 }
