@@ -50,3 +50,13 @@ type CreateLeadInput struct {
 	CountryID          int    `json:"country"`
 	Budget             int    `json:"budget"`
 }
+
+type UpdateLeadInput struct {
+	ID                 int    `json:"id"`
+	ZipCode            string `json:"zip_code"`
+	Service            int    `json:"service"`
+	StreetAddressLine1 string `json:"street_address_line_1"`
+	StreetAddressLine2 string `json:"street_address_line_2"`
+	StreetAddressLine3 string `json:"street_address_line_3"`
+	Budget             int    `json:"budget"`
+}

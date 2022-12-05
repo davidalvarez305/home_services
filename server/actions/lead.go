@@ -144,16 +144,24 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 		AdHeadline:   input.AdHeadline,
 	}
 
-	// Add address for this lead -> only for updating
-	/* l.Address = &models.Address{
+	z := &ZipCode{}
+
+	err := z.GetZipCode(input.ZipCode)
+
+	if err != nil {
+		return err
+	}
+
+	// Add address for this lead
+	l.Address = &models.Address{
 		StreetAddressLine1: input.StreetAddressLine1,
 		StreetAddressLine2: input.StreetAddressLine2,
 		StreetAddressLine3: input.StreetAddressLine3,
-		CityID:             input.CityID,
-		StateID:            input.StateID,
-		CountryID:          input.CountryID,
+		CityID:             z.CityID,
+		StateID:            z.StateID,
+		CountryID:          z.CountryID,
 		ZipCode:            input.ZipCode,
-	} */
+	}
 
 	l.ServiceID = input.Service
 	l.Budget = input.Budget

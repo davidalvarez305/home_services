@@ -38,9 +38,6 @@ const EditLead: React.FC<Props> = ({ lead, setLeadToEdit }) => {
     street_address_line_1: string | null;
     street_address_line_2: string | null;
     street_address_line_3: string | null;
-    city: number | null;
-    state: number | null;
-    country: number | null;
     budget: number;
   }) {
     return new Promise((resolve) => {
@@ -103,9 +100,6 @@ const EditLead: React.FC<Props> = ({ lead, setLeadToEdit }) => {
       <Formik
         initialValues={{
           ...lead,
-          city: lead.city_id,
-          state: lead.state_id,
-          country: lead.country_id,
           service: lead.service_id,
           photos: null,
         }}
@@ -129,7 +123,7 @@ const EditLead: React.FC<Props> = ({ lead, setLeadToEdit }) => {
       </Formik>
       {openCarousel && leadPhotos && (
         <CarouselModal>
-          {leadPhotos.map((photo, index) => (
+          {leadPhotos.map((photo) => (
             <div key={photo}>
               <div>
                 <DeleteButton

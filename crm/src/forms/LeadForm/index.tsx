@@ -11,7 +11,9 @@ interface Props {
 
 const LeadForm: React.FC<Props> = ({ setToggleForm }) => {
   const [imagesNum, setImagesNum] = useState(0);
+
   const formik = useFormikContext();
+
   return (
     <Form>
       <div className={styles["form-container"]}>
@@ -31,20 +33,12 @@ const LeadForm: React.FC<Props> = ({ setToggleForm }) => {
         </div>
         <div className={styles["column-container"]}>
           <FormSelect
-            name={"city"}
-            options={[{ value: 1, label: "Hialeah" }]}
-          />
-          <FormSelect
-            name={"state"}
-            options={[{ value: 1, label: "Florida" }]}
-          />
-          <FormSelect
-            name={"country"}
-            options={[{ value: 1, label: "United States" }]}
-          />
-          <FormSelect
             name={"zip_code"}
             options={[{ value: "33015", label: "33015" }]}
+          />
+          <FormSelect
+            name={"service"}
+            options={[{ value: 1, label: "Bathroom Remodeling" }]}
           />
         </div>
       </div>
@@ -55,10 +49,6 @@ const LeadForm: React.FC<Props> = ({ setToggleForm }) => {
             type={'number'}
           />
         <div className={styles["image-and-services"]}>
-          <FormSelect
-            name={"service"}
-            options={[{ value: 1, label: "Bathroom Remodeling" }]}
-          />
           <Button
             type={"button"}
             onClick={() => document.getElementById("image")?.click()}

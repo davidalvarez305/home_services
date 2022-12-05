@@ -12,24 +12,19 @@ function AccountSidebar() {
   const router = useRouter();
   const navLinks = [
     {
-      icon: <BarsIcon />,
-      link: "leads",
-      label: "Leads",
+      icon: <SettingsIcon />,
+      link: "/profile-settings",
+      label: "Profile Settings"
     },
     {
-      icon: <ReportsIcon />,
-      link: "company",
-      label: "Dashboard",
+      icon: <SettingsIcon />,
+      link: "/quote-settings",
+      label: "Location & Service"
     },
     {
-      icon: <ReportsIcon />,
-      link: "calculator",
-      label: "Calculator",
-    },
-    {
-      icon: <ReportsIcon />,
-      link: "company-settings",
-      label: "Company Settings",
+      icon: <SettingsIcon />,
+      link: "http://127.0.0.1:8000/",
+      label: "Create New"
     },
   ];
 
@@ -47,27 +42,12 @@ function AccountSidebar() {
         {navLinks.map((link) => (
           <React.Fragment key={link.link}>
             <SidebarElement
-              handleClick={() => router.push("/" + link.link)}
+              handleClick={() => router.push(link.link)}
               {...link}
             />
           </React.Fragment>
         ))}
       </div>
-      <div className={styles["balance"]}>
-        <div className={styles["balances"]}>{"Traffic"}</div>
-        <SidebarElement
-          handleClick={() => router.push("/create-company")}
-          icon={<PlusIcon />}
-          label={"Create A Company"}
-          link={"create-company"}
-        />
-      </div>
-      <SidebarElement
-        handleClick={() => router.push("/profile-settings")}
-        icon={<SettingsIcon />}
-        link={"profile-settings"}
-        label={"Profile Settings"}
-      />
     </div>
   );
 }

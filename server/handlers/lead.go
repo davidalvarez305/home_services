@@ -255,7 +255,7 @@ func LeadLogout(c *fiber.Ctx) error {
 }
 
 func UpdateLead(c *fiber.Ctx) error {
-	var input types.CreateLeadInput
+	var input types.UpdateLeadInput
 	leadId := c.Params("id")
 	leadLog := &actions.LeadLog{}
 
@@ -296,14 +296,7 @@ func UpdateLead(c *fiber.Ctx) error {
 	l.Address.StreetAddressLine1 = input.StreetAddressLine1
 	l.Address.StreetAddressLine2 = input.StreetAddressLine2
 	l.Address.StreetAddressLine3 = input.StreetAddressLine3
-	l.Address.CityID = input.CityID
-	l.Address.StateID = input.StateID
-	l.Address.CountryID = input.CountryID
 	l.Budget = input.Budget
-	l.FirstName = input.FirstName
-	l.LastName = input.LastName
-	l.Email = input.Email
-	l.PhoneNumber = input.PhoneNumber
 
 	err = l.Save()
 
@@ -322,7 +315,7 @@ func UpdateLead(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(201).JSON(fiber.Map{
+	return c.Status(200).JSON(fiber.Map{
 		"data": l,
 	})
 }
