@@ -194,7 +194,7 @@ func CheckLoginCode(c *fiber.Ctx) error {
 
 func GetLeadInfo(c *fiber.Ctx) error {
 	leadId := c.Params("id")
-	lead := &actions.Lead{}
+	lead := &actions.LeadDetails{}
 
 	if len(leadId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
@@ -202,7 +202,7 @@ func GetLeadInfo(c *fiber.Ctx) error {
 		})
 	}
 
-	err := lead.GetLead(leadId)
+	err := lead.GetLeadDetails(leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

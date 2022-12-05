@@ -249,15 +249,7 @@ func (lead *Lead) GenerateLeadToken() error {
 }
 
 func (l *Lead) GetLeadByPhoneNumber(phoneNumber string) error {
-
-	sql := `
-	SELECT l.id
-	FROM quote AS q
-	LEFT JOIN lead AS l
-	ON l.id = l.lead_id
-	WHERE l.phone_number = ?;`
-
-	return database.DB.Raw(sql, phoneNumber[2:]).First(&l).Error
+	return database.DB.Where("phone_number = ?", phoneNumber[2:]).First(&l).Error
 }
 
 func (l *Lead) GetLeadWithAddress(id string) error {
