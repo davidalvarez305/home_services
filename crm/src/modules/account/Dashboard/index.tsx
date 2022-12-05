@@ -49,7 +49,7 @@ const Dashboard: React.FC = () => {
   }
 
   if (leadToEdit && type) {
-    return <EditLead type={type} lead={leadToEdit} setLeadToEdit={setLeadToEdit} />;
+    return <EditLead type={type} lead={leadToEdit} setLeadToEdit={setLeadToEdit} setLeadDetails={setLeadDetails} />;
   }
 
   return (

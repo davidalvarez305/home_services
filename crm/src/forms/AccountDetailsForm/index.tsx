@@ -15,36 +15,15 @@ const AccountDetailsForm: React.FC<Props> = ({ setToggleForm }) => {
     <Form>
       <div className={styles["form-container"]}>
         <div className={styles["column-container"]}>
-          <PrimaryInput
-            label={"First Name"}
-            name={"first_name"}
-          />
-          <PrimaryInput
-            label={"Last Name"}
-            name={"last_name"}
-          />
-          <PrimaryInput
-            label={"Email"}
-            name={"email"}
-          />
+          <PrimaryInput label={"First Name"} name={"first_name"} />
+          <PrimaryInput label={"Last Name"} name={"last_name"} />
+          <PrimaryInput label={"Email"} name={"email"} />
         </div>
         <div className={styles["column-container"]}>
-          <FormSelect
-            name={"zip_code"}
-            options={[{ value: "33015", label: "33015" }]}
-          />
-          <FormSelect
-            name={"service"}
-            options={[{ value: 1, label: "Bathroom Remodeling" }]}
-          />
+          <PrimaryInput label={"Phone Number"} name={"phone_number"} />
         </div>
       </div>
       <div className={styles["bottom-form-container"]}>
-          <PrimaryInput
-            label={"Project Budget"}
-            name={"budget"}
-            type={'number'}
-          />
         <div className={styles["buttons-container"]}>
           <Button
             isLoading={formik.isSubmitting}

@@ -311,8 +311,18 @@ func UpdateLead(c *fiber.Ctx) error {
 		})
 	}
 
+	lead := &actions.LeadDetails{}
+
+	err = lead.GetLeadDetails(leadId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to fetch updated records.",
+		})
+	}
+
 	return c.Status(200).JSON(fiber.Map{
-		"data": l,
+		"data": lead,
 	})
 }
 

@@ -17,10 +17,11 @@ import AccountDetailsForm from "../../../forms/AccountDetailsForm";
 interface Props {
   lead: LeadDetails;
   setLeadToEdit: React.Dispatch<React.SetStateAction<LeadDetails | undefined>>;
+  setLeadDetails: React.Dispatch<React.SetStateAction<LeadDetails | undefined>>;
   type: "ACCOUNT" | "QUOTE";
 }
 
-const EditLead: React.FC<Props> = ({ lead, setLeadToEdit, type }) => {
+const EditLead: React.FC<Props> = ({ lead, setLeadToEdit, type, setLeadDetails }) => {
   useAccountRequired();
   const ctx = useContext(LeadContext);
   const { makeRequest, isLoading, error } = useFetch();
@@ -52,7 +53,7 @@ const EditLead: React.FC<Props> = ({ lead, setLeadToEdit, type }) => {
           data: input,
         },
         (res) => {
-          const lead: Lead = res.data.data;
+          const lead: LeadDetails = res.data.data;
 
           if (lead.id && photos) {
             const fd = new FormData();
@@ -68,11 +69,13 @@ const EditLead: React.FC<Props> = ({ lead, setLeadToEdit, type }) => {
                 data: fd,
               },
               (_) => {
+                setLeadDetails(lead);
                 setLeadToEdit(undefined);
                 return resolve(true);
-              } // TBD
+              }
             );
           } else {
+            setLeadDetails(lead);
             setLeadToEdit(undefined);
             return resolve(true);
           }
