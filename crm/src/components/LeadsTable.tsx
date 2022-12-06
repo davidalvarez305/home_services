@@ -1,4 +1,4 @@
-import React, { LegacyRef, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { IconButton, Table, Tbody, Td, Thead, Tr } from "@chakra-ui/react";
 import { CompanyLead } from "../types/general";
 import { COMPANY_LEADS_HEADERS } from "../utils/companyLeadsHeaders";
@@ -6,8 +6,6 @@ import { FaPhone } from "react-icons/fa";
 import { BiImages } from "react-icons/bi";
 import CarouselModal from "./CarouselModal";
 import Image from "next/image";
-import useOnScreen from "../hooks/useOnScreen";
-import Slider from "react-slick";
 
 interface Props {
   companyLeads: CompanyLead[];
@@ -15,21 +13,19 @@ interface Props {
 
 function RenderImages({ photos }: CompanyLead) {
   const [renderModal, setRenderModal] = useState(false);
-  const ref = useRef<Slider | null>(null);
-  const isSeen = useOnScreen(ref);
-
-  useEffect(() => {
-    if (!isSeen) {
-        setRenderModal(false);
-    }
-  }, [isSeen]);
 
   if (renderModal) {
     return (
-      <CarouselModal sliderRef={ref}>
+      <CarouselModal
+        onClose={() => {
+          setRenderModal(false);
+        }}
+        isOpen={renderModal}
+      >
         {photos.split(",").map((photo) => (
           <React.Fragment key={photo}>
             <Image
+              id={photo}
               src={`https://home-services-app.s3.amazonaws.com/lead-photos/${photo}`}
               alt={photo}
               width={400}

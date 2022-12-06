@@ -7,17 +7,17 @@ import {
   ModalBody,
   ModalFooter,
   Button,
+  UseModalProps,
 } from "@chakra-ui/react";
-import { LegacyRef, useState } from "react";
+import { useState } from "react";
 import Slider from "react-slick";
 import Head from "next/head";
 
-interface Props {
+type Props = any & {
   children: React.ReactNode;
-  sliderRef?: LegacyRef<Slider>;
-}
+};
 
-const CarouselModal: React.FC<Props> = ({ children, sliderRef }) => {
+const CarouselModal: React.FC<Props> = ({ children, ...props }) => {
   const [showModal, setShowModal] = useState(true);
 
   const settings = {
@@ -48,6 +48,7 @@ const CarouselModal: React.FC<Props> = ({ children, sliderRef }) => {
         size="3xl"
         isOpen={showModal}
         onClose={() => setShowModal(false)}
+        {...props}
       >
         <ModalOverlay />
         <ModalContent>
@@ -58,9 +59,7 @@ const CarouselModal: React.FC<Props> = ({ children, sliderRef }) => {
               minH: 500,
             }}
           >
-            <Slider ref={sliderRef} {...settings}>
-              {children}
-            </Slider>
+            <Slider {...settings}>{children}</Slider>
           </ModalBody>
           <ModalFooter>
             <Button
