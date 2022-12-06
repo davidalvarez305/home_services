@@ -153,8 +153,8 @@ func (cl *CompanyLeads) GetCompanyLeads(companyId, offset, limit string) error {
 	GROUP BY c.id, a.street_address_line1, a.street_address_line2, a.street_address_line3, ser.service, ser.id,
 	city.city, city.id, s.id, s.state, l.email, l.company_id, l.first_name, l.last_name,
 	l.phone_number, a.zip_code, l.created_at, l.budget, ctry.country, ctry.id
-	offset = ?
-	limit = ?;`
+	OFFSET ?
+	LIMIT ?;`
 
 	return database.DB.Raw(sql, companyId, offset, limit).Scan(&cl).Error
 }

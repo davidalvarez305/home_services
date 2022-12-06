@@ -160,3 +160,27 @@ export type LeadDetails = {
   photos: string | null;
   budget: number;
 }
+
+export type CompanyLead = {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  company_id: number;
+  street_address_line_1: string;
+  street_address_line_2: string;
+  street_address_line_3: string;
+  city: string;
+  city_id: number;
+  state: string;
+  state_id: number;
+  country: string;
+  country_id: number;
+  zip_code: string;
+  created_at: number;
+  service: string;
+  service_id: number;
+  photos: string;
+  budget: number;
+}
