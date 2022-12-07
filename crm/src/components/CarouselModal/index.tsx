@@ -7,7 +7,6 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  UseModalProps,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import Slider from "react-slick";

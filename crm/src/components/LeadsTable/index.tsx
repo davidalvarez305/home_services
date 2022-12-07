@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { IconButton, Table, Tbody, Td, Thead, Tr } from "@chakra-ui/react";
-import { CompanyLead } from "../types/general";
-import { COMPANY_LEADS_HEADERS } from "../utils/companyLeadsHeaders";
+import { CompanyLead } from "../../types/general";
+import { COMPANY_LEADS_HEADERS } from "../../utils/companyLeadsHeaders";
 import { FaPhone } from "react-icons/fa";
 import { BiImages } from "react-icons/bi";
-import CarouselModal from "./CarouselModal";
+import CarouselModal from "../CarouselModal";
 import Image from "next/image";
 
 interface Props {
@@ -68,19 +68,43 @@ function renderPhoneIcon({ phone_number }: CompanyLead) {
   );
 }
 
+const tableStyles = {
+  table: {
+    borderRadius: "8px",
+    border: "1px solid",
+    borderColor: "var(--cfdbd5outline-onlight2)",
+    borderCollapse: "collapse",
+  },
+  table_row: {
+    margin: "5px",
+    maxHeight: "40px",
+    borderRadius: "8px",
+    border: "1px solid",
+    borderColor: "var(--cfdbd5outline-onlight2)",
+  },
+  td: {
+    maxWidth: "150px",
+  },
+  th: {
+    letterSpacing: "2px",
+  },
+};
+
 const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
   return (
-    <Table>
+    <Table sx={{ ...tableStyles["table"] }}>
       <Thead>
-        <Tr>
+        <Tr sx={{ ...tableStyles["table_row"] }}>
           {COMPANY_LEADS_HEADERS.map((header, index) => (
-            <Td key={index}>{header}</Td>
+            <Td sx={{ ...tableStyles["td"] }} key={index}>
+              {header}
+            </Td>
           ))}
         </Tr>
       </Thead>
       <Tbody>
         {companyLeads.map((lead) => (
-          <Tr key={lead.id}>
+          <Tr sx={{ ...tableStyles["table_row"] }} key={lead.id}>
             {COMPANY_LEADS_HEADERS.map((header) => {
               switch (header) {
                 case "created_at":
@@ -90,11 +114,17 @@ const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
                 case "photos":
                   return RenderImages(lead);
                 case "budget":
-                  return <Td>{`$${lead[header as keyof CompanyLead]}`}</Td>;
+                  return (
+                    <Td sx={{ ...tableStyles["td"] }}>{`$${
+                      lead[header as keyof CompanyLead]
+                    }`}</Td>
+                  );
                 default:
                   return (
                     <React.Fragment key={lead[header as keyof CompanyLead]}>
-                      <Td>{lead[header as keyof CompanyLead]}</Td>
+                      <Td sx={{ ...tableStyles["td"] }}>
+                        {lead[header as keyof CompanyLead]}
+                      </Td>
                     </React.Fragment>
                   );
               }

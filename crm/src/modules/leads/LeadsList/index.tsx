@@ -5,8 +5,8 @@ import { UserContext } from "../../../context/UserContext";
 import useFetch from "../../../hooks/useFetch";
 import { COMPANY_ROUTE } from "../../../constants";
 import { CompanyLead } from "../../../types/general";
-import { Table, Tbody, Td, Thead, Tr } from "@chakra-ui/react";
 import LeadsTable from "../../../components/LeadsTable";
+import styles from "./LeadsList.module.css";
 
 const LeadsList: React.FC = () => {
   const ctx = useContext(UserContext);
@@ -32,7 +32,9 @@ const LeadsList: React.FC = () => {
 
   return (
     <PrimaryLayout screenName="Leads List">
+      <div className={styles['main-container']}>
       {companyLeads.length > 0 && <LeadsTable companyLeads={companyLeads} />}
+      </div>
     </PrimaryLayout>
   );
 };
