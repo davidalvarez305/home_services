@@ -18,6 +18,7 @@ const LeadsList: React.FC = () => {
     offset: 0,
     limit: 8,
   });
+  const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
     if (ctx?.user.company_id) {
@@ -29,6 +30,7 @@ const LeadsList: React.FC = () => {
       makeRequest(
         { url: `${COMPANY_ROUTE}/${ctx?.user.company_id}/leads/?` + qs },
         (res) => {
+          setHasMore(() => res.data.data.length === 8);
           setCompanyLeads((prev) => [...prev, ...res.data.data]);
         }
       );
@@ -49,13 +51,15 @@ const LeadsList: React.FC = () => {
       <div className={styles["main-container"]}>
         <div className={styles["table-button"]}>
           <LeadsTable companyLeads={companyLeads} />
-          <Button
-            className="Dark"
-            isLoading={isLoading}
-            onClick={() => handleLoadMore()}
-          >
-            Load More
-          </Button>
+          {hasMore && (
+            <Button
+              className="Dark"
+              isLoading={isLoading}
+              onClick={() => handleLoadMore()}
+            >
+              Load More
+            </Button>
+          )}
         </div>
       </div>
     </PrimaryLayout>
