@@ -6,3 +6,11 @@
     margin: 10px;
     height: 700px;
 }
+
+.table-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
