@@ -111,8 +111,8 @@ const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
                   return renderDate(lead);
                 case "phone_number":
                   return renderPhoneIcon(lead);
-                /* case "photos":
-                  return RenderImages(lead); */
+                case "photos":
+                  return RenderImages(lead);
                 case "budget":
                   return (
                     <Td sx={{ ...tableStyles["td"] }}>{`$${
