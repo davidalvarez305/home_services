@@ -40,7 +40,7 @@ const LeadsList: React.FC = () => {
   function handleLoadMore() {
     setOffsetLimits((prev) => {
       return {
-        offset: (prev.offset += prev.limit),
+        offset: (prev.offset + prev.limit),
         limit: 8,
       };
     });
