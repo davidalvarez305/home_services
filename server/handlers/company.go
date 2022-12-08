@@ -47,7 +47,7 @@ func CreateCompany(c *fiber.Ctx) error {
 	err = company.CreateCompany(input)
 
 	if err != nil {
-		return c.Status(403).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": "Could not create company.",
 		})
 	}
@@ -61,8 +61,16 @@ func CreateCompany(c *fiber.Ctx) error {
 	err = user.Save()
 
 	if err != nil {
-		return c.Status(403).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"data": "Could not attach company to user.",
+		})
+	}
+
+	err = company.CreateStripeCustomer(user)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not create Stripe Customer.",
 		})
 	}
 

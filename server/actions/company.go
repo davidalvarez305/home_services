@@ -40,6 +40,10 @@ type CompanyLead struct {
 
 type CompanyLeads []*CompanyLead
 
+func (c *Company) Save() error {
+	return database.DB.Save(&c).First(&c).Error
+}
+
 // Create and return company model.
 func (c *Company) CreateCompany(input *types.CreateCompanyInput) error {
 

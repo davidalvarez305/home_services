@@ -7,7 +7,7 @@ import (
 	"github.com/stripe/stripe-go/v74/customer"
 )
 
-func CreateStripeCustomer(company *Company, owner User) (string, error) {
+func (company *Company) CreateStripeCustomer(owner *User) error {
 
 	stripe.Key = os.Getenv("STRIPE_SECRET_KEY")
 
@@ -21,5 +21,11 @@ func CreateStripeCustomer(company *Company, owner User) (string, error) {
 
 	c, err := customer.New(params)
 
-	return c.ID, err
+	if err != nil {
+		return err
+	}
+
+	company.StripeCustomerID = c.ID
+
+	return company.Save()
 }
