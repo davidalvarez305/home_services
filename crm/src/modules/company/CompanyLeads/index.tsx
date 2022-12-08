@@ -6,10 +6,10 @@ import useFetch from "../../../hooks/useFetch";
 import { COMPANY_ROUTE } from "../../../constants";
 import { CompanyLead } from "../../../types/general";
 import LeadsTable from "../../../components/LeadsTable";
-import styles from "./LeadsList.module.css";
+import styles from "./CompanyLeads.module.css";
 import Button from "../../../components/Button";
 
-const LeadsList: React.FC = () => {
+const CompanyLeads: React.FC = () => {
   const ctx = useContext(UserContext);
   useLoginRequired();
   const { makeRequest, isLoading, error } = useFetch();
@@ -65,4 +65,4 @@ const LeadsList: React.FC = () => {
     </PrimaryLayout>
   );
 };
-export default LeadsList;
+export default CompanyLeads;

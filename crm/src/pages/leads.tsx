@@ -1,3 +1,3 @@
-import LeadsList from "../modules/leads/LeadsList";
+import CompanyLeads from "../modules/company/CompanyLeads";
 
-export default LeadsList;
+export default CompanyLeads;
