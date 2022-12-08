@@ -2,7 +2,6 @@ package actions
 
 import (
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/davidalvarez305/home_services/server/models"
@@ -72,42 +71,39 @@ func (msg *TwillioWebhookRequestBody) UploadImagesFromMMS(l *Lead) error {
 	for _, img := range images {
 
 		// Only upload images where the MediaURL is not empty
-		if len(img) > 0 {
-
-			var fileName = utils.GenerateFileName("file.jpg")
-			path, err := utils.ResolveServerPath()
-
-			var fullPath = path + "/uploads/" + fileName
-
-			if err != nil {
-				fmt.Printf("%+v\n", err)
-				continue
-			}
-
-			err = utils.GetImageFromURL(img, fullPath)
-
-			if err != nil {
-				fmt.Printf("%+v\n", err)
-				continue
-			}
-
-			file, err := os.Open(fullPath)
-
-			if err != nil {
-				fmt.Printf("%+v\n", err)
-				continue
-			}
-
-			err = utils.UploadImageToS3(file, fileName, "lead-photos")
-
-			if err != nil {
-				fmt.Printf("%+v\n", err)
-				continue
-			}
-
-			// Save the FILE NAME in the DB, not the FULL LOCAL PATH
-			uploadImages = append(uploadImages, fileName)
+		if len(img) == 0 {
+			continue
 		}
+
+		var fileName = utils.GenerateFileName("file.jpg")
+		path, err := utils.ResolveServerPath()
+
+		var fullPath = path + "/uploads/" + fileName
+
+		if err != nil {
+			continue
+		}
+
+		err = utils.GetImageFromURL(img, fullPath)
+
+		if err != nil {
+			continue
+		}
+
+		file, err := os.Open(fullPath)
+
+		if err != nil {
+			continue
+		}
+
+		err = utils.UploadImageToS3(file, fileName, "lead-photos")
+
+		if err != nil {
+			continue
+		}
+
+		// Save the FILE NAME in the DB, not the FULL LOCAL PATH
+		uploadImages = append(uploadImages, fileName)
 	}
 
 	if len(uploadImages) == 0 {
