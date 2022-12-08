@@ -5,6 +5,7 @@ type User struct {
 	Username        string         `gorm:"unique;not null" json:"username"`
 	Password        string         `gorm:"not null" json:"password"`
 	Email           string         `gorm:"unique;not null" json:"email"`
+	PhoneNumber     string         `gorm:"unique;not null" json:"phone_number"`
 	APIToken        string         `gorm:"column:api_token;unique;not null" json:"api_token"`
 	ProfileImage    string         `gorm:"column:profile_picture" json:"profile_picture"`
 	CreatedAt       int64          `gorm:"not null;column:created_at" json:"created_at"`
