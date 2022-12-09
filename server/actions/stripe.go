@@ -9,6 +9,7 @@ import (
 	"github.com/stripe/stripe-go/v74"
 	"github.com/stripe/stripe-go/v74/customer"
 	"github.com/stripe/stripe-go/v74/invoice"
+	"github.com/stripe/stripe-go/v74/invoiceitem"
 )
 
 func (company *Company) CreateStripeCustomer(owner *User) error {
@@ -50,15 +51,26 @@ func CreateInvoice(company *Company) error {
 	params := &stripe.InvoiceParams{
 		Customer:         stripe.String(company.StripeCustomerID),
 		AutoAdvance:      stripe.Bool(true),
-		CollectionMethod: stripe.String("send_invoice"),
-		Currency:         stripe.String("USD"),
+		CollectionMethod: stripe.String(string(stripe.InvoiceCollectionMethodSendInvoice)),
+		Currency:         stripe.String(string(stripe.CurrencyUSD)),
 		DaysUntilDue:     stripe.Int64(30),
 		CustomFields:     customFields,
 		Description:      stripe.String(fmt.Sprintf("Invoice for leads generated in the month of %s.", month.String())),
-		DueDate:          stripe.Int64(thirtydaysFromNow),
 	}
 
 	in, err := invoice.New(params)
+
+	if err != nil {
+		return err
+	}
+
+	item := &stripe.InvoiceItemParams{
+		Customer: stripe.String("{{CUSTOMER_ID}}"),
+		Price:    stripe.String("{{PRICE_ID}}"),
+		Invoice:  stripe.String("{{INVOICE_ID}}"),
+	}
+
+	_, err = invoiceitem.New(item)
 
 	if err != nil {
 		return err
