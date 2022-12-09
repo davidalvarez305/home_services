@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/stripe/stripe-go/v74"
 	"github.com/stripe/stripe-go/v74/customer"
 	"github.com/stripe/stripe-go/v74/invoice"
@@ -33,7 +34,7 @@ func (company *Company) CreateStripeCustomer(owner *User) error {
 	return company.Save()
 }
 
-func CreateInvoice(stripeCustomerId string) error {
+func CreateInvoice(company *Company) error {
 	stripe.Key = os.Getenv("STRIPE_SECRET_KEY")
 
 	customFields := []*stripe.InvoiceCustomFieldParams{}
@@ -47,7 +48,7 @@ func CreateInvoice(stripeCustomerId string) error {
 	_, month, _ := time.Now().Date()
 
 	params := &stripe.InvoiceParams{
-		Customer:         stripe.String(stripeCustomerId),
+		Customer:         stripe.String(company.StripeCustomerID),
 		AutoAdvance:      stripe.Bool(true),
 		CollectionMethod: stripe.String("send_invoice"),
 		Currency:         stripe.String("USD"),
@@ -57,7 +58,25 @@ func CreateInvoice(stripeCustomerId string) error {
 		DueDate:          stripe.Int64(thirtydaysFromNow),
 	}
 
-	_, err := invoice.New(params)
+	in, err := invoice.New(params)
+
+	if err != nil {
+		return err
+	}
+
+	invoice := &Invoice{}
+
+	i := models.Invoice{
+		InvoiceID:              in.ID,
+		InvoiceAmount:          int(in.AmountDue),
+		InvoiceDueDate:         thirtydaysFromNow,
+		InvoicePaymentStatusID: 1, // 1 is pending
+		CompanyID:              company.ID,
+	}
+
+	invoice.Invoice = &i
+
+	err = invoice.Save()
 
 	return err
 }
