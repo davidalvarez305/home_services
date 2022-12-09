@@ -1,7 +1,9 @@
 package actions
 
 import (
+	"fmt"
 	"os"
+	"time"
 
 	"github.com/stripe/stripe-go/v74"
 	"github.com/stripe/stripe-go/v74/customer"
@@ -31,7 +33,7 @@ func (company *Company) CreateStripeCustomer(owner *User) error {
 	return company.Save()
 }
 
-func CreateInvoice() error {
+func CreateInvoice(stripeCustomerId string) error {
 	stripe.Key = os.Getenv("STRIPE_SECRET_KEY")
 
 	customFields := []*stripe.InvoiceCustomFieldParams{}
@@ -41,24 +43,21 @@ func CreateInvoice() error {
 		Value: stripe.String("99"),
 	})
 
+	thirtydaysFromNow := time.Now().Unix() + 2592000
+	_, month, _ := time.Now().Date()
+
 	params := &stripe.InvoiceParams{
-		Customer:             stripe.String(COMPANY_ID),
-		AutoAdvance:          stripe.Bool(true),
-		CollectionMethod:     stripe.String("send_invoice"),
-		Currency:             stripe.String("USD"),
-		DaysUntilDue:         stripe.Int64(30),
-		CustomFields:         customFields,
-		DefaultPaymentMethod: stripe.String(),
-		Description:          stripe.String(),
-		DueDate:              stripe.String(),
-		OnBehalfOf:           stripe.String(),
+		Customer:         stripe.String(stripeCustomerId),
+		AutoAdvance:      stripe.Bool(true),
+		CollectionMethod: stripe.String("send_invoice"),
+		Currency:         stripe.String("USD"),
+		DaysUntilDue:     stripe.Int64(30),
+		CustomFields:     customFields,
+		Description:      stripe.String(fmt.Sprintf("Invoice for leads generated in the month of %s.", month.String())),
+		DueDate:          stripe.Int64(thirtydaysFromNow),
 	}
 
-	in, err := invoice.New(params)
+	_, err := invoice.New(params)
 
-	if err != nil {
-		return err
-	}
-
-	in.AmountDue
+	return err
 }
