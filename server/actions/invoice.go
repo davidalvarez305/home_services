@@ -12,3 +12,7 @@ type Invoice struct {
 func (i *Invoice) Save() error {
 	return database.DB.Save(&i).First(&i).Error
 }
+
+func (i *Invoice) GetInvoiceByID(id string) error {
+	return database.DB.Where("id = ?", id).First(&i).Error
+}

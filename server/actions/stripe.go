@@ -76,7 +76,5 @@ func CreateInvoice(company *Company) error {
 
 	invoice.Invoice = &i
 
-	err = invoice.Save()
-
-	return err
+	return invoice.Save()
 }
