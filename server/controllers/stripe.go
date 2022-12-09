@@ -9,5 +9,5 @@ func Stripe(router fiber.Router) {
 
 	stripe := router.Group("stripe")
 
-	stripe.Get("/", handlers.HandleStripeWebhooks)
+	stripe.Post("/", handlers.HandleStripeWebhooks)
 }

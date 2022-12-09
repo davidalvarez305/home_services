@@ -37,7 +37,7 @@ func HandleStripeWebhooks(c *fiber.Ctx) error {
 				"data": "Could not parse payment method.",
 			})
 		}
-		fmt.Printf("%+v\n", paymentMethod)
+		fmt.Printf("paymentMethod: %+v\n", paymentMethod)
 	}
 
 	return c.Status(200).JSON(fiber.Map{
