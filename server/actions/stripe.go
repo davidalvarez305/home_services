@@ -88,12 +88,13 @@ func CreateInvoice(company *Company) error {
 		return err
 	}
 
-	amountDue := lc.Count * int(company.PriceAgreement)
+	amountDue := lc.Count * company.PriceAgreement
 
 	item := &stripe.InvoiceItemParams{
 		Customer: stripe.String(company.StripeCustomerID),
 		Amount:   stripe.Int64(int64(amountDue)),
 		Invoice:  stripe.String(in.ID),
+		Currency: stripe.String("usd"),
 	}
 
 	_, err = invoiceitem.New(item)

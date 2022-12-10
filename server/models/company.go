@@ -5,7 +5,7 @@ type Company struct {
 	Name             string         `gorm:"unique;not null;column:name" json:"name"`
 	Logo             string         `gorm:"column:logo" json:"logo"`
 	StripeCustomerID string         `gorm:"column:stripe_customer_id" json:"stripe_customer_id"`
-	PriceAgreement   float32        `gorm:"column:price_agreement" json:"price_agreement"`
+	PriceAgreement   int            `gorm:"column:price_agreement" json:"price_agreement"`
 	CreatedAt        int64          `gorm:"not null;column:created_at" json:"created_at"`
 	UpdatedAt        int64          `gorm:"not null;column:updated_at" json:"updated_at"`
 	AccountStatusID  int            `json:"account_status_id"`
