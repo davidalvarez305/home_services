@@ -89,7 +89,7 @@ func CreateInvoice(company *Company) (*Invoice, error) {
 		return inv, err
 	}
 
-	amountDue := lc.Count * company.PriceAgreement
+	amountDue := lc.Count * company.PriceAgreement * 100
 
 	item := &stripe.InvoiceItemParams{
 		Customer: stripe.String(company.StripeCustomerID),
@@ -112,9 +112,7 @@ func CreateInvoice(company *Company) (*Invoice, error) {
 		CompanyID:              company.ID,
 	}
 
-	sendInvoiceParams := &stripe.InvoiceSendInvoiceParams{}
-
-	_, err = invoice.SendInvoice(inv.InvoiceID, sendInvoiceParams)
+	_, err = invoice.SendInvoice(in.ID, nil)
 
 	if err != nil {
 		return inv, err
