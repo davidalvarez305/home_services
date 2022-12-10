@@ -17,6 +17,8 @@ type Lead struct {
 	*models.Lead
 }
 
+type Leads []*models.Lead
+
 type LeadLogin struct {
 	UUID string `json:"uuid"`
 }
@@ -93,6 +95,10 @@ func (l *Lead) GetLeadByUUID(uuid string) error {
 
 func (l *Lead) GetLeadByEmail(email string) error {
 	return database.DB.Where("email = ?", email).First(&l).Error
+}
+
+func (leads *Leads) GetLeadsByDates(companyId int, from, to int64) error {
+	return database.DB.Where("company_id = ? AND created_at > ? AND created_at < ?", companyId, from, to).Find(&leads).Error
 }
 
 // Grabs userId from session, and then performs select query from the database.

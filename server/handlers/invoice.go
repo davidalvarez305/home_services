@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+
 	"github.com/davidalvarez305/home_services/server/actions"
 	"github.com/gofiber/fiber/v2"
 )
@@ -27,6 +29,7 @@ func CreateInvoice(c *fiber.Ctx) error {
 	invoice, err := actions.CreateInvoice(company)
 
 	if err != nil {
+		fmt.Printf("%+v\n", err)
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Failed to create invoice.",
 		})

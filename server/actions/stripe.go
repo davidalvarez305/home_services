@@ -5,28 +5,13 @@ import (
 	"os"
 	"time"
 
-	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
+	"github.com/jinzhu/now"
 	"github.com/stripe/stripe-go/v74"
 	"github.com/stripe/stripe-go/v74/customer"
 	"github.com/stripe/stripe-go/v74/invoice"
 	"github.com/stripe/stripe-go/v74/invoiceitem"
 )
-
-type LeadCount struct {
-	Count int `json:"count"`
-}
-
-func (lc *LeadCount) GetLeadCount() error {
-	sql := `
-	SELECT COUNT(*) FROM lead
-	WHERE company_id  = 1
-	AND created_at > 1670224630
-	AND created_at < 1670400180;
-	`
-
-	return database.DB.Raw(sql).Scan(&lc).Error
-}
 
 func (company *Company) CreateStripeCustomer(owner *User) error {
 
@@ -82,14 +67,18 @@ func CreateInvoice(company *Company) (*Invoice, error) {
 	}
 
 	// Get Invoice Leads
-	lc := LeadCount{}
-	err = lc.GetLeadCount()
+	leads := &Leads{}
+
+	begin := now.BeginningOfMonth().Unix()
+	end := now.EndOfMonth().Unix()
+
+	err = leads.GetLeadsByDates(company.ID, begin, end)
 
 	if err != nil {
 		return inv, err
 	}
 
-	amountDue := lc.Count * company.PriceAgreement * 100
+	amountDue := len(*leads) * company.PriceAgreement * 100
 
 	item := &stripe.InvoiceItemParams{
 		Customer: stripe.String(company.StripeCustomerID),
@@ -119,6 +108,10 @@ func CreateInvoice(company *Company) (*Invoice, error) {
 	}
 
 	inv.Invoice = &i
+
+	for _, lead := range *leads {
+		inv.Lead = append(inv.Lead, lead)
+	}
 
 	err = inv.Save()
 

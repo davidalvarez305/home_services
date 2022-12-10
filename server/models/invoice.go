@@ -9,5 +9,5 @@ type Invoice struct {
 	PaymentStatus          *PaymentStatus `gorm:"not null;column:invoice_payment_status_id;foreignKey:InvoicePaymentStatusID;CASCADE,OnUpdate:CASCADE" json:"-"`
 	CompanyID              int            `json:"company_id"`
 	Company                *Company       `gorm:"not null;column:company_id;foreignKey:CompanyID;constraint:OnUpdate:CASCADE" json:"-"`
-	Lead                   []*Lead        `gorm:"many2many:invoice_leads" json:"-"`
+	Lead                   []*Lead        `json:"leads"`
 }

@@ -53,7 +53,6 @@ func Connect() {
 		&models.Company{},
 		&models.County{},
 		&models.CompanyToken{},
-		&models.InvoiceLeads{},
 		&models.Invoice{},
 		&models.LeadLog{},
 		&models.LeadMarketing{},
