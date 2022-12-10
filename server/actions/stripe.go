@@ -5,12 +5,28 @@ import (
 	"os"
 	"time"
 
+	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/stripe/stripe-go/v74"
 	"github.com/stripe/stripe-go/v74/customer"
 	"github.com/stripe/stripe-go/v74/invoice"
 	"github.com/stripe/stripe-go/v74/invoiceitem"
 )
+
+type LeadCount struct {
+	Count int `json:"count"`
+}
+
+func (lc *LeadCount) GetLeadCount() error {
+	sql := `
+	SELECT COUNT(*) FROM lead
+	WHERE company_id  = 1
+	AND created_at > 1670224630
+	AND created_at < 1670400180;
+	`
+
+	return database.DB.Raw(sql).Scan(&lc).Error
+}
 
 func (company *Company) CreateStripeCustomer(owner *User) error {
 
@@ -64,10 +80,20 @@ func CreateInvoice(company *Company) error {
 		return err
 	}
 
+	// Get Invoice Leads
+	lc := LeadCount{}
+	err = lc.GetLeadCount()
+
+	if err != nil {
+		return err
+	}
+
+	amountDue := lc.Count * int(company.PriceAgreement)
+
 	item := &stripe.InvoiceItemParams{
-		Customer: stripe.String("{{CUSTOMER_ID}}"),
-		Price:    stripe.String("{{PRICE_ID}}"),
-		Invoice:  stripe.String("{{INVOICE_ID}}"),
+		Customer: stripe.String(company.StripeCustomerID),
+		Amount:   stripe.Int64(int64(amountDue)),
+		Invoice:  stripe.String(in.ID),
 	}
 
 	_, err = invoiceitem.New(item)
@@ -76,7 +102,7 @@ func CreateInvoice(company *Company) error {
 		return err
 	}
 
-	invoice := &Invoice{}
+	inv := &Invoice{}
 
 	i := models.Invoice{
 		InvoiceID:              in.ID,
@@ -86,7 +112,21 @@ func CreateInvoice(company *Company) error {
 		CompanyID:              company.ID,
 	}
 
-	invoice.Invoice = &i
+	sendInvoiceParams := &stripe.InvoiceSendInvoiceParams{}
 
-	return invoice.Save()
+	_, err = invoice.SendInvoice(inv.InvoiceID, sendInvoiceParams)
+
+	if err != nil {
+		return err
+	}
+
+	inv.Invoice = &i
+
+	err = inv.Save()
+
+	if err != nil {
+		return err
+	}
+
+	return err
 }
