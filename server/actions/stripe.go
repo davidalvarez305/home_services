@@ -51,7 +51,8 @@ func (company *Company) CreateStripeCustomer(owner *User) error {
 	return company.Save()
 }
 
-func CreateInvoice(company *Company) error {
+func CreateInvoice(company *Company) (*Invoice, error) {
+	inv := &Invoice{}
 	stripe.Key = os.Getenv("STRIPE_SECRET_KEY")
 
 	customFields := []*stripe.InvoiceCustomFieldParams{}
@@ -77,7 +78,7 @@ func CreateInvoice(company *Company) error {
 	in, err := invoice.New(params)
 
 	if err != nil {
-		return err
+		return inv, err
 	}
 
 	// Get Invoice Leads
@@ -85,7 +86,7 @@ func CreateInvoice(company *Company) error {
 	err = lc.GetLeadCount()
 
 	if err != nil {
-		return err
+		return inv, err
 	}
 
 	amountDue := lc.Count * company.PriceAgreement
@@ -100,10 +101,8 @@ func CreateInvoice(company *Company) error {
 	_, err = invoiceitem.New(item)
 
 	if err != nil {
-		return err
+		return inv, err
 	}
-
-	inv := &Invoice{}
 
 	i := models.Invoice{
 		InvoiceID:              in.ID,
@@ -118,7 +117,7 @@ func CreateInvoice(company *Company) error {
 	_, err = invoice.SendInvoice(inv.InvoiceID, sendInvoiceParams)
 
 	if err != nil {
-		return err
+		return inv, err
 	}
 
 	inv.Invoice = &i
@@ -126,8 +125,8 @@ func CreateInvoice(company *Company) error {
 	err = inv.Save()
 
 	if err != nil {
-		return err
+		return inv, err
 	}
 
-	return err
+	return inv, err
 }

@@ -1,7 +1,6 @@
 package actions
 
 import (
-	"strconv"
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/database"
@@ -74,13 +73,7 @@ func (c *Company) CreateCompany(input *types.CreateCompanyInput) error {
 // Update and return company model.
 func (c *Company) UpdateCompany(companyId string, input models.Company) error {
 
-	id, err := strconv.Atoi(companyId)
-
-	if err != nil {
-		return err
-	}
-
-	err = c.GetCompanyByID(id)
+	err := c.GetCompanyByID(companyId)
 
 	if err != nil {
 		return err
@@ -98,14 +91,8 @@ func (c *Company) UpdateCompany(companyId string, input models.Company) error {
 // Delete company model.
 func (c *Company) DeleteCompany(companyId string) error {
 
-	id, err := strconv.Atoi(companyId)
-
-	if err != nil {
-		return err
-	}
-
 	// First check to see that this company exists.
-	err = c.GetCompanyByID(id)
+	err := c.GetCompanyByID(companyId)
 
 	if err != nil {
 		return err
@@ -115,7 +102,7 @@ func (c *Company) DeleteCompany(companyId string) error {
 }
 
 // Get Company from DB.
-func (c *Company) GetCompanyByID(id int) error {
+func (c *Company) GetCompanyByID(id string) error {
 	return database.DB.Where("id = ?", id).First(&c).Error
 }
 
