@@ -49,7 +49,6 @@ func Connect() {
 	db.AutoMigrate(
 		&models.AccountStatus{},
 		&models.City{},
-		&models.CompanyInvoices{},
 		&models.CompanyServicesLocations{},
 		&models.Company{},
 		&models.County{},

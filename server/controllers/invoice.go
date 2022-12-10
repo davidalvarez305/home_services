@@ -10,4 +10,5 @@ func Invoice(router fiber.Router) {
 	invoice := router.Group("invoice")
 
 	invoice.Post("/:companyId", handlers.CreateInvoice)
+	invoice.Get("/:companyId", handlers.GetInvoices)
 }

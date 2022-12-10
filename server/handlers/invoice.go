@@ -36,3 +36,27 @@ func CreateInvoice(c *fiber.Ctx) error {
 		"data": invoice,
 	})
 }
+
+func GetInvoices(c *fiber.Ctx) error {
+	companyId := c.Params("companyId")
+
+	if len(companyId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Include company ID in path.",
+		})
+	}
+
+	invoices := &actions.Invoices{}
+
+	err := invoices.GetInvoiceDetails(companyId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to fetch invoices.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": invoices,
+	})
+}
