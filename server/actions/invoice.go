@@ -16,9 +16,13 @@ func (i *Invoice) Save() error {
 }
 
 func (i *Invoice) GetInvoiceByID(id string) error {
-	return database.DB.Where("id = ?", id).First(&i).Error
+	return database.DB.Where("id = ?", id).Preload("Lead").First(&i).Error
 }
 
 func (i *Invoices) GetInvoiceDetails(companyId string) error {
 	return database.DB.Where("company_id = ?", companyId).Preload("Lead").Find(&i).Error
+}
+
+func (i *Invoice) GetInvoiceByInvoiceID(invoice_id string) error {
+	return database.DB.Where("invoice_id = ?", invoice_id).First(&i).Error
 }

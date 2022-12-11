@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/davidalvarez305/home_services/server/actions"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stripe/stripe-go/v74"
 )
@@ -20,24 +21,57 @@ func HandleStripeWebhooks(c *fiber.Ctx) error {
 	}
 
 	switch event.Type {
-	case "payment_intent.succeeded":
-		var paymentIntent stripe.PaymentIntent
-		err := json.Unmarshal(event.Data.Raw, &paymentIntent)
+	case "invoice.paid":
+		var invoice stripe.Invoice
+		err := json.Unmarshal(event.Data.Raw, &invoice)
+
 		if err != nil {
 			return c.Status(400).JSON(fiber.Map{
 				"data": "Could not parse payment intent.",
 			})
 		}
-		fmt.Printf("%+v\n", paymentIntent)
-	case "payment_method.attached":
-		var paymentMethod stripe.PaymentMethod
-		err := json.Unmarshal(event.Data.Raw, &paymentMethod)
+
+		inv := &actions.Invoice{}
+
+		err = inv.GetInvoiceByInvoiceID(invoice.ID)
+
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Could not fetch invoice by invoice ID.",
+			})
+		}
+
+		// Update invoice payment status
+		inv.InvoicePaymentStatusID = 2
+		err = inv.Save()
+
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Failed to update invoice payment status.",
+			})
+		}
+		// Create log
+		log := &actions.CompanyLog{}
+
+		err = log.Save("Invoice payment completed.", fmt.Sprintf("%+v", inv.CompanyID))
+
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Failed to save log.",
+			})
+		}
+
+	case "invoice.payment_failed":
+		var invoice stripe.Invoice
+		err := json.Unmarshal(event.Data.Raw, &invoice)
 		if err != nil {
 			return c.Status(400).JSON(fiber.Map{
 				"data": "Could not parse payment method.",
 			})
 		}
-		fmt.Printf("paymentMethod: %+v\n", paymentMethod)
+
+		// Create log
+		// E-mail to myself with details
 	}
 
 	return c.Status(200).JSON(fiber.Map{
