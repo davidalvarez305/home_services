@@ -22,45 +22,28 @@ func HandleStripeWebhooks(c *fiber.Ctx) error {
 		})
 	}
 
+	var invoice stripe.Invoice
+	var paymentStatusID int
+	var logMessage string
+	var emailMsg string
+	var emailSubject string
+
 	switch event.Type {
+	case "invoice.payment_succeeded":
 	case "invoice.paid":
-		var invoice stripe.Invoice
-		err := json.Unmarshal(event.Data.Raw, &invoice)
+		{
+			err := json.Unmarshal(event.Data.Raw, &invoice)
 
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Could not parse payment intent.",
-			})
-		}
+			if err != nil {
+				return c.Status(400).JSON(fiber.Map{
+					"data": "Could not parse payment intent.",
+				})
+			}
 
-		inv := &actions.Invoice{}
-
-		err = inv.GetInvoiceByInvoiceID(invoice.ID)
-
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Could not fetch invoice by invoice ID.",
-			})
-		}
-
-		// Update invoice payment status
-		inv.InvoicePaymentStatusID = 2
-		err = inv.Save()
-
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Failed to update invoice payment status.",
-			})
-		}
-		// Create log
-		log := &actions.CompanyLog{}
-
-		err = log.Save("Invoice payment completed.", fmt.Sprintf("%+v", inv.CompanyID))
-
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Failed to save log.",
-			})
+			paymentStatusID = 2 // Payment completed
+			logMessage = "Invoice payment completed."
+			emailSubject = logMessage
+			emailMsg = fmt.Sprintf("Succesful payment for Invoice ID: %+v", invoice.ID)
 		}
 
 	case "invoice.payment_failed":
@@ -73,37 +56,81 @@ func HandleStripeWebhooks(c *fiber.Ctx) error {
 			})
 		}
 
-		// Fetch invoice
-		inv := &actions.Invoice{}
+		paymentStatusID = 3 // Payment failed
+		logMessage = "Invoice payment failed."
+		emailSubject = logMessage
+		emailMsg = fmt.Sprintf("Payment failed for Invoice ID: %+v", invoice.ID)
 
-		err = inv.GetInvoiceByInvoiceID(invoice.ID)
-
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Could not fetch invoice by invoice ID.",
-			})
-		}
-
-		// Create log
-		log := &actions.CompanyLog{}
-
-		err = log.Save("Invoice payment failed.", fmt.Sprintf("%+v", inv.CompanyID))
+	case "invoice.marked_uncollectible":
+		var invoice stripe.Invoice
+		err := json.Unmarshal(event.Data.Raw, &invoice)
 
 		if err != nil {
 			return c.Status(400).JSON(fiber.Map{
-				"data": "Failed to save log.",
+				"data": "Could not parse payment method.",
 			})
 		}
 
-		// E-mail to myself with details
-		msg := fmt.Sprintf("Invoice payment failed for %v", inv.CompanyID)
-		err = utils.SendGmail(msg, os.Getenv("GMAIL_EMAIL"), "Invoice payment failed.")
+		paymentStatusID = 4 // Payment uncollectible
+		logMessage = "Invoice payment marked uncollectible."
+		emailSubject = logMessage
+		emailMsg = fmt.Sprintf("Payment marked uncollectible for Invoice ID: %+v", invoice.ID)
+
+	case "invoice.payment_action_required":
+		var invoice stripe.Invoice
+		err := json.Unmarshal(event.Data.Raw, &invoice)
 
 		if err != nil {
 			return c.Status(400).JSON(fiber.Map{
-				"data": "Failed to send e-mail.",
+				"data": "Could not parse payment method.",
 			})
 		}
+
+		paymentStatusID = 5 // Payment action required
+		logMessage = "Invoice payment action required."
+		emailSubject = logMessage
+		emailMsg = fmt.Sprintf("Payment action required for Invoice ID: %+v", invoice.ID)
+	}
+
+	// Fetch invoice
+	inv := &actions.Invoice{}
+
+	err = inv.GetInvoiceByInvoiceID(invoice.ID)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not fetch invoice by invoice ID.",
+		})
+	}
+
+	// Save invoice status
+	inv.InvoicePaymentStatusID = paymentStatusID
+	err = inv.Save()
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to save invoice status.",
+		})
+	}
+
+	// Create log
+	log := &actions.CompanyLog{}
+
+	err = log.Save(logMessage, fmt.Sprintf("%+v", inv.CompanyID))
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to save log.",
+		})
+	}
+
+	// E-mail to myself with details
+	err = utils.SendGmail(emailMsg, os.Getenv("GMAIL_EMAIL"), emailSubject)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to send e-mail.",
+		})
 	}
 
 	return c.Status(200).JSON(fiber.Map{
