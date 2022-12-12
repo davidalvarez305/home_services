@@ -44,7 +44,11 @@ func (c *Company) Save() error {
 }
 
 // Create and return company model.
-func (c *Company) CreateCompany(input *types.CreateCompanyInput) error {
+func (c *Company) CreateCompany(input *types.CreateCompanyInput, user *User) error {
+	user.User.RoleID = 2
+	user.User.UpdatedAt = time.Now().Unix()
+
+	var users Users
 
 	// Create New Company With Default Status as 'inactive'
 	// By attaching the address like this, it will create a START TRANSACTION, where both the company and address insertion must be successful.
@@ -63,6 +67,8 @@ func (c *Company) CreateCompany(input *types.CreateCompanyInput) error {
 			StreetAddressLine2: input.StreetAddressLine2,
 			StreetAddressLine3: input.StreetAddressLine3,
 		},
+		// Create company with authenticated user set as 'Owner' as default
+		Users: append(users, user.User),
 	}
 
 	c.Company = &company

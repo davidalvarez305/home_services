@@ -33,7 +33,7 @@ func (company *Company) CreateStripeCustomer(owner *User) error {
 
 	company.StripeCustomerID = c.ID
 
-	return company.Save()
+	return nil
 }
 
 func CreateInvoice(company *Company) (*Invoice, error) {
