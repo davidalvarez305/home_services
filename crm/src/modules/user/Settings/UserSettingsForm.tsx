@@ -1,16 +1,55 @@
 import { Form, Formik } from "formik";
-import { useContext } from "react";
-import { BUCKET_URL } from "../../../constants";
+import { ChangeEvent, useContext, useState } from "react";
+import { BUCKET_URL, USER_ROUTE } from "../../../constants";
 import { UserContext } from "../../../context/UserContext";
 import Image from "next/image";
 import FormInput from "../../../components/FormInput";
+import image from "next/image";
+import useFetch from "../../../hooks/useFetch";
+import { useToast } from "@chakra-ui/react";
 
 export default function UserSettingsForm() {
   const ctx = useContext(UserContext);
-  console.log(ctx);
+  const [image, setImage] = useState<File>();
+  const { isLoading, makeRequest, error } = useFetch();
   const USER_IMAGE = `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_picture}`;
+  const toast = useToast();
+  
   const inputClass =
     "block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
+
+    function handleUpload(event: ChangeEvent<HTMLInputElement>) {
+      if (event.target.files) {
+        setImage(event.target.files[0]);
+      }
+    }
+  
+    function handleSubmit() {
+      if (image) {
+        const fd = new FormData();
+  
+        fd.append("image", image, image?.name);
+  
+        makeRequest(
+          {
+            url: USER_ROUTE + "/change-picture",
+            method: "PUT",
+            data: fd,
+          },
+          (res) => {
+            ctx?.SetUser(res.data.data);
+          }
+        );
+      } else {
+        toast({
+          title: "Missing image!",
+          description: "You haven't selected an image.",
+          status: "warning",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
 
   const formFields = [
     {
@@ -79,12 +118,13 @@ export default function UserSettingsForm() {
               </svg>
             </div>
             <label className="block">
-              <span className="sr-only">Choose profile photo</span>
+              <span className="sr-only">Upload photo</span>
               <input
                 className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                id="image"
+                onChange={handleUpload}
                 type="file"
-                id="photo"
-                name="photo"
+                accept="image/*"
               />
             </label>
           </div>
