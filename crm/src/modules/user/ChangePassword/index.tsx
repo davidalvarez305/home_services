@@ -33,14 +33,14 @@ const ChangePassword = () => {
 
   if (msg.length > 0) {
     return (
-      <PrimaryLayout screenName={"Change Password"}>
+      <PrimaryLayout>
         <div>{msg}</div>
       </PrimaryLayout>
     );
   }
 
   return (
-    <PrimaryLayout screenName={"Change Password"}>
+    <PrimaryLayout>
       <Formik initialValues={{ email: "" }} onSubmit={handleSubmit}>
         <Form>
           <div className={styles["form"]}>
