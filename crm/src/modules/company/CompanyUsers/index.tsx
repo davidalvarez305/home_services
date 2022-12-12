@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import PrimaryLayout from "../../../layout/Primary";
+import PrimaryLayout from "../../../components/Layout";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { AccountStatus, Role, User } from "../../../types/general";
 import useFetch from "../../../hooks/useFetch";

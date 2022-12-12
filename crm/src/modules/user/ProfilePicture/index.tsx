@@ -1,6 +1,6 @@
 import { Form, Formik } from "formik";
 import React, { ChangeEvent, useContext, useState } from "react";
-import PrimaryLayout from "../../../layout/Primary";
+import PrimaryLayout from "../../../components/Layout";
 import styles from "./ProfilePicture.module.css";
 import { FiSend } from "react-icons/fi";
 import { GrClose } from "react-icons/gr";

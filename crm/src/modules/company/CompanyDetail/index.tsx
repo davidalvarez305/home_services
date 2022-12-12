@@ -1,5 +1,5 @@
 import React from "react";
-import PrimaryLayout from "../../../layout/Primary";
+import PrimaryLayout from "../../../components/Layout";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import router from "next/router";
 import { MdDelete } from "react-icons/md";

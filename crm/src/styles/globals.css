@@ -9,6 +9,10 @@
     src: url("https://fonts.animaapp.com/MaterialIconsOutlined-Regular") format("truetype");
 }
 
+@import "tailwindcss/base";
+@import "tailwindcss/utilities";
+@import "tailwindcss/components";
+
 .screen a {
     display: contents;
     text-decoration: none;

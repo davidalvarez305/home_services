@@ -6,7 +6,7 @@ import { COMPANY_ROUTE } from "../../../constants";
 import { UserContext } from "../../../context/UserContext";
 import useFetch from "../../../hooks/useFetch";
 import useLoginRequired from "../../../hooks/useLoginRequired";
-import PrimaryLayout from "../../../layout/Primary";
+import PrimaryLayout from "../../../components/Layout";
 import styles from "./AcceptUserCompanyInvite.module.css";
 
 const AcceptUserCompanyInvite = () => {

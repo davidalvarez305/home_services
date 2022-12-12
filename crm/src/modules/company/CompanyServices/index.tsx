@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import PrimaryLayout from "../../../layout/Primary";
+import PrimaryLayout from "../../../components/Layout";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { Table, Tbody, Td, Thead, Tr } from "@chakra-ui/table";
 import DeleteButton from "../../../components/DeleteIconButton";

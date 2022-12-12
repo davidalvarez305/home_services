@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import PrimaryLayout from "../../../layout/Primary";
+import PrimaryLayout from "../../../components/Layout";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { UserContext } from "../../../context/UserContext";
 import useFetch from "../../../hooks/useFetch";

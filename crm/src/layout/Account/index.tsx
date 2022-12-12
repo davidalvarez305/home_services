@@ -1,4 +1,4 @@
-import TopNavigation from "../../components/TopNavigation";
+import TopNavigation from "../../components/Navigation";
 import Footer from "../../components/Footer";
 import styles from "./Account.module.css";
 import AccountSidebar from "../../components/AccountSidebar";

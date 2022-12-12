@@ -1,5 +1,5 @@
 import useLoginRequired from "../hooks/useLoginRequired";
-import PrimaryLayout from "../layout/Primary";
+import PrimaryLayout from "../components/Layout";
 
 export default function Home() {
   useLoginRequired();

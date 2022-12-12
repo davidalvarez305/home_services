@@ -6,7 +6,7 @@ import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import { USER_ROUTE } from "../../../constants";
 import useFetch from "../../../hooks/useFetch";
 import useLoginRequired from "../../../hooks/useLoginRequired";
-import PrimaryLayout from "../../../layout/Primary";
+import PrimaryLayout from "../../../components/Layout";
 import styles from "./ChangePassword.module.css";
 
 const ChangePassword = () => {
