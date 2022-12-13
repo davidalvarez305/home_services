@@ -6,7 +6,7 @@ import useFetch from "../../../hooks/useFetch";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { useToast } from "@chakra-ui/react";
 import UserSettingsForm from "./UserSettingsForm";
-import ChangePasswordForm from "./ChangePasswordForm";
+import RequestChangePassword from "./RequestChangePassword";
 
 const ProfileSettings: React.FC = () => {
   useLoginRequired();
@@ -60,7 +60,7 @@ const ProfileSettings: React.FC = () => {
           </div>
         </div>
 
-        {ctx?.user && ctx.user.id > 0 && <ChangePasswordForm />}
+        {ctx?.user && ctx.user.id > 0 && <RequestChangePassword />}
 
       </div>
       {error.message &&
