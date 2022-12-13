@@ -4,52 +4,53 @@ import { BUCKET_URL, USER_ROUTE } from "../../../constants";
 import { UserContext } from "../../../context/UserContext";
 import Image from "next/image";
 import FormInput from "../../../components/FormInput";
-import image from "next/image";
 import useFetch from "../../../hooks/useFetch";
 import { useToast } from "@chakra-ui/react";
+import ProfileIcon from "../../../assets/ProfileIcon";
 
 export default function UserSettingsForm() {
   const ctx = useContext(UserContext);
   const [image, setImage] = useState<File>();
   const { isLoading, makeRequest, error } = useFetch();
   const USER_IMAGE = `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_picture}`;
+  const hasProfileImg = ctx!.user.profile_picture.length > 0;
   const toast = useToast();
-  
+
   const inputClass =
     "block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
 
-    function handleUpload(event: ChangeEvent<HTMLInputElement>) {
-      if (event.target.files) {
-        setImage(event.target.files[0]);
-      }
+  function handleUpload(event: ChangeEvent<HTMLInputElement>) {
+    if (event.target.files) {
+      setImage(event.target.files[0]);
     }
-  
-    function handleSubmit() {
-      if (image) {
-        const fd = new FormData();
-  
-        fd.append("image", image, image?.name);
-  
-        makeRequest(
-          {
-            url: USER_ROUTE + "/change-picture",
-            method: "PUT",
-            data: fd,
-          },
-          (res) => {
-            ctx?.SetUser(res.data.data);
-          }
-        );
-      } else {
-        toast({
-          title: "Missing image!",
-          description: "You haven't selected an image.",
-          status: "warning",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
+  }
+
+  function handleSubmit() {
+    if (image) {
+      const fd = new FormData();
+
+      fd.append("image", image, image?.name);
+
+      makeRequest(
+        {
+          url: USER_ROUTE + "/change-picture",
+          method: "PUT",
+          data: fd,
+        },
+        (res) => {
+          ctx?.SetUser(res.data.data);
+        }
+      );
+    } else {
+      toast({
+        title: "Missing image!",
+        description: "You haven't selected an image.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
     }
+  }
 
   const formFields = [
     {
@@ -104,18 +105,11 @@ export default function UserSettingsForm() {
           <label className="font-medium">Photo</label>
           <div className="sm:flex sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 text-gray-300">
-              <svg
-                className="hi-solid hi-user inline-block w-8 h-8"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              {hasProfileImg ? (
+                <Image src={USER_IMAGE} alt={"profile image"} />
+              ) : (
+                <ProfileIcon />
+              )}
             </div>
             <label className="block">
               <span className="sr-only">Upload photo</span>
@@ -127,6 +121,16 @@ export default function UserSettingsForm() {
                 accept="image/*"
               />
             </label>
+            {image && (
+              <label className="block">
+                <button
+                  className="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-3 py-2 leading-5 text-sm rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700"
+                  onClick={() => handleSubmit()}
+                >
+                  Upload
+                </button>
+              </label>
+            )}
           </div>
         </div>
         {formFields.map((field) => (
