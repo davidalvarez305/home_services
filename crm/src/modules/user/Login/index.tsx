@@ -8,7 +8,7 @@ import Link from "next/link";
 import useFetch from "../../../hooks/useFetch";
 import { LOGIN_ROUTE } from "../../../constants";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
-import LoginOrRegister from "../UserWrapper/UserWrapper";
+import LoginOrRegister from "../UserWrapper";
 import { UserContext } from "../../../context/UserContext";
 import styles from "./Login.module.css";
 import Button from "../../../components/Button";

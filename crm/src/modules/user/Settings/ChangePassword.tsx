@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import FormInput from "../../../components/FormInput";
 import { USER_ROUTE } from "../../../constants";
 import useFetch from "../../../hooks/useFetch";
-import UserWrapper from "../UserWrapper/UserWrapper";
+import UserWrapper from "../UserWrapper";
 
 export default function ChangePassword() {
   const { isLoading, makeRequest, error } = useFetch();
