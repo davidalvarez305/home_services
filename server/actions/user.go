@@ -76,8 +76,11 @@ func (user *User) UpdateUser(body User) error {
 
 	user.Username = body.Username
 	user.Email = body.Email
-	user.APIToken = utils.GenerateAPIToken(user.Email + user.Password)
 	user.UpdatedAt = time.Now().Unix()
+	user.FirstName = body.FirstName
+	user.LastName = body.LastName
+	user.JobTitle = body.JobTitle
+	user.PhoneNumber = body.PhoneNumber
 
 	err := user.Save()
 

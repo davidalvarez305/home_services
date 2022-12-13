@@ -7,6 +7,7 @@ import FormInput from "../../../components/FormInput";
 import useFetch from "../../../hooks/useFetch";
 import { useToast } from "@chakra-ui/react";
 import ProfileIcon from "../../../assets/ProfileIcon";
+import { User } from "../../../types/general";
 
 export default function UserSettingsForm() {
   const ctx = useContext(UserContext);
@@ -39,17 +40,38 @@ export default function UserSettingsForm() {
         },
         (res) => {
           ctx?.SetUser(res.data.data);
+
+          toast({
+            title: "Success!",
+            description: "Images has been uploaded.",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
         }
       );
-    } else {
-      toast({
-        title: "Missing image!",
-        description: "You haven't selected an image.",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-      });
     }
+  }
+
+  function handleUpdateUser(values: User) {
+    makeRequest(
+      {
+        url: USER_ROUTE,
+        method: "PUT",
+        data: values,
+      },
+      (res) => {
+        ctx?.SetUser(res.data.data);
+
+        toast({
+          title: "Success!",
+          description: "User has been updated.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    );
   }
 
   const formFields = [
@@ -98,7 +120,7 @@ export default function UserSettingsForm() {
   return (
     <Formik
       initialValues={ctx!.user}
-      onSubmit={(values) => console.log(values)}
+      onSubmit={handleUpdateUser}
     >
       <Form className="space-y-6">
         <div className="space-y-1">
