@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import useFetch from "../../../hooks/useFetch";
 import { LEAD_ROUTE } from "../../../constants";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
-import LoginOrRegister from "../../user/UserWrapper";
+import LoginOrRegister from "../../user/UserWrapper/UserWrapper";
 import { LeadContext } from "../../../context/LeadContext";
 import styles from "./Login.module.css";
 import Button from "../../../components/Button";

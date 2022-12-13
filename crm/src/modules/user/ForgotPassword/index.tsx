@@ -7,7 +7,7 @@ import Link from "next/link";
 import useFetch from "../../../hooks/useFetch";
 import { USER_ROUTE } from "../../../constants";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
-import LoginOrRegister from "../UserWrapper";
+import LoginOrRegister from "../UserWrapper/UserWrapper";
 import styles from "./ForgotPassword.module.css";
 import Button from "../../../components/Button";
 
