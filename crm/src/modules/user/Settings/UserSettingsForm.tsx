@@ -62,12 +62,20 @@ export default function UserSettingsForm() {
       label: "Username",
     },
     {
-      className: inputClass,
+      className: "block border placeholder-gray-400 px-3 py-2 leading-6 w-1/2 rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50",
       type: "text",
-      id: "name",
-      name: "name",
-      placeholder: "John Doe",
-      label: "Name",
+      id: "first_name",
+      name: "first_name",
+      placeholder: "John",
+      label: "First Name",
+    },
+    {
+      className: "block border placeholder-gray-400 px-3 py-2 leading-6 w-1/2 rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50",
+      type: "text",
+      id: "last_name",
+      name: "last_name",
+      placeholder: "Doe",
+      label: "Last Name",
     },
     {
       className: inputClass,
@@ -80,18 +88,10 @@ export default function UserSettingsForm() {
     {
       className: inputClass,
       type: "text",
-      id: "title",
-      name: "title",
+      id: "job_title",
+      name: "job_title",
       placeholder: "Product Manager",
-      label: "Title",
-    },
-    {
-      className: inputClass,
-      type: "text",
-      id: "company",
-      name: "company",
-      placeholder: "@company",
-      label: "Company",
+      label: "Job Title",
     },
   ];
 

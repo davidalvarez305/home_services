@@ -17,6 +17,9 @@ export default function useAuth() {
     account_status_id: 0,
     company_id: 0,
     role_id: 0,
+    first_name: "",
+    last_name: "",
+    job_title: ""
   };
   const [user, setUser] = useState(userProps);
 

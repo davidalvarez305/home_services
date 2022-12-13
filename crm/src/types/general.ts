@@ -12,6 +12,9 @@ export type User = {
   account_status_id: number;
   company_id: number;
   role_id: number;
+  job_title: string;
+  first_name: string;
+  last_name: string;
 };
 
 export type Company = {

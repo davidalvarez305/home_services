@@ -2,16 +2,16 @@
 
 @import url("https://fonts.googleapis.com/css?family=Inter:400,700,900,800");
 
+@import "tailwindcss/base";
+@import "tailwindcss/utilities";
+@import "tailwindcss/components";
+
 @font-face {
     font-family: "Material Icons Outlined-Regular";
     font-style: normal;
     font-weight: 400;
     src: url("https://fonts.animaapp.com/MaterialIconsOutlined-Regular") format("truetype");
 }
-
-@import "tailwindcss/base";
-@import "tailwindcss/utilities";
-@import "tailwindcss/components";
 
 .screen a {
     display: contents;
