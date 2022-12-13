@@ -8,6 +8,7 @@ import useFetch from "../../../hooks/useFetch";
 import { useToast } from "@chakra-ui/react";
 import ProfileIcon from "../../../assets/ProfileIcon";
 import { User } from "../../../types/general";
+import Button from "../../../components/Button";
 
 export default function UserSettingsForm() {
   const ctx = useContext(UserContext);
@@ -84,7 +85,8 @@ export default function UserSettingsForm() {
       label: "Username",
     },
     {
-      className: "block border placeholder-gray-400 px-3 py-2 leading-6 w-1/2 rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50",
+      className:
+        "block border placeholder-gray-400 px-3 py-2 leading-6 w-1/2 rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50",
       type: "text",
       id: "first_name",
       name: "first_name",
@@ -92,7 +94,8 @@ export default function UserSettingsForm() {
       label: "First Name",
     },
     {
-      className: "block border placeholder-gray-400 px-3 py-2 leading-6 w-1/2 rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50",
+      className:
+        "block border placeholder-gray-400 px-3 py-2 leading-6 w-1/2 rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50",
       type: "text",
       id: "last_name",
       name: "last_name",
@@ -118,10 +121,7 @@ export default function UserSettingsForm() {
   ];
 
   return (
-    <Formik
-      initialValues={ctx!.user}
-      onSubmit={handleUpdateUser}
-    >
+    <Formik initialValues={ctx!.user} onSubmit={handleUpdateUser}>
       <Form className="space-y-6">
         <div className="space-y-1">
           <label className="font-medium">Photo</label>
@@ -151,13 +151,13 @@ export default function UserSettingsForm() {
             </label>
             {image && (
               <label className="block">
-                <button
-                  disabled={isLoading}
+                <Button
+                  disabled={true}
                   className="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-3 py-2 leading-5 text-sm rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700"
                   onClick={() => handleSubmit()}
                 >
                   Upload
-                </button>
+                </Button>
               </label>
             )}
           </div>
