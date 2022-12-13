@@ -13,6 +13,10 @@ export default function ChangePassword() {
 
   function handleSubmit(values: { newPassword: string, confirmNewPassword: string }) {
 
+    if (values.newPassword === "" || values.confirmNewPassword === "") {
+      return;
+    }
+
     if (values.newPassword !== values.confirmNewPassword) {
 
       toast({
@@ -30,7 +34,9 @@ export default function ChangePassword() {
       {
         url: USER_ROUTE + "/change-password/" + router.query.code,
         method: "PUT",
-        data: values,
+        data: {
+          newPassword: values.newPassword
+        },
       },
       (res) => {
         if (res.statusText === "OK") {
