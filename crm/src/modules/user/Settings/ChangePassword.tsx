@@ -11,7 +11,8 @@ export default function ChangePassword() {
   const router = useRouter();
   const toast = useToast();
 
-  function handleSubmit(values: { newPassword: string, confirmNewPassword: string }) {
+  type formValues = { newPassword: string, confirmNewPassword: string };
+  function handleSubmit(values: formValues) {
 
     if (values.newPassword === "" || values.confirmNewPassword === "") {
       return;
