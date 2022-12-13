@@ -106,7 +106,13 @@ export default function UserSettingsForm() {
           <div className="sm:flex sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 text-gray-300">
               {hasProfileImg ? (
-                <Image src={USER_IMAGE} alt={"profile image"} />
+                <Image
+                  className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 text-gray-300"
+                  src={USER_IMAGE}
+                  alt={"profile image"}
+                  width={250}
+                  height={250}
+                />
               ) : (
                 <ProfileIcon />
               )}
@@ -124,6 +130,7 @@ export default function UserSettingsForm() {
             {image && (
               <label className="block">
                 <button
+                  disabled={isLoading}
                   className="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-3 py-2 leading-5 text-sm rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700"
                   onClick={() => handleSubmit()}
                 >
@@ -137,6 +144,7 @@ export default function UserSettingsForm() {
           <FormInput key={field.id} {...field} />
         ))}
         <button
+          disabled={isLoading}
           type="submit"
           className="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-3 py-2 leading-5 text-sm rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700"
         >

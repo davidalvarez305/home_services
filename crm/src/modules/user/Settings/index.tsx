@@ -9,7 +9,7 @@ import UserSettingsForm from "./UserSettingsForm";
 import ChangePasswordForm from "./ChangePasswordForm";
 
 const ProfileSettings: React.FC = () => {
-  // useLoginRequired();
+  useLoginRequired();
   const ctx = useContext(UserContext);
   const { makeRequest, isLoading, error } = useFetch();
   const toast = useToast();
