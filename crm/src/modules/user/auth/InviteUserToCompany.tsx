@@ -9,7 +9,7 @@ import useFetch from "../../../hooks/useFetch";
 import UserWrapper from "../auth/UserWrapper";
 import FormWrapper from "./FormWrapper";
 
-const InviteUserToCompany = () => {
+export default function InviteUserToCompany() {
   const { isLoading, makeRequest, error } = useFetch();
   const router = useRouter();
   const className =
@@ -87,4 +87,4 @@ const InviteUserToCompany = () => {
   );
 };
 
-export default InviteUserToCompany;
+
