@@ -6,7 +6,7 @@ import { COMPANY_ROUTE } from "../../../constants";
 import { UserContext } from "../../../context/UserContext";
 import useFetch from "../../../hooks/useFetch";
 import useLoginRequired from "../../../hooks/useLoginRequired";
-import UserWrapper from "../auth/UserWrapper";
+import UserWrapper from "./UserWrapper";
 
 export default function AcceptUserCompanyInvite() {
   const [companyName, setCompanyName] = useState("");
