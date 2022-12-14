@@ -1,3 +1,3 @@
-import ProfileSettings from "../modules/user/Settings";
+import ProfileSettings from "../modules/user/settings/Settings";
 
 export default ProfileSettings;

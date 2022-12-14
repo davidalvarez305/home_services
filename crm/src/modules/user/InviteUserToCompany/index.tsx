@@ -5,7 +5,7 @@ import PrimaryInput from "../../../components/FormInput";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import { COMPANY_ROUTE } from "../../../constants";
 import useFetch from "../../../hooks/useFetch";
-import UserWrapper from "../UserWrapper";
+import UserWrapper from "../auth/UserWrapper";
 import styles from "./InviteUserToCompany.module.css";
 
 const InviteUserToCompany = () => {

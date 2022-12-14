@@ -8,7 +8,7 @@ import { LOGIN_ROUTE } from "../../../constants";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import { UserContext } from "../../../context/UserContext";
 import Button from "../../../components/Button";
-import UserWrapper from "../UserWrapper";
+import UserWrapper from "./UserWrapper";
 
 const Login: React.FC = () => {
   const { makeRequest, isLoading, error } = useFetch();
