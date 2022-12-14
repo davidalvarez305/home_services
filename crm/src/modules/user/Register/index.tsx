@@ -1,16 +1,12 @@
 import { Form, Formik } from "formik";
 import React from "react";
 import Checkbox from "../../../components/Checkbox";
-import SignInButton from "../../../components/SignInButton";
 import PrimaryInput from "../../../components/FormInput";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import useFetch from "../../../hooks/useFetch";
 import { USER_ROUTE } from "../../../constants";
-import RequestErrorMessage from "../../../components/RequestErrorMessage";
-import LoginOrRegister from "../UserWrapper";
-import styles from "./Register.module.css";
 import Button from "../../../components/Button";
+import UserWrapper from "../UserWrapper";
 
 const Register: React.FC = () => {
   const { makeRequest, isLoading, error } = useFetch();
@@ -41,50 +37,59 @@ const Register: React.FC = () => {
   }
 
   return (
-    <LoginOrRegister
-      h1Text="Sign Up"
-      h1Subtext="Create your account by entering your details."
-      bottomTextOne="Already have an account?"
-      bottomLinkText="Login."
-      bottomLinkDestination="login"
-    >
+    <UserWrapper>
       <Formik
         initialValues={{ username: "", email: "", password: "" }}
         onSubmit={handleSubmit}
       >
         <Form>
-          <div className={styles["form"]}>
-            <PrimaryInput
-              label="Username"
-              name="username"
-              placeholder="Username..."
-            />
-            <PrimaryInput
-              label="Email"
-              name="email"
-              placeholder="Email..."
-              type="email"
-            />
-            <PrimaryInput
-              label="Password"
-              name="password"
-              placeholder="Password..."
-              type="password"
-            />
-            <div className={styles["flex-row"]}>
-              <Checkbox>Remember me</Checkbox>
-              <div className={styles["recover-password" + " x12px--bold"]}>
-                <Link href={"/forgot-password"}>Forgot Password</Link>
+          <div className="flex flex-col rounded shadow-sm bg-white overflow-hidden">
+            <div className="p-5 lg:p-6 grow w-full">
+              <div className="sm:p-5 lg:px-10 lg:py-8">
+                <div className="space-y-6">
+                  <PrimaryInput
+                    className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    label="Username"
+                    name="username"
+                    placeholder="Username..."
+                  />
+                  <PrimaryInput
+                    className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    label="Email"
+                    name="email"
+                    placeholder="Email..."
+                    type="email"
+                  />
+                  <PrimaryInput
+                    className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    label="Password"
+                    name="password"
+                    placeholder="Password..."
+                    type="password"
+                  />
+                  <Checkbox />
+                  <Button
+                    className="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none w-full px-4 py-3 leading-6 rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700"
+                    type={"submit"}
+                    disabled={isLoading}
+                  >
+                    Sign up
+                  </Button>
+                </div>
               </div>
             </div>
-            <Button type={"submit"} className={"Blue"} isLoading={isLoading}>
-              Sign up
-            </Button>
-            <RequestErrorMessage {...error} />
+            <div className="py-4 px-5 lg:px-6 w-full text-sm text-center bg-gray-50">
+              <a
+                className="font-medium text-blue-600 hover:text-blue-400"
+                href="/login"
+              >
+                Return to Sign In
+              </a>
+            </div>
           </div>
         </Form>
       </Formik>
-    </LoginOrRegister>
+    </UserWrapper>
   );
 };
 

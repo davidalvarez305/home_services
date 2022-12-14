@@ -2,7 +2,6 @@ import { useFormikContext } from "formik";
 import { useCallback, useEffect, useState } from "react";
 
 export default function useRememberMe() {
-  const [email, setEmail] = useState<string>();
   const { setFieldValue } = useFormikContext();
 
   const rememberEmail = useCallback((email: string) => {
@@ -19,7 +18,6 @@ export default function useRememberMe() {
     const storageEmail = window.localStorage.getItem("email");
 
     if (storageEmail) {
-      setEmail(storageEmail);
       setFieldValue('email', storageEmail);
 
       var checkbox = document.getElementById('remember_me') as any;
@@ -30,5 +28,5 @@ export default function useRememberMe() {
     }
   }, [setFieldValue]);
 
-  return { email, rememberEmail };
+  return { rememberEmail };
 }
