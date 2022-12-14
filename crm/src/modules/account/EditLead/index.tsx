@@ -11,7 +11,7 @@ import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import DeleteButton from "../../../components/DeleteIconButton";
 import CarouselModal from "../../../components/CarouselModal";
 import AccountLayout from "../../../layout/Account";
-import { Lead, LeadDetails } from "../../../types/general";
+import { LeadDetails } from "../../../types/general";
 import AccountDetailsForm from "../../../forms/AccountDetailsForm";
 
 interface Props {

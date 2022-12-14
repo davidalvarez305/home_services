@@ -1,17 +1,14 @@
 import { Form, Formik } from "formik";
 import React, { useContext } from "react";
 import Checkbox from "../../../components/Checkbox";
-import SignInButton from "../../../components/SignInButton";
 import PrimaryInput from "../../../components/FormInput";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import useFetch from "../../../hooks/useFetch";
 import { LOGIN_ROUTE } from "../../../constants";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
-import LoginOrRegister from "../UserWrapper";
 import { UserContext } from "../../../context/UserContext";
-import styles from "./Login.module.css";
 import Button from "../../../components/Button";
+import UserWrapper from "../UserWrapper";
 
 const Login: React.FC = () => {
   const { makeRequest, isLoading, error } = useFetch();
@@ -33,45 +30,67 @@ const Login: React.FC = () => {
   }
 
   return (
-    <LoginOrRegister
-      h1Text="Sign In"
-      h1Subtext="Enter your account details"
-      bottomTextOne="Don't have an account?"
-      bottomLinkText="Register."
-      bottomLinkDestination="register"
-    >
+    <UserWrapper>
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={handleSubmit}
       >
         <Form>
-          <div className={styles["form"]}>
-            <PrimaryInput
-              label="Email"
-              name="email"
-              placeholder="Email..."
-              type="email"
-            />
-            <PrimaryInput
-              label="Password"
-              name="password"
-              placeholder="Password..."
-              type="password"
-            />
-            <div className={styles["flex-row"]}>
-              <Checkbox>Remember me</Checkbox>
-              <div className={styles["recover-password" + " x12px--bold"]}>
-                <Link href={"/forgot-password"}>Forgot Password</Link>
+          <div className="flex flex-col rounded shadow-sm bg-white overflow-hidden">
+            <div className="p-5 lg:p-6 grow w-full">
+              <div className="sm:p-5 lg:px-10 lg:py-8">
+                <form className="space-y-6">
+                  <PrimaryInput
+                    className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    label="Email"
+                  />
+                  <PrimaryInput
+                    className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    label="Password"
+                  />
+                  <div>
+                    <Button
+                      disabled={isLoading}
+                      type="submit"
+                      className="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none w-full px-4 py-3 leading-6 rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700"
+                    >
+                      Sign In
+                    </Button>
+                    <div className="space-y-2 sm:flex sm:items-center sm:justify-between sm:space-x-2 sm:space-y-0 mt-4">
+                      <Checkbox />
+                      <a
+                        href="/forgot-password"
+                        className="inline-block text-blue-600 hover:text-blue-400"
+                      >
+                        Forgot Password?
+                      </a>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
-            <Button type={"submit"} className={"Blue"} isLoading={isLoading}>
-              Sign in
-            </Button>
-            <RequestErrorMessage {...error} />
+            <div className="py-4 px-5 lg:px-6 w-full text-sm text-center bg-gray-50">
+              Don’t have an account yet?
+              <a
+                className="font-medium text-blue-600 hover:text-blue-400"
+                href="/register"
+              >
+                Join us today
+              </a>
+            </div>
           </div>
+          <RequestErrorMessage {...error} />
         </Form>
       </Formik>
-    </LoginOrRegister>
+    </UserWrapper>
   );
 };
 
