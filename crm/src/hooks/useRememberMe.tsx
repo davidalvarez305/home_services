@@ -1,23 +1,30 @@
-import { useCallback, useEffect, useState } from "react";
+import { useFormikContext } from "formik";
+import { useCallback, useEffect } from "react";
 
 export default function useRememberMe() {
-  const [email, setEmail] = useState<string>();
+  const formik = useFormikContext();
 
   const rememberEmail = useCallback((email: string) => {
     if (email.length > 0) {
-      window.localStorage.setItem("username", email);
+      window.localStorage.setItem("email", email);
     } else {
-      window.localStorage.removeItem("username");
+      window.localStorage.removeItem("email");
     }
   }, []);
 
   useEffect(() => {
-    const email = window.localStorage.getItem("username");
+    const email = window.localStorage.getItem("email");
 
     if (email) {
-      setEmail(email);
-    }
-  }, []);
+      formik.setFieldValue('email', email);
 
-  return { email, rememberEmail };
+      var checkbox = document.getElementById('remember_me');
+
+      if (checkbox) {
+        checkbox.click();
+      }
+    }
+  }, [formik]);
+
+  return { rememberEmail };
 }

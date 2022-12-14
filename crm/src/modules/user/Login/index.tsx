@@ -39,7 +39,7 @@ const Login: React.FC = () => {
           <div className="flex flex-col rounded shadow-sm bg-white overflow-hidden">
             <div className="p-5 lg:p-6 grow w-full">
               <div className="sm:p-5 lg:px-10 lg:py-8">
-                <form className="space-y-6">
+                <div className="space-y-6">
                   <PrimaryInput
                     className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                     type="email"
@@ -74,7 +74,7 @@ const Login: React.FC = () => {
                       </a>
                     </div>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
             <div className="py-4 px-5 lg:px-6 w-full text-sm text-center bg-gray-50">

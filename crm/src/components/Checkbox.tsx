@@ -1,14 +1,15 @@
-import { useFormik, useFormikContext } from "formik";
+import {useFormikContext } from "formik";
 import React from "react";
 import useRememberMe from "../hooks/useRememberMe";
 
 export default function Checkbox() {
   const { values } = useFormikContext<{ email: string, password: string }>();
-  const { email, rememberEmail } = useRememberMe();
+  const { rememberEmail } = useRememberMe();
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.target.checked) {
       rememberEmail(values.email);
+
     } else {
       rememberEmail('');
     }
@@ -17,7 +18,6 @@ export default function Checkbox() {
   return (
     <label className="flex items-center">
       <input
-        defaultChecked={!!email}
         onChange={handleChange}
         type="checkbox"
         id="remember_me"
