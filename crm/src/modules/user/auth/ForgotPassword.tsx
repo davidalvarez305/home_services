@@ -5,10 +5,11 @@ import useFetch from "../../../hooks/useFetch";
 import { USER_ROUTE } from "../../../constants";
 import Button from "../../../components/Button";
 import UserWrapper from "./UserWrapper";
+import { useToast } from "@chakra-ui/react";
 
 const ForgotPassword: React.FC = () => {
   const { makeRequest, isLoading, error } = useFetch();
-  const [msg, setMsg] = useState("");
+  const toast = useToast();
 
   function handleSubmit(values: { email: string }) {
     makeRequest(
@@ -18,7 +19,13 @@ const ForgotPassword: React.FC = () => {
         data: values,
       },
       (_) => {
-        setMsg("Use the link sent to your inbox within the next 5 minutes.");
+        toast({
+          title: "Sent!",
+          description: "Use the link sent to your inbox within the next 5 minutes.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        })
       }
     );
   }

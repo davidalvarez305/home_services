@@ -1,3 +1,3 @@
-import AcceptUserCompanyInvite from "../../modules/user/AcceptUserCompanyInvite";
+import AcceptUserCompanyInvite from "../../modules/user/invite/AcceptUserCompanyInvite";
 
 export default AcceptUserCompanyInvite;

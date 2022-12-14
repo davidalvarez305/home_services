@@ -32,13 +32,7 @@ const InviteUserToCompany = () => {
   }
 
   return (
-    <UserWrapper
-      h1Text="Sign Up"
-      h1Subtext="Create your account by entering your details."
-      bottomTextOne="Already have an account?"
-      bottomLinkText="Login."
-      bottomLinkDestination="login"
-    >
+    <UserWrapper>
       <Formik
         initialValues={{ username: "", email: "", password: "" }}
         onSubmit={handleSubmit}
@@ -62,7 +56,7 @@ const InviteUserToCompany = () => {
               placeholder="Password..."
               type="password"
             />
-            <Button className={"Blue"} type={"submit"} isLoading={isLoading}>
+            <Button className={"Blue"} type={"submit"} disabled={isLoading}>
               Submit
             </Button>
             <RequestErrorMessage {...error} />
