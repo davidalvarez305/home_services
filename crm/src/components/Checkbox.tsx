@@ -4,12 +4,11 @@ import useRememberMe from "../hooks/useRememberMe";
 
 export default function Checkbox() {
   const { values } = useFormikContext<{ email: string, password: string }>();
-  const { rememberEmail } = useRememberMe();
+  const { email, rememberEmail } = useRememberMe();
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.target.checked) {
       rememberEmail(values.email);
-
     } else {
       rememberEmail('');
     }
