@@ -1,3 +1,6 @@
+import AuthSubFooter from "../../../components/AuthSubFooter";
+import Checkbox from "../../../components/Checkbox";
+
 interface Props {
   children: React.ReactNode;
 }
@@ -10,11 +13,7 @@ export default function FormWrapper({ children }: Props) {
           <div className="space-y-6">{children}</div>
         </div>
       </div>
-      <div className="py-4 px-5 lg:px-6 w-full text-sm text-center bg-gray-50">
-        <a className="font-medium text-blue-600 hover:text-blue-400" href="#">
-          Return to Sign In
-        </a>
-      </div>
+      <AuthSubFooter />
     </div>
   );
 }
