@@ -83,7 +83,7 @@ func InviteUserToCompany(companyId int, email string) error {
 	}
 
 	// Assert that invitee doesn't own another company
-	if user.Role.ID != 1 {
+	if user.RoleID != 1 {
 		return errors.New("cannot invite users that own other companies")
 	}
 
@@ -97,9 +97,9 @@ func InviteUserToCompany(companyId int, email string) error {
 
 	// Send e-mail to the user
 	clientUrl := os.Getenv("CLIENT_URL")
-	url := fmt.Sprintf(`%s/%s/%s?companyId=%v`, clientUrl, clientDestination, companyToken.UUID, companyToken.CompanyID)
+	url := fmt.Sprintf(`%s/%s/%s?companyId=%v&companyName=%s`, clientUrl, clientDestination, companyToken.UUID, companyToken.CompanyID, companyToken.Company.Name)
 	msg := fmt.Sprintf("Click this link to accept your invite, and create your account: %s", url)
-	title := "You have been invited to join Home Services."
+	title := fmt.Sprintf("You have been invited to join %s.", companyToken.Company.Name)
 
 	return utils.SendGmail(msg, email, title)
 

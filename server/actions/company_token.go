@@ -28,9 +28,9 @@ func (c *CompanyToken) GenerateCompanyToken(companyId int, email string) error {
 	// Assign CompanyToken to struct
 	c.CompanyToken = &t
 
-	result := database.DB.Save(&c).First(&c)
+	err := database.DB.Save(&c).Preload("Company").First(&c).Error
 
-	return result.Error
+	return err
 }
 
 func (CompanyToken *CompanyToken) GetCompanyToken(uuid string) error {
