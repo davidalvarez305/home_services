@@ -18,7 +18,7 @@ const Button: React.FC<Props> = ({ children, ...props }) => {
     );
   }
 
-  return <button className={props.className ? props.className : defaultPrimaryButton} {...props}>{children}</button>;
+  return <button className={defaultPrimaryButton} {...props}>{children}</button>;
 };
 
 export default Button;

@@ -12,14 +12,14 @@ export default function Logo() {
         <g transform="translate(1.1083297729492188 162.3700966392484) scale(1 1) rotate(0 0 0)">
           <text
             dy=""
-            dominant-baseline="auto"
-            alignment-baseline="auto"
-            font-family="'Montserrat-Bold'"
-            font-size="32px"
+            dominantBaseline="auto"
+            alignmentBaseline="auto"
+            fontFamily="'Montserrat-Bold'"
+            fontSize="32px"
             fill="#231F20"
-            letter-spacing="0"
-            font-weight="normal"
-            font-style="normal"
+            letterSpacing="0"
+            fontWeight="normal"
+            fontStyle="normal"
           >
             FindAPro.gg
           </text>
