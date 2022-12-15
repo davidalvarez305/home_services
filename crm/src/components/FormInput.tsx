@@ -12,7 +12,7 @@ const PrimaryInput: React.FC<Props> = ({ label, name, size: _, ...props }) => {
   return (
     <div className="space-y-1">
       <div className="font-medium">{label}</div>
-      <input {...props} {...field} />
+      <input id={field.name} {...props} {...field} />
     </div>
   );
 };
