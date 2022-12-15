@@ -18,9 +18,6 @@ export default function UserSettingsForm() {
   const hasProfileImg = ctx!.user.profile_picture.length > 0;
   const toast = useToast();
 
-  const inputClass =
-    "block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
-
   function handleUpload(event: ChangeEvent<HTMLInputElement>) {
     if (event.target.files) {
       setImage(event.target.files[0]);
@@ -75,11 +72,13 @@ export default function UserSettingsForm() {
     );
   }
 
+  const inputClass =
+    "block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
+
   const formFields = [
     {
       className: inputClass,
       type: "text",
-      id: "username",
       name: "username",
       placeholder: "john.doe",
       label: "Username",
@@ -88,7 +87,6 @@ export default function UserSettingsForm() {
       className:
         "block border placeholder-gray-400 px-3 py-2 leading-6 w-1/2 rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50",
       type: "text",
-      id: "first_name",
       name: "first_name",
       placeholder: "John",
       label: "First Name",
@@ -97,7 +95,6 @@ export default function UserSettingsForm() {
       className:
         "block border placeholder-gray-400 px-3 py-2 leading-6 w-1/2 rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50",
       type: "text",
-      id: "last_name",
       name: "last_name",
       placeholder: "Doe",
       label: "Last Name",
@@ -105,7 +102,6 @@ export default function UserSettingsForm() {
     {
       className: inputClass,
       type: "email",
-      id: "email",
       name: "email",
       placeholder: "john.doe@example.com",
       label: "Email",
@@ -113,7 +109,6 @@ export default function UserSettingsForm() {
     {
       className: inputClass,
       type: "text",
-      id: "job_title",
       name: "job_title",
       placeholder: "Product Manager",
       label: "Job Title",
@@ -163,7 +158,7 @@ export default function UserSettingsForm() {
           </div>
         </div>
         {formFields.map((field) => (
-          <FormInput key={field.id} {...field} />
+          <FormInput key={field.name} {...field} />
         ))}
         <Button
           disabled={isLoading}

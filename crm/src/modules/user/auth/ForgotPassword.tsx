@@ -1,6 +1,6 @@
 import { Form, Formik } from "formik";
 import React from "react";
-import PrimaryInput from "../../../components/FormInput";
+import FormInput from "../../../components/FormInput";
 import useFetch from "../../../hooks/useFetch";
 import { USER_ROUTE } from "../../../constants";
 import Button from "../../../components/Button";
@@ -38,8 +38,7 @@ export default function ForgotPassword() {
       <Formik initialValues={{ email: "" }} onSubmit={handleSubmit}>
         <Form>
           <FormWrapper>
-            <PrimaryInput
-              className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            <FormInput
               label="Email"
               name="email"
               placeholder="Email..."

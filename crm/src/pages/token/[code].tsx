@@ -1,3 +1,3 @@
-import Token from "../../modules/user/settings/ChangePassword";
+import Token from "../../modules/user/auth/ChangePassword";
 
 export default Token;

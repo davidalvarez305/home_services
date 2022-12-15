@@ -1,6 +1,6 @@
 import { Form, Formik } from "formik";
 import React, { useContext } from "react";
-import PrimaryInput from "../../../components/FormInput";
+import FormInput from "../../../components/FormInput";
 import { useRouter } from "next/router";
 import useFetch from "../../../hooks/useFetch";
 import { LOGIN_ROUTE } from "../../../constants";
@@ -37,18 +37,14 @@ export default function Login() {
       >
         <Form>
           <FormWrapper>
-            <PrimaryInput
-              className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            <FormInput
               type="email"
-              id="email"
               name="email"
               placeholder="Enter your email"
               label="Email"
             />
-            <PrimaryInput
-              className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            <FormInput
               type="password"
-              id="password"
               name="password"
               placeholder="Enter your password"
               label="Password"

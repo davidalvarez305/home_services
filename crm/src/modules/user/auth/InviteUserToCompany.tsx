@@ -2,7 +2,7 @@ import { useToast } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import Button from "../../../components/Button";
-import PrimaryInput from "../../../components/FormInput";
+import FormInput from "../../../components/FormInput";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import { COMPANY_ROUTE } from "../../../constants";
 import useFetch from "../../../hooks/useFetch";
@@ -12,8 +12,6 @@ import FormWrapper from "./FormWrapper";
 export default function InviteUserToCompany() {
   const { isLoading, makeRequest, error } = useFetch();
   const router = useRouter();
-  const className =
-    "block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
   const toast = useToast();
 
   function handleSubmit(values: {
@@ -50,21 +48,18 @@ export default function InviteUserToCompany() {
       >
         <Form>
           <FormWrapper>
-            <PrimaryInput
-              className={className}
+            <FormInput
               label="Username"
               name="username"
               placeholder="Username..."
             />
-            <PrimaryInput
-              className={className}
+            <FormInput
               label="Email"
               name="email"
               placeholder="Email..."
               type="email"
             />
-            <PrimaryInput
-              className={className}
+            <FormInput
               label="Password"
               name="password"
               placeholder="Password..."
