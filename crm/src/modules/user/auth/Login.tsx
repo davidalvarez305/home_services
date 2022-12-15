@@ -1,6 +1,5 @@
 import { Form, Formik } from "formik";
 import React, { useContext } from "react";
-import Checkbox from "../../../components/Checkbox";
 import PrimaryInput from "../../../components/FormInput";
 import { useRouter } from "next/router";
 import useFetch from "../../../hooks/useFetch";
@@ -9,10 +8,9 @@ import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import { UserContext } from "../../../context/UserContext";
 import Button from "../../../components/Button";
 import UserWrapper from "./UserWrapper";
-import AuthSubFooter from "../../../components/AuthSubFooter";
 import FormWrapper from "./FormWrapper";
 
-const Login: React.FC = () => {
+export default function Login() {
   const { makeRequest, isLoading, error } = useFetch();
   const ctx = useContext(UserContext);
   const router = useRouter();
@@ -68,6 +66,4 @@ const Login: React.FC = () => {
       </Formik>
     </UserWrapper>
   );
-};
-
-export default Login;
+}

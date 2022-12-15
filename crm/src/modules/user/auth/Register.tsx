@@ -7,6 +7,7 @@ import { USER_ROUTE } from "../../../constants";
 import Button from "../../../components/Button";
 import UserWrapper from "./UserWrapper";
 import FormWrapper from "./FormWrapper";
+import RequestErrorMessage from "../../../components/RequestErrorMessage";
 
 const Register: React.FC = () => {
   const { makeRequest, isLoading, error } = useFetch();
@@ -72,6 +73,7 @@ const Register: React.FC = () => {
               Sign up
             </Button>
           </FormWrapper>
+          <RequestErrorMessage {...error} />
         </Form>
       </Formik>
     </UserWrapper>

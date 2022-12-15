@@ -50,8 +50,8 @@ export default function AcceptUserCompanyInvite() {
         >
           Accept
         </Button>
-        <RequestErrorMessage {...error} />
       </FormWrapper>
+      <RequestErrorMessage {...error} />
     </UserWrapper>
   );
 }

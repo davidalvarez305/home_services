@@ -1,15 +1,15 @@
 import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import React from "react";
 import PrimaryInput from "../../../components/FormInput";
 import useFetch from "../../../hooks/useFetch";
 import { USER_ROUTE } from "../../../constants";
 import Button from "../../../components/Button";
 import UserWrapper from "./UserWrapper";
 import { useToast } from "@chakra-ui/react";
-import AuthSubFooter from "../../../components/AuthSubFooter";
 import FormWrapper from "./FormWrapper";
+import RequestErrorMessage from "../../../components/RequestErrorMessage";
 
-const ForgotPassword: React.FC = () => {
+export default function ForgotPassword() {
   const { makeRequest, isLoading, error } = useFetch();
   const toast = useToast();
 
@@ -53,10 +53,9 @@ const ForgotPassword: React.FC = () => {
               Start Recovery
             </Button>
           </FormWrapper>
+          <RequestErrorMessage {...error} />
         </Form>
       </Formik>
     </UserWrapper>
   );
 };
-
-export default ForgotPassword;

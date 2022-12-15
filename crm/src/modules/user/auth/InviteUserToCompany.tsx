@@ -36,7 +36,7 @@ export default function InviteUserToCompany() {
           status: "success",
           duration: 3000,
           isClosable: true,
-        })
+        });
         router.push("/login");
       }
     );
@@ -79,12 +79,10 @@ export default function InviteUserToCompany() {
             >
               Submit
             </Button>
-            <RequestErrorMessage {...error} />
           </FormWrapper>
+          <RequestErrorMessage {...error} />
         </Form>
       </Formik>
     </UserWrapper>
   );
-};
-
-
+}
