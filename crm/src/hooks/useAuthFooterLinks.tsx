@@ -14,14 +14,13 @@ export default function useAuthFooterLinks() {
     const currentPage = window.location.href;
 
     switch (true) {
-      case currentPage.includes("register"):
-        setPath("/login");
-        setMsg({ top: "Have an account?", bottom: "Sign in." });
-        break;
       case currentPage.includes("login"):
         setPath("/register");
         setMsg({ top: "Don’t have an account yet?", bottom: "Create one." });
         break;
+      default:
+        setPath("/login");
+        setMsg({ top: "Have an account?", bottom: "Sign in." });
     }
   }, []);
 

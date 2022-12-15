@@ -1,6 +1,5 @@
 import AuthSubFooter from "../../../components/AuthSubFooter";
 import AuthTopSubFooter from "../../../components/AuthTopSubFooter";
-import Checkbox from "../../../components/Checkbox";
 
 interface Props {
   children: React.ReactNode;
