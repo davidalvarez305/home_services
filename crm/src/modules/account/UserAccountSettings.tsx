@@ -21,11 +21,17 @@ export default function UserAccountSettings({ lead }: Props) {
   const toast = useToast();
 
   function handleSubmit(values: LeadDetails) {
+
+    // In this case, service has to be set to service_id because that's what the server expects.
+
     makeRequest(
       {
         url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
         method: "PUT",
-        data: values,
+        data: {
+          ...values,
+          service: values.service_id,
+        },
       },
       (res) => {
         ctx?.SetLead(res.data.data);
