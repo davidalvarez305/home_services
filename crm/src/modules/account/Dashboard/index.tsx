@@ -60,10 +60,10 @@ const Dashboard: React.FC = () => {
 
   return (
     <Layout>
-      {ctx?.lead.id && (
+      {leadDetails && (
         <div className="space-y-8">
-          <UserAccountSettings lead={ctx.lead} />
-          <LeadInformationSettings lead={ctx.lead} />
+          <UserAccountSettings lead={leadDetails} />
+          <LeadInformationSettings lead={leadDetails} />
         </div>
       )}
       <RequestErrorMessage {...error} />

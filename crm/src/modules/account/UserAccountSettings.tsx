@@ -9,10 +9,10 @@ import RequestErrorMessage from "../../components/RequestErrorMessage";
 import { LEAD_ROUTE } from "../../constants";
 import { LeadContext } from "../../context/LeadContext";
 import useFetch from "../../hooks/useFetch";
-import { Lead, LeadDetails } from "../../types/general";
+import { LeadDetails } from "../../types/general";
 
 interface Props {
-  lead: Lead;
+  lead: LeadDetails;
 }
 
 export default function UserAccountSettings({ lead }: Props) {
@@ -20,7 +20,7 @@ export default function UserAccountSettings({ lead }: Props) {
   const ctx = useContext(LeadContext);
   const toast = useToast();
 
-  function handleSubmit(values: Lead) {
+  function handleSubmit(values: LeadDetails) {
     makeRequest(
       {
         url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
