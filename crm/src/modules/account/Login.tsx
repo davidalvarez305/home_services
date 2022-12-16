@@ -1,4 +1,4 @@
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import React, { useContext, useState } from "react";
 import PrimaryInput from "../../components/FormInput";
 import { useRouter } from "next/router";
@@ -10,12 +10,14 @@ import { LeadContext } from "../../context/LeadContext";
 import Button from "../../components/Button";
 import { Lead } from "../../types/general";
 import FormWrapper from "../user/auth/FormWrapper";
+import { useToast } from "@chakra-ui/react";
 
 const Login: React.FC = () => {
   const [enterCode, setEnterCode] = useState(false);
-  const [forgotCode, setForgotCode] = useState(false);
   const { makeRequest, isLoading, error } = useFetch();
   const ctx = useContext(LeadContext);
+  const toast = useToast();
+  const { setFieldValue } = useFormikContext();
   const router = useRouter();
   const buttonClassName = "inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none w-full px-4 py-3 leading-6 rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700"
 
@@ -27,8 +29,15 @@ const Login: React.FC = () => {
         data: values,
       },
       (_) => {
-        setForgotCode(false);
         setEnterCode(true);
+        setFieldValue('code', '');
+        toast({
+          title: "Success!",
+          description: "Enter the code found in your inbox.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     );
   }
