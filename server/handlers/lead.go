@@ -130,7 +130,6 @@ func CheckLoginCode(c *fiber.Ctx) error {
 	}
 
 	// Initialize Structs
-	lead := &actions.Lead{}
 	lc := &actions.LeadCode{}
 
 	// Retrieve Token from DB
@@ -148,14 +147,6 @@ func CheckLoginCode(c *fiber.Ctx) error {
 	if difference > 300 {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Token expired.",
-		})
-	}
-
-	err = lead.GetLead(fmt.Sprintf("%+v", lc.LeadID))
-
-	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"data": "Could not find that user account.",
 		})
 	}
 
@@ -177,7 +168,7 @@ func CheckLoginCode(c *fiber.Ctx) error {
 		})
 	}
 
-	sess.Set("lead_uuid", lead.UUID)
+	sess.Set("lead_uuid", lc.Lead.UUID)
 
 	err = sess.Save()
 
@@ -188,7 +179,7 @@ func CheckLoginCode(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{
-		"data": lead,
+		"data": lc.Lead,
 	})
 }
 

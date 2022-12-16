@@ -33,7 +33,7 @@ func (lc *LeadCode) GenerateLoginCode(leadId int) error {
 }
 
 func (lc *LeadCode) GetLoginCode(code string) error {
-	return database.DB.Where("code = ?", code).First(&lc).Error
+	return database.DB.Where("code = ?", code).Preload("Lead").First(&lc).Error
 }
 
 func (lc *LeadCode) DeleteCode() error {
