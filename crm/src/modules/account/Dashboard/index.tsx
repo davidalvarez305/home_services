@@ -30,7 +30,7 @@ const Dashboard: React.FC = () => {
         }
       );
     }
-  }, [makeRequest, ctx?.lead]);
+  }, [makeRequest, ctx?.lead.id]);
 
   function handleDeleteLead() {
     makeRequest(

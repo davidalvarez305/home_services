@@ -10,7 +10,11 @@ import RequestErrorMessage from "../../components/RequestErrorMessage";
 import { LEAD_ROUTE, SERVICE_ROUTE } from "../../constants";
 import { LeadContext } from "../../context/LeadContext";
 import useFetch from "../../hooks/useFetch";
-import { LeadDetails, Service, UpdateLeadInformation } from "../../types/general";
+import {
+  LeadDetails,
+  Service,
+  UpdateLeadInformation,
+} from "../../types/general";
 
 interface Props {
   lead: LeadDetails;
@@ -40,7 +44,7 @@ export default function LeadInformationSettings({ lead }: Props) {
     });
   }, [makeRequest, lead.service_id]);
 
-  function handleSubmit(values: UpdateLeadInformation) {
+  function handleSubmit(values: LeadDetails) {
     makeRequest(
       {
         url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
@@ -80,13 +84,7 @@ export default function LeadInformationSettings({ lead }: Props) {
       <div className="flex flex-col rounded shadow-sm bg-white overflow-hidden md:w-2/3">
         <div className="p-5 lg:p-6 grow w-full">
           <Formik
-            initialValues={{
-              street_address_line_1: String(lead.street_address_line_1),
-              street_address_line_2: String(lead.street_address_line_2),
-              street_address_line_3: String(lead.street_address_line_3),
-              service: String(defaultService.id),
-              zip_code: lead.zip_code,
-            }}
+            initialValues={lead}
             onSubmit={handleSubmit}
           >
             <Form>
