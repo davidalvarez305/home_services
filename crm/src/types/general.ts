@@ -187,3 +187,11 @@ export type CompanyLead = {
   photos: string;
   budget: number;
 }
+
+export type UpdateLeadInformation = {
+  street_address_line_1: string;
+  street_address_line_2: string;
+  street_address_line_3: string;
+  service: string;
+  zip_code: string;
+};

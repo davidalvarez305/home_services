@@ -22,8 +22,8 @@ export default function useAccountRequired() {
   }, [ctx, router]);
 
   useEffect(() => {
-    if (!ctx?.lead.uuid || !ctx?.lead.email) {
+    if (!ctx?.lead.id) {
       fetchData();
     }
-  }, [fetchData, ctx?.lead]);
+  }, [fetchData, ctx?.lead.id]);
 }

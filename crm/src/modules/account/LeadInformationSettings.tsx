@@ -10,19 +10,11 @@ import RequestErrorMessage from "../../components/RequestErrorMessage";
 import { LEAD_ROUTE, SERVICE_ROUTE } from "../../constants";
 import { LeadContext } from "../../context/LeadContext";
 import useFetch from "../../hooks/useFetch";
-import { LeadDetails, Service } from "../../types/general";
+import { LeadDetails, Service, UpdateLeadInformation } from "../../types/general";
 
 interface Props {
   lead: LeadDetails;
 }
-
-type UpdateLeadInformation = {
-  street_address_line_1: string;
-  street_address_line_2: string;
-  street_address_line_3: string;
-  service: string;
-  zip_code: string;
-};
 
 export default function LeadInformationSettings({ lead }: Props) {
   const { makeRequest, isLoading, error } = useFetch();
@@ -92,7 +84,7 @@ export default function LeadInformationSettings({ lead }: Props) {
               street_address_line_1: String(lead.street_address_line_1),
               street_address_line_2: String(lead.street_address_line_2),
               street_address_line_3: String(lead.street_address_line_3),
-              service: "",
+              service: String(defaultService.id),
               zip_code: lead.zip_code,
             }}
             onSubmit={handleSubmit}
