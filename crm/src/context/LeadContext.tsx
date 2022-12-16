@@ -1,11 +1,11 @@
 import React, { createContext, ReactNode } from "react";
 import useLeadAuth from "../hooks/useLeadAuth";
-import { Lead } from "../types/general";
+import { LeadDetails } from "../types/general";
 
 interface ContextValue {
-  SetLead: (user: Lead) => void;
+  SetLead: (user: LeadDetails) => void;
   Logout: () => void;
-  lead: Lead;
+  lead: LeadDetails | undefined;
 }
 
 export const LeadContext = createContext<ContextValue | null>(null);

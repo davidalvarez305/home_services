@@ -1,15 +1,15 @@
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import Button from "../components/Button";
-import FormInput from "../components/FormInput";
-import RequestErrorMessage from "../components/RequestErrorMessage";
-import { LEAD_ROUTE } from "../constants";
-import { LeadContext } from "../context/LeadContext";
-import useFetch from "../hooks/useFetch";
-import { Lead } from "../types/general";
-import FormWrapper from "./user/auth/FormWrapper";
-import UserWrapper from "./user/auth/UserWrapper";
+import Button from "../../../components/Button";
+import FormInput from "../../../components/FormInput";
+import RequestErrorMessage from "../../../components/RequestErrorMessage";
+import { LEAD_ROUTE } from "../../../constants";
+import { LeadContext } from "../../../context/LeadContext";
+import useFetch from "../../../hooks/useFetch";
+import { LeadDetails } from "../../../types/general";
+import FormWrapper from "./FormWrapper";
+import UserWrapper from "./UserWrapper";
 
 interface Props {
     setEnterCode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,7 +27,7 @@ export default function ConfirmCode({ setEnterCode }:Props) {
         method: "POST",
       },
       (res) => {
-        const lead: Lead = res.data.data;
+        const lead: LeadDetails = res.data.data;
         ctx?.SetLead(lead);
         router.push("/account/" + lead.uuid);
       }

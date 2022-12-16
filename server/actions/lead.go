@@ -60,7 +60,7 @@ func (l *Lead) GetLead(leadId string) error {
 	return database.DB.Where("id = ?", leadId).First(&l).Error
 }
 
-func (ld *LeadDetails) GetLeadDetails(leadId string) error {
+func (ld *LeadDetails) GetLeadDetails(uuid string) error {
 
 	sql := `
 	SELECT l.id, l.email, l.uuid, l.company_id, l.first_name, l.last_name, l.phone_number, l.budget, l.created_at, 
@@ -81,12 +81,12 @@ func (ld *LeadDetails) GetLeadDetails(leadId string) error {
 	ON s.id = a.state_id
 	LEFT JOIN country AS ctry
 	ON ctry.id = a.country_id
-	WHERE l.id = ?
+	WHERE l.uuid = ?
 	GROUP BY a.street_address_line1, a.street_address_line2, a.street_address_line3, ser.service, ser.id,
 	c.city, c.id, s.id, s.state, l.id, l.email, l.uuid, l.company_id, l.first_name, l.last_name,
 	l.phone_number, a.zip_code, l.created_at, l.budget, ctry.country, ctry.id;`
 
-	return database.DB.Raw(sql, leadId).First(&ld).Error
+	return database.DB.Raw(sql, uuid).First(&ld).Error
 }
 
 func (l *Lead) GetLeadByUUID(uuid string) error {
@@ -115,7 +115,7 @@ func (lead *Lead) GetLeadFromSession(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = lead.GetLeadByUUID(fmt.Sprintf("%v", leadUUID))
+	err = lead.GetLeadDetails(fmt.Sprintf("%v", leadUUID))
 
 	return err
 }

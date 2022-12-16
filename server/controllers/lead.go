@@ -16,7 +16,6 @@ func Lead(router fiber.Router) {
 	lead.Post("/login/:code", handlers.CheckLoginCode) // Check login code sent from client
 
 	// Lead Specific Endpoints
-	lead.Get("/:id", handlers.GetLeadInfo)                        // Query user
 	lead.Put("/:id", handlers.UpdateLead)                         // Update profile
 	lead.Delete("/:id", handlers.DeleteLead)                      // Delete account
 	lead.Post("/:id/photo", handlers.AddLeadPhotos)               // Add photo(s) attached to a lead's quote.

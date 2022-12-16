@@ -178,31 +178,18 @@ func CheckLoginCode(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(200).JSON(fiber.Map{
-		"data": lc.Lead,
-	})
-}
+	ld := &actions.LeadDetails{}
 
-func GetLeadInfo(c *fiber.Ctx) error {
-	leadId := c.Params("id")
-	lead := &actions.LeadDetails{}
-
-	if len(leadId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Lead ID not found in URL params.",
-		})
-	}
-
-	err := lead.GetLeadDetails(leadId)
+	err = ld.GetLeadDetails(lc.lead.UUID)
 
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to query account details.",
+		return c.Status(500).JSON(fiber.Map{
+			"data": "Failed to fetch user details.",
 		})
 	}
 
 	return c.Status(200).JSON(fiber.Map{
-		"data": lead,
+		"data": ld,
 	})
 }
 

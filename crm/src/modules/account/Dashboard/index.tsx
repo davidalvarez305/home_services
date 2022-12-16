@@ -10,7 +10,6 @@ import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import LeadInformationSettings from "../LeadInformationSettings";
 
 const Dashboard: React.FC = () => {
-  const [leadDetails, setLeadDetails] = useState<LeadDetails>();
   const ctx = useContext(LeadContext);
   const { makeRequest, error } = useFetch();
   useAccountRequired();
@@ -19,23 +18,10 @@ const Dashboard: React.FC = () => {
     ctx?.Logout();
   }
 
-  useEffect(() => {
-    if (ctx?.lead.id) {
-      makeRequest(
-        {
-          url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
-        },
-        (res) => {
-          setLeadDetails(res.data.data);
-        }
-      );
-    }
-  }, [makeRequest, ctx?.lead.id]);
-
   function handleDeleteLead() {
     makeRequest(
       {
-        url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
+        url: `${LEAD_ROUTE}/${ctx?.lead?.id}`,
         method: "DELETE",
       },
       (_) => {
@@ -46,10 +32,10 @@ const Dashboard: React.FC = () => {
 
   return (
     <Layout>
-      {leadDetails && (
+      {ctx?.lead && (
         <div className="space-y-8">
-          <UserAccountSettings lead={leadDetails} />
-          <LeadInformationSettings lead={leadDetails} />
+          <UserAccountSettings lead={ctx.lead} />
+          <LeadInformationSettings lead={ctx.lead} />
         </div>
       )}
       <RequestErrorMessage {...error} />

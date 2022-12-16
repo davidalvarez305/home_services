@@ -8,7 +8,7 @@ import UserWrapper from "../user/auth/UserWrapper";
 import Button from "../../components/Button";
 import FormWrapper from "../user/auth/FormWrapper";
 import { useToast } from "@chakra-ui/react";
-import ConfirmCode from "../ConfirmCode";
+import ConfirmCode from "../user/auth/ConfirmCode";
 
 export default function Login() {
   const [enterCode, setEnterCode] = useState(false);
