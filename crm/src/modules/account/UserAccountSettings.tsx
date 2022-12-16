@@ -20,13 +20,7 @@ export default function UserAccountSettings({ lead }: Props) {
   const ctx = useContext(LeadContext);
   const toast = useToast();
 
-  function handleSubmit(values: {
-    id: number;
-    first_name: string;
-    last_name: string;
-    phone_number: string;
-    email: string;
-  }) {
+  function handleSubmit(values: Lead) {
     makeRequest(
       {
         url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
@@ -61,7 +55,10 @@ export default function UserAccountSettings({ lead }: Props) {
       />
       <div className="flex flex-col rounded shadow-sm bg-white overflow-hidden md:w-2/3">
         <div className="p-5 lg:p-6 grow w-full">
-          <Formik initialValues={lead} onSubmit={handleSubmit}>
+          <Formik
+            initialValues={lead}
+            onSubmit={handleSubmit}
+          >
             <Form>
               <div className="space-y-6">
                 <div className="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
