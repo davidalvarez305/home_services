@@ -13,7 +13,6 @@ import useFetch from "../../hooks/useFetch";
 import {
   LeadDetails,
   Service,
-  UpdateLeadInformation,
 } from "../../types/general";
 
 interface Props {
@@ -47,7 +46,7 @@ export default function LeadInformationSettings({ lead }: Props) {
   function handleSubmit(values: LeadDetails) {
     makeRequest(
       {
-        url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
+        url: `${LEAD_ROUTE}/${ctx?.lead?.id}`,
         method: "PUT",
         data: {
           ...values,
@@ -83,10 +82,7 @@ export default function LeadInformationSettings({ lead }: Props) {
 
       <div className="flex flex-col rounded shadow-sm bg-white overflow-hidden md:w-2/3">
         <div className="p-5 lg:p-6 grow w-full">
-          <Formik
-            initialValues={lead}
-            onSubmit={handleSubmit}
-          >
+          <Formik initialValues={lead} onSubmit={handleSubmit}>
             <Form>
               <div className="space-y-6">
                 <FormInput
@@ -115,6 +111,14 @@ export default function LeadInformationSettings({ lead }: Props) {
                       label={"Zip Code"}
                       type={"text"}
                     />
+                    <div className="space-y-1 sm:w-1/3">
+                      <FormInput
+                        className={inputClass}
+                        name={"budget"}
+                        label={"Budget"}
+                        type={"number"}
+                      />
+                    </div>
                   </div>
                   <div className="space-y-1 sm:w-1/3">
                     <CustomSelect
