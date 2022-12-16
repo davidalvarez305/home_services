@@ -1,9 +1,11 @@
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
+import { DJANGO_DOMAIN } from "../constants";
 
 export default function useAuthFooterLinks() {
   const [path, setPath] = useState("");
   const [msg, setMsg] = useState({ top: "", bottom: "" });
+  const [showForgotPassword, setShowForgotPassword] = useState(true);
   const router = useRouter();
 
   const redirect = useCallback(() => {
@@ -14,6 +16,11 @@ export default function useAuthFooterLinks() {
     const currentPage = window.location.href;
 
     switch (true) {
+      case currentPage.includes("account"):
+        setPath(DJANGO_DOMAIN);
+        setMsg({ top: "Don’t have an account yet?", bottom: "Create one." });
+        setShowForgotPassword(false);
+        break;
       case currentPage.includes("login"):
         setPath("/register");
         setMsg({ top: "Don’t have an account yet?", bottom: "Create one." });
@@ -24,5 +31,5 @@ export default function useAuthFooterLinks() {
     }
   }, []);
 
-  return { redirect, msg };
+  return { showForgotPassword, redirect, msg };
 }

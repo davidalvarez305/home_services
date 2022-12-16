@@ -8,5 +8,5 @@ export const ROLE_ROUTE = process.env.NEXT_PUBLIC_API_URL + "api/role";
 export const SERVICE_ROUTE = process.env.NEXT_PUBLIC_API_URL + "api/service";
 export const LOCATION_ROUTE = process.env.NEXT_PUBLIC_API_URL + "api/location";
 export const CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL;
-export const DJANGO_DOMAIN = process.env.NEXT_PUBLIC_DJANGO_DOMAIN;
+export const DJANGO_DOMAIN = process.env.NEXT_PUBLIC_DJANGO_DOMAIN as string;
 export const BUCKET_URL = process.env.NEXT_PUBLIC_BUCKET_URL;

@@ -13,7 +13,6 @@ func Lead(router fiber.Router) {
 	lead.Get("/", handlers.GetLeadFromSession)         // Query user
 	lead.Post("/logout", handlers.LeadLogout)          // Logout
 	lead.Post("/login", handlers.LeadLogin)            // Login portal for leads
-	lead.Post("/login/code", handlers.RecoverUUIDCode) // Recover UUID Code if Lost
 	lead.Post("/login/:code", handlers.CheckLoginCode) // Check login code sent from client
 
 	// Lead Specific Endpoints

@@ -20,7 +20,7 @@ type Lead struct {
 type Leads []*models.Lead
 
 type LeadLogin struct {
-	UUID string `json:"uuid"`
+	Email string `json:"email"`
 }
 
 type LeadDetails struct {
@@ -187,7 +187,7 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 func (l *Lead) Login(input *LeadLogin, c *fiber.Ctx) error {
 
 	// Find Lead by UUID
-	err := l.GetLeadByUUID(input.UUID)
+	err := l.GetLeadByEmail(input.Email)
 
 	if err != nil {
 		return err
