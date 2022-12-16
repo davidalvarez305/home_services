@@ -3,7 +3,6 @@ import useAccountRequired from "../../../hooks/useAccountRequired";
 import useFetch from "../../../hooks/useFetch";
 import { LEAD_ROUTE } from "../../../constants";
 import { LeadContext } from "../../../context/LeadContext";
-import EditLead from "../EditLead";
 import { LeadDetails } from "../../../types/general";
 import Layout from "../../../components/Layout";
 import UserAccountSettings from "../UserAccountSettings";
@@ -11,11 +10,9 @@ import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import LeadInformationSettings from "../LeadInformationSettings";
 
 const Dashboard: React.FC = () => {
-  const [type, setType] = useState<"QUOTE" | "ACCOUNT">();
-  const [leadToEdit, setLeadToEdit] = useState<LeadDetails>();
   const [leadDetails, setLeadDetails] = useState<LeadDetails>();
   const ctx = useContext(LeadContext);
-  const { makeRequest, isLoading, error } = useFetch();
+  const { makeRequest, error } = useFetch();
   useAccountRequired();
 
   function handleLogout() {
@@ -44,17 +41,6 @@ const Dashboard: React.FC = () => {
       (_) => {
         handleLogout();
       }
-    );
-  }
-
-  if (leadToEdit && type) {
-    return (
-      <EditLead
-        type={type}
-        lead={leadToEdit}
-        setLeadToEdit={setLeadToEdit}
-        setLeadDetails={setLeadDetails}
-      />
     );
   }
 

@@ -10,11 +10,19 @@ import RequestErrorMessage from "../../components/RequestErrorMessage";
 import { LEAD_ROUTE, SERVICE_ROUTE } from "../../constants";
 import { LeadContext } from "../../context/LeadContext";
 import useFetch from "../../hooks/useFetch";
-import { Lead, LeadDetails, Service } from "../../types/general";
+import { LeadDetails, Service } from "../../types/general";
 
 interface Props {
   lead: LeadDetails;
 }
+
+type UpdateLeadInformation = {
+  street_address_line_1: string;
+  street_address_line_2: string;
+  street_address_line_3: string;
+  service: string;
+  zip_code: string;
+};
 
 export default function LeadInformationSettings({ lead }: Props) {
   const { makeRequest, isLoading, error } = useFetch();
@@ -40,14 +48,14 @@ export default function LeadInformationSettings({ lead }: Props) {
     });
   }, [makeRequest, lead.service_id]);
 
-  function handleSubmit(values: LeadDetails) {
+  function handleSubmit(values: UpdateLeadInformation) {
     makeRequest(
       {
         url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
         method: "PUT",
         data: {
-            ...values,
-            service_id: parseInt(String(values.service_id))
+          ...values,
+          service: parseInt(values.service),
         },
       },
       (res) => {
@@ -79,57 +87,64 @@ export default function LeadInformationSettings({ lead }: Props) {
 
       <div className="flex flex-col rounded shadow-sm bg-white overflow-hidden md:w-2/3">
         <div className="p-5 lg:p-6 grow w-full">
-          <Formik initialValues={lead} onSubmit={handleSubmit}>
-            {({ setFieldValue }) => (
-              <Form>
-                <div className="space-y-6">
-                  <FormInput
-                    className={inputClass}
-                    name={"street_address_line_1"}
-                    label={"Street Address Line 1"}
-                    type={"text"}
-                  />
-                  <FormInput
-                    className={inputClass}
-                    name={"street_address_line_2"}
-                    label={"Street Address Line 2"}
-                    type={"text"}
-                  />
-                  <FormInput
-                    className={inputClass}
-                    name={"street_address_line_3"}
-                    label={"Street Address Line 3"}
-                    type={"text"}
-                  />
-                  <div className="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
-                    <div className="space-y-1 sm:w-1/3">
-                      <FormInput
-                        className={inputClass}
-                        name={"zip_code"}
-                        label={"Zip Code"}
-                        type={"text"}
-                      />
-                    </div>
-                    <div className="space-y-1 sm:w-1/3">
-                      <CustomSelect
-                        defaultValue={defaultService.id}
-                        name={"service_id"}
-                        label={"Service"}
-                      >
-                        {services.map((service) => (
-                          <option key={service.id} value={service.id}>
-                            {service.service}
-                          </option>
-                        ))}
-                      </CustomSelect>
-                    </div>
+          <Formik
+            initialValues={{
+              street_address_line_1: String(lead.street_address_line_1),
+              street_address_line_2: String(lead.street_address_line_2),
+              street_address_line_3: String(lead.street_address_line_3),
+              service: "",
+              zip_code: lead.zip_code,
+            }}
+            onSubmit={handleSubmit}
+          >
+            <Form>
+              <div className="space-y-6">
+                <FormInput
+                  className={inputClass}
+                  name={"street_address_line_1"}
+                  label={"Street Address Line 1"}
+                  type={"text"}
+                />
+                <FormInput
+                  className={inputClass}
+                  name={"street_address_line_2"}
+                  label={"Street Address Line 2"}
+                  type={"text"}
+                />
+                <FormInput
+                  className={inputClass}
+                  name={"street_address_line_3"}
+                  label={"Street Address Line 3"}
+                  type={"text"}
+                />
+                <div className="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
+                  <div className="space-y-1 sm:w-1/3">
+                    <FormInput
+                      className={inputClass}
+                      name={"zip_code"}
+                      label={"Zip Code"}
+                      type={"text"}
+                    />
                   </div>
-                  <Button type="submit" disabled={isLoading}>
-                    Save Changes
-                  </Button>
+                  <div className="space-y-1 sm:w-1/3">
+                    <CustomSelect
+                      defaultValue={defaultService.id}
+                      name={"service"}
+                      label={"Service"}
+                    >
+                      {services.map((service) => (
+                        <option key={service.id} value={service.id}>
+                          {service.service}
+                        </option>
+                      ))}
+                    </CustomSelect>
+                  </div>
                 </div>
-              </Form>
-            )}
+                <Button type="submit" disabled={isLoading}>
+                  Save Changes
+                </Button>
+              </div>
+            </Form>
           </Formik>
         </div>
         <RequestErrorMessage {...error} />
