@@ -4,7 +4,7 @@ import {
   Box,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactSelect from "react-select";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import { useField, useFormikContext } from "formik";
@@ -14,9 +14,10 @@ type SelectType = { value: string | number; label: string };
 type Props = {
   options: SelectType[];
   name: string;
+  className?: string;
 };
 
-const FormSelect: React.FC<Props> = ({ options, name }) => {
+const FormSelect: React.FC<Props> = ({ options, name, className }) => {
   const { setFieldValue } = useFormikContext();
 
   const [field, meta] = useField(name);
@@ -51,6 +52,7 @@ const FormSelect: React.FC<Props> = ({ options, name }) => {
           {capitalizeFirstLetter(name)}
         </FormLabel>
         <ReactSelect
+          className={className}
           name={field.name}
           id={field.name}
           value={selectedValue}
