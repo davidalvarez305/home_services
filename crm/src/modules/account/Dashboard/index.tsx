@@ -10,6 +10,7 @@ import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import EditLead from "../EditLead";
 import { LeadDetails } from "../../../types/general";
 import { Button } from "@chakra-ui/react";
+import Layout from "../../../components/Layout";
 
 const Dashboard: React.FC = () => {
   const [type, setType] = useState<"QUOTE" | "ACCOUNT">();
@@ -53,7 +54,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <AccountLayout screenName="Dashboard">
+    <Layout>
       <div className={styles["main-container"]}>
         {leadDetails && (
           <div className={styles["box-container"]}>
@@ -101,7 +102,7 @@ const Dashboard: React.FC = () => {
         </div>
         <RequestErrorMessage {...error} />
       </div>
-    </AccountLayout>
+    </Layout>
   );
 };
 export default Dashboard;
