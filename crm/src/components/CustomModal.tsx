@@ -1,16 +1,15 @@
-import { Fragment, useState } from "react";
+import { Dispatch, Fragment, SetStateAction } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import Slider from "react-slick";
-import Button from "./Button";
 import Head from "next/head";
 
-type Props = any & {
+type Props = {
   children: React.ReactNode;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  isOpen: boolean;
 };
 
-export default function CustomModal({ children }: Props) {
-  const [isOpen, setIsOpen] = useState(true);
-
+export default function CustomModal({ children, setIsOpen, isOpen }:Props) {
   const settings = {
     dots: true,
     infinite: true,
@@ -23,34 +22,30 @@ export default function CustomModal({ children }: Props) {
     setIsOpen(false);
   }
 
-  function handleNext() {
+  /* function handleNext() {
     var next = document.querySelector(".slick-arrow.slick-next");
     if (next instanceof HTMLElement) {
       next.click();
     }
-  }
+  } */
 
   return (
-    <>
-      <div>
-        <Head>
-          <link
-            rel="stylesheet"
-            type="text/css"
-            charSet="UTF-8"
-            href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
-          />
-          <link
-            rel="stylesheet"
-            type="text/css"
-            href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
-          />
-        </Head>
-      </div>
-      {/* Modal Container */}
+    <div>
+      <Head>
+        <link
+          rel="stylesheet"
+          type="text/css"
+          charSet="UTF-8"
+          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
+        />
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
+        />
+      </Head>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-90" onClose={closeModal}>
-          {/* Modal Backdrop */}
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-200"
@@ -62,9 +57,7 @@ export default function CustomModal({ children }: Props) {
           >
             <div className="fixed inset-0 bg-gray-900 bg-opacity-75" />
           </Transition.Child>
-          {/* END Modal Backdrop */}
 
-          {/* Modal Dialog */}
           <div className="fixed inset-0 overflow-y-auto p-4 lg:p-8">
             <Transition.Child
               as={Fragment}
@@ -109,10 +102,8 @@ export default function CustomModal({ children }: Props) {
               </Dialog.Panel>
             </Transition.Child>
           </div>
-          {/* END Modal Dialog */}
         </Dialog>
       </Transition>
-      {/* END Modal Container */}
-    </>
+    </div>
   );
 }

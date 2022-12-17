@@ -123,7 +123,7 @@ export default function UploadPhotos() {
           )}
         </div>
         {openCarousel && leadPhotos && (
-          <CustomModal>
+          <CustomModal setIsOpen={setOpenCarousel} isOpen={openCarousel}>
             {leadPhotos.map((photo) => (
               <div key={photo}>
                 <Image
