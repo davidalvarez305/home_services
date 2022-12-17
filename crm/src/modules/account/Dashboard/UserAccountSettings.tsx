@@ -1,15 +1,15 @@
 import { useToast } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { useContext } from "react";
-import UserProfileIcon from "../../assets/UserProfileIcon";
-import Button from "../../components/Button";
-import FormInput from "../../components/FormInput";
-import LargeFormSection from "../../components/LargeFormSection";
-import RequestErrorMessage from "../../components/RequestErrorMessage";
-import { LEAD_ROUTE } from "../../constants";
-import { LeadContext } from "../../context/LeadContext";
-import useFetch from "../../hooks/useFetch";
-import { LeadDetails } from "../../types/general";
+import UserProfileIcon from "../../../assets/UserProfileIcon";
+import Button from "../../../components/Button";
+import FormInput from "../../../components/FormInput";
+import LargeFormSection from "../../../components/LargeFormSection";
+import RequestErrorMessage from "../../../components/RequestErrorMessage";
+import { LEAD_ROUTE } from "../../../constants";
+import { LeadContext } from "../../../context/LeadContext";
+import useFetch from "../../../hooks/useFetch";
+import { LeadDetails } from "../../../types/general";
 
 interface Props {
   lead: LeadDetails;
@@ -26,7 +26,7 @@ export default function UserAccountSettings({ lead }: Props) {
 
     makeRequest(
       {
-        url: `${LEAD_ROUTE}/${ctx?.lead.id}`,
+        url: `${LEAD_ROUTE}/${ctx?.lead?.id}`,
         method: "PUT",
         data: {
           ...values,

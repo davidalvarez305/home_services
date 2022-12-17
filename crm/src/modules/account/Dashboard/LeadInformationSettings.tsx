@@ -1,19 +1,16 @@
 import { useToast } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useContext, useEffect, useState } from "react";
-import BlueLockIcon from "../../assets/BlueLockIcon";
-import Button from "../../components/Button";
-import CustomSelect from "../../components/CustomSelect";
-import FormInput from "../../components/FormInput";
-import LargeFormSection from "../../components/LargeFormSection";
-import RequestErrorMessage from "../../components/RequestErrorMessage";
-import { LEAD_ROUTE, SERVICE_ROUTE } from "../../constants";
-import { LeadContext } from "../../context/LeadContext";
-import useFetch from "../../hooks/useFetch";
-import {
-  LeadDetails,
-  Service,
-} from "../../types/general";
+import BlueLockIcon from "../../../assets/BlueLockIcon";
+import Button from "../../../components/Button";
+import CustomSelect from "../../../components/CustomSelect";
+import FormInput from "../../../components/FormInput";
+import LargeFormSection from "../../../components/LargeFormSection";
+import RequestErrorMessage from "../../../components/RequestErrorMessage";
+import { LEAD_ROUTE, SERVICE_ROUTE } from "../../../constants";
+import { LeadContext } from "../../../context/LeadContext";
+import useFetch from "../../../hooks/useFetch";
+import { LeadDetails, Service } from "../../../types/general";
 
 interface Props {
   lead: LeadDetails;
@@ -111,14 +108,14 @@ export default function LeadInformationSettings({ lead }: Props) {
                       label={"Zip Code"}
                       type={"text"}
                     />
-                    <div className="space-y-1 sm:w-1/3">
-                      <FormInput
-                        className={inputClass}
-                        name={"budget"}
-                        label={"Budget"}
-                        type={"number"}
-                      />
-                    </div>
+                  </div>
+                  <div className="space-y-1 sm:w-1/3">
+                    <FormInput
+                      className={inputClass}
+                      name={"budget"}
+                      label={"Budget"}
+                      type={"number"}
+                    />
                   </div>
                   <div className="space-y-1 sm:w-1/3">
                     <CustomSelect
