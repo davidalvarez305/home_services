@@ -8,6 +8,7 @@ import SmallXIcon from "../../../assets/SmallXIcon";
 import UserProfileIcon from "../../../assets/UserProfileIcon";
 import Button from "../../../components/Button";
 import CarouselModal from "../../../components/CarouselModal";
+import CustomModal from "../../../components/CustomModal";
 import DeleteButton from "../../../components/DeleteIconButton";
 import FormInput from "../../../components/FormInput";
 import LargeFormSection from "../../../components/LargeFormSection";
@@ -130,7 +131,7 @@ export default function UploadPhotos() {
           )}
         </div>
       {openCarousel && leadPhotos && (
-        <CarouselModal>
+        <CustomModal>
           {leadPhotos.map((photo) => (
             <div key={photo}>
               <div>
@@ -148,7 +149,7 @@ export default function UploadPhotos() {
               />
             </div>
           ))}
-        </CarouselModal>
+        </CustomModal>
       )}
         <RequestErrorMessage {...error} />
       </div>
