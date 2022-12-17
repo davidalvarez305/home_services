@@ -105,9 +105,7 @@ export default function CustomModal({ children }: Props) {
                 <div className="p-5 lg:p-6 grow w-full">
                   <Slider {...settings}>{children}</Slider>
                 </div>
-                <div className="py-4 px-5 lg:px-6 w-full bg-gray-50 text-right space-x-2">
-                  <Button onClick={() => handleNext()}>Next</Button>
-                </div>
+                <div className="px-5 lg:px-6 w-full text-right space-x-2" />
               </Dialog.Panel>
             </Transition.Child>
           </div>

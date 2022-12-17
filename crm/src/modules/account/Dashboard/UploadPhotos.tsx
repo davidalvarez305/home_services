@@ -1,5 +1,4 @@
 import { useToast } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
 import Image from "next/image";
 import { useContext, useState } from "react";
 import GreyInfoIcon from "../../../assets/GreyInfoIcon";
@@ -7,20 +6,13 @@ import RightArrowIcon from "../../../assets/RightArrowIcon";
 import SmallXIcon from "../../../assets/SmallXIcon";
 import UserProfileIcon from "../../../assets/UserProfileIcon";
 import Button from "../../../components/Button";
-import CarouselModal from "../../../components/CarouselModal";
 import CustomModal from "../../../components/CustomModal";
 import DeleteButton from "../../../components/DeleteIconButton";
-import FormInput from "../../../components/FormInput";
 import LargeFormSection from "../../../components/LargeFormSection";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import { LEAD_ROUTE } from "../../../constants";
 import { LeadContext } from "../../../context/LeadContext";
 import useFetch from "../../../hooks/useFetch";
-import { LeadDetails } from "../../../types/general";
-
-interface Props {
-  lead: LeadDetails;
-}
 
 export default function UploadPhotos() {
   const { makeRequest, isLoading, error } = useFetch();
@@ -130,27 +122,29 @@ export default function UploadPhotos() {
             </button>
           )}
         </div>
-      {openCarousel && leadPhotos && (
-        <CustomModal>
-          {leadPhotos.map((photo) => (
-            <div key={photo}>
-              <div>
-                <DeleteButton
-                  aria-label={"delete photo"}
-                  onClick={() => handleDeletePhoto(photo)}
-                  isLoading={isLoading}
+        {openCarousel && leadPhotos && (
+          <CustomModal>
+            {leadPhotos.map((photo) => (
+              <div key={photo}>
+                <Image
+                  src={`https://home-services-app.s3.amazonaws.com/lead-photos/${photo}`}
+                  alt={photo}
+                  width={400}
+                  height={400}
                 />
+                <div className="flex items-center justify-center py-2 px-5 lg:px-6 w-full text-right space-x-2">
+                  <Button
+                    className="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-3 py-2 leading-5 text-sm rounded border-red-700 bg-red-700 text-white hover:text-white hover:bg-red-800 hover:border-red-800 focus:ring focus:ring-red-500 focus:ring-opacity-50 active:bg-red-700"
+                    onClick={() => handleDeletePhoto(photo)}
+                    disabled={isLoading}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </div>
-              <Image
-                src={`https://home-services-app.s3.amazonaws.com/lead-photos/${photo}`}
-                alt={photo}
-                width={400}
-                height={400}
-              />
-            </div>
-          ))}
-        </CustomModal>
-      )}
+            ))}
+          </CustomModal>
+        )}
         <RequestErrorMessage {...error} />
       </div>
     </div>
