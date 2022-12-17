@@ -7,12 +7,12 @@ import SmallXIcon from "../../../assets/SmallXIcon";
 import UserProfileIcon from "../../../assets/UserProfileIcon";
 import Button from "../../../components/Button";
 import CustomModal from "../../../components/CustomModal";
-import DeleteButton from "../../../components/DeleteIconButton";
 import LargeFormSection from "../../../components/LargeFormSection";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import { LEAD_ROUTE } from "../../../constants";
 import { LeadContext } from "../../../context/LeadContext";
 import useFetch from "../../../hooks/useFetch";
+import { LeadDetails, PhotoResponse } from "../../../types/general";
 
 export default function UploadPhotos() {
   const { makeRequest, isLoading, error } = useFetch();
@@ -45,7 +45,12 @@ export default function UploadPhotos() {
         method: "POST",
         data: fd,
       },
-      (_) => {
+      (res) => {
+        const returnedPhotos: PhotoResponse[] = res.data.data;
+        const updatedLead = { ...ctx!.lead, photos: returnedPhotos.map((photo) => photo.image_url).join(',') } as LeadDetails;
+        ctx?.SetLead(updatedLead);
+        setLeadPhotos(returnedPhotos.map((photo) => photo.image_url));
+
         toast({
           title: "Success!",
           description: "Photos have been uploaded.",
@@ -125,7 +130,7 @@ export default function UploadPhotos() {
         {openCarousel && leadPhotos && (
           <CustomModal setIsOpen={setOpenCarousel} isOpen={openCarousel}>
             {leadPhotos.map((photo) => (
-              <div key={photo}>
+              <div className={'cursor-grab'} key={photo}>
                 <Image
                   src={`https://home-services-app.s3.amazonaws.com/lead-photos/${photo}`}
                   alt={photo}

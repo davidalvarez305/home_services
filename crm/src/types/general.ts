@@ -126,7 +126,7 @@ export type CreateLeadInput = {
   state: number;
   country: number;
   budget: number;
-}
+};
 
 export type Lead = {
   id: number;
@@ -162,7 +162,7 @@ export type LeadDetails = {
   service_id: number;
   photos: string | null;
   budget: number;
-}
+};
 
 export type CompanyLead = {
   id: number;
@@ -186,7 +186,7 @@ export type CompanyLead = {
   service_id: number;
   photos: string;
   budget: number;
-}
+};
 
 export type UpdateLeadInformation = {
   street_address_line_1: string;
@@ -195,3 +195,5 @@ export type UpdateLeadInformation = {
   service: string;
   zip_code: string;
 };
+
+export type PhotoResponse = { id: number; image_url: string; lead_id: number };
