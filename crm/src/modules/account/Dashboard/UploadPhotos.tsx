@@ -1,11 +1,14 @@
 import { useToast } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
+import Image from "next/image";
 import { useContext, useState } from "react";
 import GreyInfoIcon from "../../../assets/GreyInfoIcon";
 import RightArrowIcon from "../../../assets/RightArrowIcon";
 import SmallXIcon from "../../../assets/SmallXIcon";
 import UserProfileIcon from "../../../assets/UserProfileIcon";
 import Button from "../../../components/Button";
+import CarouselModal from "../../../components/CarouselModal";
+import DeleteButton from "../../../components/DeleteIconButton";
 import FormInput from "../../../components/FormInput";
 import LargeFormSection from "../../../components/LargeFormSection";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
@@ -23,6 +26,13 @@ export default function UploadPhotos() {
   const [photos, setPhotos] = useState<FileList | null>(null);
   const ctx = useContext(LeadContext);
   const toast = useToast();
+  const [openCarousel, setOpenCarousel] = useState(false);
+  const [leadPhotos, setLeadPhotos] = useState(() => {
+    if (ctx?.lead?.photos) {
+      return ctx.lead.photos.split(",");
+    }
+    return null;
+  });
 
   function handleSubmit() {
     if (!photos) {
@@ -49,6 +59,22 @@ export default function UploadPhotos() {
           status: "success",
           duration: 3000,
           isClosable: true,
+        });
+      }
+    );
+  }
+
+  function handleDeletePhoto(url: string) {
+    makeRequest(
+      {
+        url: `${LEAD_ROUTE}/${ctx?.lead?.id}/photo/${url}`,
+        method: "DELETE",
+      },
+      (res) => {
+        setLeadPhotos(() => {
+          return res.data.data.map(
+            (photo: { image_url: string }) => photo.image_url
+          );
         });
       }
     );
@@ -84,6 +110,7 @@ export default function UploadPhotos() {
             </span>
           </Button>
           <Button
+            onClick={() => setOpenCarousel(true)}
             disabled={isLoading}
             className="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-6 py-2 leading-6 rounded border-gray-200 bg-gray-200 text-gray-700 hover:text-gray-700 hover:bg-gray-300 hover:border-gray-300 focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-gray-200 active:border-gray-200"
           >
@@ -102,6 +129,27 @@ export default function UploadPhotos() {
             </button>
           )}
         </div>
+      {openCarousel && leadPhotos && (
+        <CarouselModal>
+          {leadPhotos.map((photo) => (
+            <div key={photo}>
+              <div>
+                <DeleteButton
+                  aria-label={"delete photo"}
+                  onClick={() => handleDeletePhoto(photo)}
+                  isLoading={isLoading}
+                />
+              </div>
+              <Image
+                src={`https://home-services-app.s3.amazonaws.com/lead-photos/${photo}`}
+                alt={photo}
+                width={400}
+                height={400}
+              />
+            </div>
+          ))}
+        </CarouselModal>
+      )}
         <RequestErrorMessage {...error} />
       </div>
     </div>
