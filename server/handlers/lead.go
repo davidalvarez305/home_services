@@ -285,7 +285,7 @@ func UpdateLead(c *fiber.Ctx) error {
 
 	lead := &actions.LeadDetails{}
 
-	err = lead.GetLeadDetails(leadId)
+	err = lead.GetLeadDetails(l.UUID)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
