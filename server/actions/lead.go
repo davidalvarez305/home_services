@@ -102,7 +102,7 @@ func (leads *Leads) GetLeadsByDates(companyId int, from, to int64) error {
 }
 
 // Grabs userId from session, and then performs select query from the database.
-func (lead *Lead) GetLeadFromSession(c *fiber.Ctx) error {
+func (ld *LeadDetails) GetLeadFromSession(c *fiber.Ctx) error {
 	sess, err := sessions.Sessions.Get(c)
 
 	if err != nil {
@@ -115,7 +115,7 @@ func (lead *Lead) GetLeadFromSession(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = lead.GetLeadDetails(fmt.Sprintf("%v", leadUUID))
+	err = ld.GetLeadDetails(fmt.Sprintf("%v", leadUUID))
 
 	return err
 }

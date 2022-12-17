@@ -74,17 +74,11 @@ func CreateLead(c *fiber.Ctx) error {
 }
 
 func GetLeadFromSession(c *fiber.Ctx) error {
-	lead := &actions.Lead{}
+	lead := &actions.LeadDetails{}
 
 	err := lead.GetLeadFromSession(c)
 
 	if err != nil {
-		return c.Status(404).JSON(fiber.Map{
-			"data": err.Error(),
-		})
-	}
-
-	if lead.Lead == nil {
 		return c.Status(404).JSON(fiber.Map{
 			"data": "Not found.",
 		})
@@ -180,7 +174,7 @@ func CheckLoginCode(c *fiber.Ctx) error {
 
 	ld := &actions.LeadDetails{}
 
-	err = ld.GetLeadDetails(lc.lead.UUID)
+	err = ld.GetLeadDetails(lc.Lead.UUID)
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
