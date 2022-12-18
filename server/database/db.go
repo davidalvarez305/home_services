@@ -37,7 +37,8 @@ func Connect() {
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
-		Logger: logger.Default.LogMode(logger.Info),
+		FullSaveAssociations: true,
+		Logger:               logger.Default.LogMode(logger.Info),
 	})
 
 	if err != nil {

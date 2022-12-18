@@ -1,30 +1,13 @@
 import React, { useContext } from "react";
 import Layout from "../../../components/Layout";
 import { UserContext } from "../../../context/UserContext";
-import { USER_ROUTE } from "../../../constants";
-import useFetch from "../../../hooks/useFetch";
 import useLoginRequired from "../../../hooks/useLoginRequired";
-import { useToast } from "@chakra-ui/react";
 import UserSettingsForm from "./UserSettingsForm";
 import RequestChangePassword from "./RequestChangePassword";
 
 const ProfileSettings: React.FC = () => {
   useLoginRequired();
   const ctx = useContext(UserContext);
-  const { makeRequest, isLoading, error } = useFetch();
-  const toast = useToast();
-
-  function handleDeleteProfile() {
-    makeRequest(
-      {
-        url: USER_ROUTE,
-        method: "DELETE",
-      },
-      (_) => {
-        ctx?.Logout();
-      }
-    );
-  }
 
   return (
     <Layout>
@@ -63,15 +46,6 @@ const ProfileSettings: React.FC = () => {
         {ctx?.user && ctx.user.id > 0 && <RequestChangePassword />}
 
       </div>
-      {error.message &&
-        error.message.length > 0 &&
-        toast({
-          title: "Error deleting account.",
-          description: error.message,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        })}
     </Layout>
   );
 };
