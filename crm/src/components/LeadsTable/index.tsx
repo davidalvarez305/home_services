@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { IconButton, Table, Tbody, Td, Thead, Tr } from "@chakra-ui/react";
+import { IconButton } from "@chakra-ui/react";
 import { CompanyLead } from "../../types/general";
 import { COMPANY_LEADS_HEADERS } from "../../utils/companyLeadsHeaders";
 import { FaPhone } from "react-icons/fa";
 import { BiImages } from "react-icons/bi";
-import CarouselModal from "../CarouselModal";
+import CustomModal from "../CustomModal";
 import Image from "next/image";
+import { v4 as uuidv4 } from "uuid";
 
 interface Props {
   companyLeads: CompanyLead[];
@@ -16,14 +17,9 @@ function RenderImages({ photos }: CompanyLead) {
 
   if (renderModal) {
     return (
-      <CarouselModal
-        onClose={() => {
-          setRenderModal(false);
-        }}
-        isOpen={renderModal}
-      >
+      <CustomModal setIsOpen={setRenderModal} isOpen={renderModal}>
         {photos.split(",").map((photo) => (
-          <React.Fragment key={photo}>
+          <div className={"cursor-grab"} key={photo}>
             <Image
               id={photo}
               src={`https://home-services-app.s3.amazonaws.com/lead-photos/${photo}`}
@@ -31,31 +27,35 @@ function RenderImages({ photos }: CompanyLead) {
               width={400}
               height={400}
             />
-          </React.Fragment>
+          </div>
         ))}
-      </CarouselModal>
+      </CustomModal>
     );
   }
 
   return (
-    <Td>
+    <td key={uuidv4()}>
       <IconButton
         onClick={() => setRenderModal(true)}
         icon={<BiImages />}
         aria-label={"photos"}
       />
-    </Td>
+    </td>
   );
 }
 
 function renderDate({ created_at }: CompanyLead) {
   const t = new Date(0);
-  return <Td>{new Date(t.setUTCSeconds(created_at)).toLocaleDateString()}</Td>;
+  return (
+    <td key={uuidv4()}>
+      {new Date(t.setUTCSeconds(created_at)).toLocaleDateString()}
+    </td>
+  );
 }
 
 function renderPhoneIcon({ phone_number }: CompanyLead) {
   return (
-    <Td>
+    <td key={uuidv4()}>
       <a href={"tel:" + phone_number}>
         <IconButton
           variant={"ghost"}
@@ -64,75 +64,84 @@ function renderPhoneIcon({ phone_number }: CompanyLead) {
           aria-label="phone"
         />
       </a>
-    </Td>
+    </td>
   );
 }
 
-const tableStyles = {
-  table: {
-    borderRadius: "8px",
-    border: "1px solid",
-    borderColor: "var(--cfdbd5outline-onlight2)",
-    borderCollapse: "collapse",
-  },
-  table_row: {
-    margin: "5px",
-    maxHeight: "40px",
-    borderRadius: "8px",
-    border: "1px solid",
-    borderColor: "var(--cfdbd5outline-onlight2)",
-  },
-  td: {
-    maxWidth: "150px",
-  },
-  th: {
-    letterSpacing: "2px",
-  },
-};
-
 const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
   return (
-    <Table sx={{ ...tableStyles["table"] }}>
-      <Thead>
-        <Tr sx={{ ...tableStyles["table_row"] }}>
-          {COMPANY_LEADS_HEADERS.map((header, index) => (
-            <Td sx={{ ...tableStyles["td"] }} key={index}>
-              {header}
-            </Td>
+    <div className="border border-gray-200 rounded overflow-x-auto min-w-full bg-white">
+      <table className="min-w-full text-sm align-middle whitespace-nowrap">
+        <thead>
+          <tr>
+            {COMPANY_LEADS_HEADERS.map((header) => (
+              <th
+                key={uuidv4()}
+                className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
+              >
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+
+        <tbody>
+          {companyLeads.map((lead) => (
+            <tr key={uuidv4()}>
+              {COMPANY_LEADS_HEADERS.map((header) => {
+                switch (header) {
+                  case "name":
+                    return (
+                      <td key={uuidv4()} className="p-3">
+                        <p className="font-medium">
+                          {`${lead.first_name} ${lead.last_name}`}
+                        </p>
+                      </td>
+                    );
+                  case "created_at":
+                    return renderDate(lead);
+                  case "phone":
+                    return renderPhoneIcon(lead);
+                  case "photos":
+                    if (lead.photos.split(",").length > 1) {
+                      return RenderImages(lead);
+                    } else {
+                      return (
+                        <td key={uuidv4()} className="p-3">
+                          <p className="font-medium">No Images</p>
+                        </td>
+                      );
+                    }
+                  case "budget":
+                    return (
+                      <td key={uuidv4()} className="p-3">
+                        <p className="font-medium">
+                          {`$${lead[header as keyof CompanyLead]}`}
+                        </p>
+                      </td>
+                    );
+                  case "location":
+                    return (
+                      <td key={uuidv4()} className="p-3">
+                        <p className="font-medium">{`${lead.city}, ${lead.state}`}</p>
+                        <p className="text-gray-500">{lead.zip_code}</p>
+                      </td>
+                    );
+                  default:
+                    return (
+                      <td key={uuidv4()} className="p-3">
+                        <p className="font-medium">
+                          {lead[header as keyof CompanyLead]}
+                        </p>
+                      </td>
+                    );
+                }
+              })}
+            </tr>
           ))}
-        </Tr>
-      </Thead>
-      <Tbody>
-        {companyLeads.map((lead) => (
-          <Tr sx={{ ...tableStyles["table_row"] }} key={lead.id}>
-            {COMPANY_LEADS_HEADERS.map((header) => {
-              switch (header) {
-                case "created_at":
-                  return renderDate(lead);
-                case "phone_number":
-                  return renderPhoneIcon(lead);
-                case "photos":
-                  return RenderImages(lead);
-                case "budget":
-                  return (
-                    <Td sx={{ ...tableStyles["td"] }}>{`$${
-                      lead[header as keyof CompanyLead]
-                    }`}</Td>
-                  );
-                default:
-                  return (
-                    <React.Fragment key={lead[header as keyof CompanyLead]}>
-                      <Td sx={{ ...tableStyles["td"] }}>
-                        {lead[header as keyof CompanyLead]}
-                      </Td>
-                    </React.Fragment>
-                  );
-              }
-            })}
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
+        </tbody>
+      </table>
+    </div>
   );
 };
 export default LeadsTable;

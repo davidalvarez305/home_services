@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import PrimaryLayout from "../../../components/Layout";
+import Layout from "../../../components/Layout";
 import useLoginRequired from "../../../hooks/useLoginRequired";
 import { UserContext } from "../../../context/UserContext";
 import useFetch from "../../../hooks/useFetch";
@@ -47,14 +47,14 @@ const CompanyLeads: React.FC = () => {
   }
 
   return (
-    <PrimaryLayout screenName="Leads List">
+    <Layout>
       <div className={styles["main-container"]}>
         <div className={styles["table-button"]}>
           <LeadsTable companyLeads={companyLeads} />
           {hasMore && (
             <Button
               className="Dark"
-              isLoading={isLoading}
+              disabled={isLoading}
               onClick={() => handleLoadMore()}
             >
               Load More
@@ -62,7 +62,7 @@ const CompanyLeads: React.FC = () => {
           )}
         </div>
       </div>
-    </PrimaryLayout>
+    </Layout>
   );
 };
 export default CompanyLeads;
