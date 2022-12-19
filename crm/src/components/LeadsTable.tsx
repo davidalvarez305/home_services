@@ -7,6 +7,7 @@ import { BiImages } from "react-icons/bi";
 import CustomModal from "./CustomModal";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
+import formatPhoneNumber from "../utils/formatPhoneNumber";
 
 interface Props {
   companyLeads: CompanyLead[];
@@ -71,7 +72,7 @@ function renderDate({ created_at }: CompanyLead) {
   );
 }
 
-function renderPhoneIcon({ phone_number }: CompanyLead) {
+/* function renderPhoneIcon({ phone_number }: CompanyLead) {
   return (
     <td key={uuidv4()}>
       <a href={"tel:" + phone_number}>
@@ -84,7 +85,7 @@ function renderPhoneIcon({ phone_number }: CompanyLead) {
       </a>
     </td>
   );
-}
+} */
 
 const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
   const [renderModal, setRenderModal] = useState(false);
@@ -113,7 +114,9 @@ const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
                 {`${lead.first_name} ${lead.last_name}`}
               </p>
             </td>
-            {renderPhoneIcon(lead)}
+            <td key={uuidv4()} className="p-3">
+              <p className="font-medium">{formatPhoneNumber(lead.phone_number)}</p>
+            </td>
             <td key={uuidv4()} className="p-3">
               <p className="font-medium">{`${lead.city}, ${lead.state}`}</p>
               <p className="text-gray-500">{lead.zip_code}</p>
