@@ -76,51 +76,53 @@ const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
 
   return (
     <div className="border border-gray-200 rounded overflow-x-auto min-w-full bg-white">
-    <table className="min-w-full text-sm align-middle whitespace-nowrap">
-      <thead>
-        <tr>
-          {COMPANY_LEADS_HEADERS.map((header) => (
-            <th
-              key={uuidv4()}
-              className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
-            >
-              {header}
-            </th>
-          ))}
-        </tr>
-      </thead>
-
-      <tbody>
-        {companyLeads.map((lead) => (
-          <tr key={uuidv4()}>
-            <td key={uuidv4()} className="p-3">
-              <p className="font-medium">
-                {`${lead.first_name} ${lead.last_name}`}
-              </p>
-            </td>
-            <td key={uuidv4()} className="p-3">
-              <p className="font-medium">{formatPhoneNumber(lead.phone_number)}</p>
-            </td>
-            <td key={uuidv4()} className="p-3">
-              <p className="font-medium">{`${lead.city}, ${lead.state}`}</p>
-              <p className="text-gray-500">{lead.zip_code}</p>
-            </td>
-            {renderDate(lead)}
-            <td key={uuidv4()} className="p-3">
-              <p className="font-medium">{lead.service}</p>
-            </td>
-            <RenderImages
-              lead={lead}
-              renderModal={renderModal}
-              setRenderModal={setRenderModal}
-            />
-            <td key={uuidv4()} className="p-3">
-              <p className="font-medium">{`$${lead.budget}`}</p>
-            </td>
+      <table className="min-w-full text-sm align-middle whitespace-nowrap">
+        <thead>
+          <tr>
+            {COMPANY_LEADS_HEADERS.map((header) => (
+              <th
+                key={uuidv4()}
+                className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
+              >
+                {header}
+              </th>
+            ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+
+        <tbody>
+          {companyLeads.map((lead, index) => (
+            <tr className={index % 2 !== 0 ? "bg-gray-50" : ""} key={uuidv4()}>
+              <td key={uuidv4()} className="p-3">
+                <p className="font-medium">
+                  {`${lead.first_name} ${lead.last_name}`}
+                </p>
+              </td>
+              <td key={uuidv4()} className="p-3">
+                <p className="font-medium">
+                  {formatPhoneNumber(lead.phone_number)}
+                </p>
+              </td>
+              <td key={uuidv4()} className="p-3">
+                <p className="font-medium">{`${lead.city}, ${lead.state}`}</p>
+                <p className="text-gray-500">{lead.zip_code}</p>
+              </td>
+              {renderDate(lead)}
+              <td key={uuidv4()} className="p-3">
+                <p className="font-medium">{lead.service}</p>
+              </td>
+              <RenderImages
+                lead={lead}
+                renderModal={renderModal}
+                setRenderModal={setRenderModal}
+              />
+              <td key={uuidv4()} className="p-3">
+                <p className="font-medium">{`$${lead.budget}`}</p>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
