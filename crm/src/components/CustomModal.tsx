@@ -1,8 +1,9 @@
-import { Dispatch, Fragment, SetStateAction } from "react";
+import { Dispatch, Fragment, SetStateAction, useEffect, useMemo } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import Slider from "react-slick";
 import Head from "next/head";
 import SmallCloseIcon from "../assets/SmallCloseIcon";
+import { createPortal } from "react-dom";
 
 type Props = {
   children: React.ReactNode;
@@ -10,7 +11,7 @@ type Props = {
   isOpen: boolean;
 };
 
-export default function CustomModal({ children, setIsOpen, isOpen }:Props) {
+export default function CustomModal({ children, setIsOpen, isOpen }: Props) {
   const settings = {
     dots: true,
     infinite: true,

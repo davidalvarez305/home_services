@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { IconButton } from "@chakra-ui/react";
 import { CompanyLead } from "../types/general";
 import { COMPANY_LEADS_HEADERS } from "../utils/companyLeadsHeaders";
-import { FaPhone } from "react-icons/fa";
 import { BiImages } from "react-icons/bi";
 import CustomModal from "./CustomModal";
 import Image from "next/image";
@@ -26,7 +25,7 @@ function RenderImages({
 }: RenderImagesProps) {
   const photos = lead.photos.split(",");
 
-  if (photos.length < 2) {
+  if (photos.length < 2 && photos[0].length === 0) {
     return (
       <td key={uuidv4()} className="p-3">
         <p className="font-medium">No Images</p>
@@ -38,7 +37,7 @@ function RenderImages({
     return (
       <CustomModal setIsOpen={setRenderModal} isOpen={renderModal}>
         {photos.map((photo) => (
-          <div className={"cursor-grab"} key={photo}>
+          <td className={"cursor-grab"} key={photo}>
             <Image
               id={photo}
               src={`https://home-services-app.s3.amazonaws.com/lead-photos/${photo}`}
@@ -46,7 +45,7 @@ function RenderImages({
               width={400}
               height={400}
             />
-          </div>
+          </td>
         ))}
       </CustomModal>
     );
@@ -71,21 +70,6 @@ function renderDate({ created_at }: CompanyLead) {
     </td>
   );
 }
-
-/* function renderPhoneIcon({ phone_number }: CompanyLead) {
-  return (
-    <td key={uuidv4()}>
-      <a href={"tel:" + phone_number}>
-        <IconButton
-          variant={"ghost"}
-          colorScheme={"green"}
-          icon={<FaPhone />}
-          aria-label="phone"
-        />
-      </a>
-    </td>
-  );
-} */
 
 const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
   const [renderModal, setRenderModal] = useState(false);
