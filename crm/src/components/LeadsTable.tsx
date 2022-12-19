@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 import formatPhoneNumber from "../utils/formatPhoneNumber";
 import ChevronUp from "../assets/ChevronUp";
 import ChevronDown from "../assets/ChevronDown";
+import sortCompanyLeads from "../utils/sortCompanyLeads";
 
 interface Props {
   companyLeads: CompanyLead[];
@@ -77,17 +78,6 @@ const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
   const [renderModal, setRenderModal] = useState(false);
   const [sortedLeads, setSortedLeads] = useState(companyLeads);
 
-  function sortLeads(dir: boolean, header: string) {
-    let sorted = [];
-    if (dir) {
-      sorted = companyLeads.sort((a, b) => a.budget - b.budget);
-    } else {
-      sorted = companyLeads.sort((a, b) => b.budget - a.budget);
-    }
-    console.log(sorted);
-    setSortedLeads(sorted);
-  }
-
   return (
     <div className="border border-gray-200 rounded overflow-x-auto min-w-full bg-white">
       <table className="min-w-full text-sm align-middle whitespace-nowrap">
@@ -99,8 +89,8 @@ const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
                 className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
               >
                 {header}
-                <ChevronUp onClick={() => sortLeads(true, header)} />
-                <ChevronDown onClick={() => sortLeads(false, header)} />
+                <ChevronUp onClick={() => setSortedLeads(sortCompanyLeads(true, header, companyLeads))} />
+                <ChevronDown onClick={() => setSortedLeads(sortCompanyLeads(false, header, companyLeads))} />
               </th>
             ))}
           </tr>
