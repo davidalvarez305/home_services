@@ -10,7 +10,7 @@ import Button from "../../components/Button";
 
 const CompanyLeads: React.FC = () => {
   const ctx = useContext(UserContext);
-  useLoginRequired();
+  // useLoginRequired();
   const { makeRequest, isLoading, error } = useFetch();
   const [companyLeads, setCompanyLeads] = useState<CompanyLead[]>([]);
   const [offsetLimits, setOffsetLimits] = useState({

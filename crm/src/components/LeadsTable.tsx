@@ -7,6 +7,8 @@ import CustomModal from "./CustomModal";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
 import formatPhoneNumber from "../utils/formatPhoneNumber";
+import ChevronUp from "../assets/ChevronUp";
+import ChevronDown from "../assets/ChevronDown";
 
 interface Props {
   companyLeads: CompanyLead[];
@@ -73,6 +75,18 @@ function renderDate({ created_at }: CompanyLead) {
 
 const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
   const [renderModal, setRenderModal] = useState(false);
+  const [sortedLeads, setSortedLeads] = useState(companyLeads);
+
+  function sortLeads(dir: boolean, header: string) {
+    let sorted = [];
+    if (dir) {
+      sorted = companyLeads.sort((a, b) => a.budget - b.budget);
+    } else {
+      sorted = companyLeads.sort((a, b) => b.budget - a.budget);
+    }
+    console.log(sorted);
+    setSortedLeads(sorted);
+  }
 
   return (
     <div className="border border-gray-200 rounded overflow-x-auto min-w-full bg-white">
@@ -85,13 +99,15 @@ const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
                 className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
               >
                 {header}
+                <ChevronUp onClick={() => sortLeads(true, header)} />
+                <ChevronDown onClick={() => sortLeads(false, header)} />
               </th>
             ))}
           </tr>
         </thead>
 
         <tbody>
-          {companyLeads.map((lead, index) => (
+          {sortedLeads.map((lead, index) => (
             <tr className={index % 2 !== 0 ? "bg-gray-50" : ""} key={uuidv4()}>
               <td key={uuidv4()} className="p-3">
                 <p className="font-medium">
