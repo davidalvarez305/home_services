@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import Layout from "../../../components/Layout";
-import useLoginRequired from "../../../hooks/useLoginRequired";
-import { UserContext } from "../../../context/UserContext";
-import useFetch from "../../../hooks/useFetch";
-import { COMPANY_ROUTE } from "../../../constants";
-import { CompanyLead } from "../../../types/general";
-import LeadsTable from "../../../components/LeadsTable";
-import styles from "./CompanyLeads.module.css";
-import Button from "../../../components/Button";
+import Layout from "../../components/Layout";
+import useLoginRequired from "../../hooks/useLoginRequired";
+import { UserContext } from "../../context/UserContext";
+import useFetch from "../../hooks/useFetch";
+import { COMPANY_ROUTE } from "../../constants";
+import { CompanyLead } from "../../types/general";
+import LeadsTable from "../../components/LeadsTable";
+import Button from "../../components/Button";
 
 const CompanyLeads: React.FC = () => {
   const ctx = useContext(UserContext);
@@ -40,7 +39,7 @@ const CompanyLeads: React.FC = () => {
   function handleLoadMore() {
     setOffsetLimits((prev) => {
       return {
-        offset: (prev.offset + prev.limit),
+        offset: prev.offset + prev.limit,
         limit: 8,
       };
     });
@@ -48,19 +47,15 @@ const CompanyLeads: React.FC = () => {
 
   return (
     <Layout>
-      <div className={styles["main-container"]}>
-        <div className={styles["table-button"]}>
-          <LeadsTable companyLeads={companyLeads} />
-          {hasMore && (
-            <Button
-              className="Dark"
-              disabled={isLoading}
-              onClick={() => handleLoadMore()}
-            >
+      <div className="flex flex-col min-w-full justify-center items-center">
+        <LeadsTable companyLeads={companyLeads} />
+        {hasMore && (
+          <div className="py-4">
+            <Button disabled={isLoading} onClick={() => handleLoadMore()}>
               Load More
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
