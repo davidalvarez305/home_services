@@ -12,13 +12,31 @@ interface Props {
   companyLeads: CompanyLead[];
 }
 
-function RenderImages({ photos }: CompanyLead) {
-  const [renderModal, setRenderModal] = useState(false);
+interface RenderImagesProps {
+  lead: CompanyLead;
+  renderModal: boolean;
+  setRenderModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function RenderImages({
+  lead,
+  renderModal,
+  setRenderModal,
+}: RenderImagesProps) {
+  const photos = lead.photos.split(",");
+
+  if (photos.length < 2) {
+    return (
+      <td key={uuidv4()} className="p-3">
+        <p className="font-medium">No Images</p>
+      </td>
+    );
+  }
 
   if (renderModal) {
     return (
       <CustomModal setIsOpen={setRenderModal} isOpen={renderModal}>
-        {photos.split(",").map((photo) => (
+        {photos.map((photo) => (
           <div className={"cursor-grab"} key={photo}>
             <Image
               id={photo}
@@ -69,6 +87,8 @@ function renderPhoneIcon({ phone_number }: CompanyLead) {
 }
 
 const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
+  const [renderModal, setRenderModal] = useState(false);
+
   return (
     <div className="border border-gray-200 rounded overflow-x-auto min-w-full bg-white">
       <table className="min-w-full text-sm align-middle whitespace-nowrap">
@@ -88,55 +108,28 @@ const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
         <tbody>
           {companyLeads.map((lead) => (
             <tr key={uuidv4()}>
-              {COMPANY_LEADS_HEADERS.map((header) => {
-                switch (header) {
-                  case "name":
-                    return (
-                      <td key={uuidv4()} className="p-3">
-                        <p className="font-medium">
-                          {`${lead.first_name} ${lead.last_name}`}
-                        </p>
-                      </td>
-                    );
-                  case "created_at":
-                    return renderDate(lead);
-                  case "phone":
-                    return renderPhoneIcon(lead);
-                  case "photos":
-                    if (lead.photos.split(",").length > 1) {
-                      return RenderImages(lead);
-                    } else {
-                      return (
-                        <td key={uuidv4()} className="p-3">
-                          <p className="font-medium">No Images</p>
-                        </td>
-                      );
-                    }
-                  case "budget":
-                    return (
-                      <td key={uuidv4()} className="p-3">
-                        <p className="font-medium">
-                          {`$${lead[header as keyof CompanyLead]}`}
-                        </p>
-                      </td>
-                    );
-                  case "location":
-                    return (
-                      <td key={uuidv4()} className="p-3">
-                        <p className="font-medium">{`${lead.city}, ${lead.state}`}</p>
-                        <p className="text-gray-500">{lead.zip_code}</p>
-                      </td>
-                    );
-                  default:
-                    return (
-                      <td key={uuidv4()} className="p-3">
-                        <p className="font-medium">
-                          {lead[header as keyof CompanyLead]}
-                        </p>
-                      </td>
-                    );
-                }
-              })}
+              <td key={uuidv4()} className="p-3">
+                <p className="font-medium">
+                  {`${lead.first_name} ${lead.last_name}`}
+                </p>
+              </td>
+              {renderPhoneIcon(lead)}
+              <td key={uuidv4()} className="p-3">
+                <p className="font-medium">{`${lead.city}, ${lead.state}`}</p>
+                <p className="text-gray-500">{lead.zip_code}</p>
+              </td>
+              {renderDate(lead)}
+              <td key={uuidv4()} className="p-3">
+                <p className="font-medium">{lead.service}</p>
+              </td>
+              <RenderImages
+                lead={lead}
+                renderModal={renderModal}
+                setRenderModal={setRenderModal}
+              />
+              <td key={uuidv4()} className="p-3">
+                <p className="font-medium">{`$${lead.budget}`}</p>
+              </td>
             </tr>
           ))}
         </tbody>
