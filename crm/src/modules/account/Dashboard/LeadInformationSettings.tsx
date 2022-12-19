@@ -21,7 +21,7 @@ export default function LeadInformationSettings({ lead }: Props) {
   const ctx = useContext(LeadContext);
   const toast = useToast();
   const [services, setServices] = useState<Service[]>([]);
-  const [defaultService, setDefaultService] = useState<Service>({
+  const [selectedValue, setSelectedValue] = useState<Service>({
     id: 0,
     service: "",
   });
@@ -33,7 +33,7 @@ export default function LeadInformationSettings({ lead }: Props) {
       for (let i = 0; i < res.data.data.length; i++) {
         const service = res.data.data[i] as Service;
         if (service.id === lead.service_id) {
-          setDefaultService(service);
+          setSelectedValue(service);
           break;
         }
       }
@@ -119,7 +119,7 @@ export default function LeadInformationSettings({ lead }: Props) {
                   </div>
                   <div className="space-y-1 sm:w-1/3">
                     <CustomSelect
-                      defaultValue={defaultService.id}
+                      value={selectedValue.id}
                       name={"service"}
                       label={"Service"}
                     >
