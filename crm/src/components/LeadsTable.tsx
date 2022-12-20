@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IconButton } from "@chakra-ui/react";
 import { CompanyLead } from "../types/general";
 import { COMPANY_LEADS_HEADERS } from "../utils/companyLeadsHeaders";
@@ -76,7 +76,11 @@ function renderDate({ created_at }: CompanyLead) {
 
 const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
   const [renderModal, setRenderModal] = useState(false);
-  const [sortedLeads, setSortedLeads] = useState(companyLeads);
+  const [sortedLeads, setSortedLeads] = useState<CompanyLead[]>([]);
+
+  useEffect(() => {
+    setSortedLeads(companyLeads);
+  }, [companyLeads]);
 
   return (
     <div className="border border-gray-200 rounded overflow-x-auto min-w-full bg-white">
@@ -88,9 +92,11 @@ const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
                 key={uuidv4()}
                 className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
               >
+                <div className="flex justify-center items-center gap-1">
                 {header}
-                <ChevronUp onClick={() => setSortedLeads(sortCompanyLeads(true, header, companyLeads))} />
-                <ChevronDown onClick={() => setSortedLeads(sortCompanyLeads(false, header, companyLeads))} />
+                <ChevronUp className="border-solid border border-gray-200 h-5 cursor-pointer" onClick={() => setSortedLeads([...sortCompanyLeads(true, header, companyLeads)])} />
+                <ChevronDown className="border-solid border border-gray-200 h-5 cursor-pointer" onClick={() => setSortedLeads([...sortCompanyLeads(false, header, companyLeads)])} />
+                </div>
               </th>
             ))}
           </tr>

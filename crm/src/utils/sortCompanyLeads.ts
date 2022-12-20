@@ -39,9 +39,12 @@ export default function sortCompanyLeads(
         sorted = companyLeads.sort((a, b) => sortCompare(a.service, b.service));
         break;
       case "photos":
-        sorted = companyLeads.sort((a, b) =>
-          sortCompare(a.photos.split(",").length, b.photos.split(",").length)
-        );
+        sorted = companyLeads.sort((a, b) => {
+          // The reason to do it like this is because all photos are UUID of equal length.
+          // Therefore because the length will be consistent to the amount of photos
+          // We can use string length as a proxy for figuring out how many photos a user has.
+          return sortCompare(a.photos.length, b.photos.length);
+        });
         break;
     }
   } else {
@@ -74,10 +77,12 @@ export default function sortCompanyLeads(
         break;
       case "photos":
         sorted = companyLeads.sort((a, b) =>
-          sortCompare(b.photos.split(",").length, a.photos.split(",").length)
+          sortCompare(b.photos.length, a.photos.length)
         );
         break;
     }
   }
+
+  console.log("sorted: ", sorted);
   return sorted;
 }
