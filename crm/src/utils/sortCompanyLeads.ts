@@ -18,7 +18,7 @@ export default function sortCompanyLeads(
         );
         break;
       case "budget":
-        sorted = companyLeads.sort((a, b) => sortCompare(a.budget, b.budget));
+        sorted = companyLeads.sort((a, b) => a.budget - b.budget);
         break;
       case "location":
         sorted = companyLeads.sort((a, b) =>
@@ -55,7 +55,7 @@ export default function sortCompanyLeads(
         );
         break;
       case "budget":
-        sorted = companyLeads.sort((a, b) => sortCompare(b.budget, a.budget));
+        sorted = companyLeads.sort((a, b) => b.budget - a.budget);
         break;
       case "location":
         sorted = companyLeads.sort((a, b) =>
