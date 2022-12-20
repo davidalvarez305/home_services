@@ -83,6 +83,5 @@ export default function sortCompanyLeads(
     }
   }
 
-  console.log("sorted: ", sorted);
   return sorted;
 }

@@ -6,7 +6,7 @@ import RightArrowIcon from "../../../assets/RightArrowIcon";
 import SmallXIcon from "../../../assets/SmallXIcon";
 import UserProfileIcon from "../../../assets/UserProfileIcon";
 import Button from "../../../components/Button";
-import CustomModal from "../../../components/CustomModal";
+import CustomModal from "../../../components/ImageSliderModal";
 import LargeFormSection from "../../../components/LargeFormSection";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import { LEAD_ROUTE } from "../../../constants";

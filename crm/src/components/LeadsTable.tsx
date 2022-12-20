@@ -3,7 +3,7 @@ import { IconButton } from "@chakra-ui/react";
 import { CompanyLead } from "../types/general";
 import { COMPANY_LEADS_HEADERS } from "../utils/companyLeadsHeaders";
 import { BiImages } from "react-icons/bi";
-import CustomModal from "./CustomModal";
+import CustomModal from "./ImageSliderModal";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
 import formatPhoneNumber from "../utils/formatPhoneNumber";
