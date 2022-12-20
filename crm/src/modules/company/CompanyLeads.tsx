@@ -10,26 +10,10 @@ import Button from "../../components/Button";
 import { Form, Formik } from "formik";
 import FormInput from "../../components/FormInput";
 import Modal from "../../components/Modal";
-
-function RenderFilterInput() {
-  return (
-    <div className="flex justify-end w-full my-2 p-2">
-      <Formik
-        initialValues={{ value: "" }}
-        onSubmit={(values) => console.log(values)}
-      >
-        <Form>
-          <FormInput
-            className="w-full block border border-gray-200 rounded px-3 py-2 leading-5 text-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-            name={"value"}
-            label={""}
-            placeholder={"Input..."}
-          />
-        </Form>
-      </Formik>
-    </div>
-  );
-}
+import CustomSelect from "../../components/CustomSelect";
+import { format } from "date-fns";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
 
 const CompanyLeads: React.FC = () => {
   const ctx = useContext(UserContext);
@@ -42,6 +26,7 @@ const CompanyLeads: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(false);
   const [toggleModal, setToggleModal] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
 
   useEffect(() => {
     if (ctx?.user.company_id) {
@@ -88,7 +73,33 @@ const CompanyLeads: React.FC = () => {
           setIsOpen={setToggleModal}
           modalTitle={"Filters"}
         >
-          <RenderFilterInput />
+          <div className="w-full grid grid-cols-2 gap-1">
+            <Formik
+              initialValues={{ value: "", service: "" }}
+              onSubmit={(values) => console.log(new URLSearchParams(values).toString())}
+            >
+              <Form>
+                <CustomSelect name={"service"} label={"Service"}>
+                  <option>Home Remodeling</option>
+                </CustomSelect>
+                <DayPicker
+                  mode="single"
+                  selected={startDate}
+                  onSelect={(date) => {
+                    console.log(date?.getTime());
+                    setStartDate(date!)
+                  }}
+                />
+                <FormInput
+                  className="w-full block border border-gray-200 rounded px-3 py-2 leading-5 text-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                  name={"value"}
+                  label={"Zip Code"}
+                  placeholder={"Input..."}
+                />
+                <Button type={"submit"}>Fetch</Button>
+              </Form>
+            </Formik>
+          </div>
         </Modal>
       )}
     </Layout>
