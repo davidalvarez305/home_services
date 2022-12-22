@@ -27,7 +27,8 @@ const CompanyLeads: React.FC = () => {
       limit: String(8),
       start_date: String(THIRTY_DAYS_AGO.getTime()),
       end_date: String(TODAY.getTime()),
-      service_id: String(''),
+      service_id: String(null),
+      zip_code: String(null),
     });
   });
   const [hasMore, setHasMore] = useState(false);

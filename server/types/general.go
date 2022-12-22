@@ -66,10 +66,10 @@ type UpdateLeadInput struct {
 }
 
 type CompanyLeadsQS struct {
-	ZipCode   string `query:"zip_code"`
-	Service   int    `query:"service_id"`
-	StartDate int    `query:"start_date"`
-	EndDate   int    `query:"end_date"`
-	Offset    int    `query:"offset"`
-	Limit     int    `query:"limit"`
+	ZipCode   any `query:"zip_code"`
+	Service   any `query:"service_id"`
+	StartDate int `query:"start_date"`
+	EndDate   int `query:"end_date"`
+	Offset    int `query:"offset"`
+	Limit     int `query:"limit"`
 }

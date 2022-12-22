@@ -126,14 +126,6 @@ func (c *Company) CheckCompanyOwners(companyId int) (bool, error) {
 
 func (cl *CompanyLeads) GetCompanyLeads(companyId string, qs types.CompanyLeadsQS) error {
 
-	var serviceId any
-
-	if qs.Service == 0 {
-		serviceId = nil
-	} else {
-		serviceId = qs.Service
-	}
-
 	sql := `
 	SELECT l.email, l.company_id, l.first_name, l.last_name, l.phone_number, l.budget, l.created_at, 
 	a.street_address_line1, a.street_address_line2, a.street_address_line3, a.zip_code,
@@ -158,13 +150,14 @@ func (cl *CompanyLeads) GetCompanyLeads(companyId string, qs types.CompanyLeadsQ
 	WHERE c.id = ?
 	AND l.created_at BETWEEN ? AND ?
 	AND l.service_id = COALESCE(?, l.service_id)
+	AND a.zip_code = COALESCE(?, a.zip_code)
 	GROUP BY c.id, a.street_address_line1, a.street_address_line2, a.street_address_line3, ser.service, ser.id,
 	city.city, city.id, s.id, s.state, l.email, l.company_id, l.first_name, l.last_name,
 	l.phone_number, a.zip_code, l.created_at, l.budget, ctry.country, ctry.id
 	OFFSET ?
 	LIMIT ?;`
 
-	return database.DB.Raw(sql, companyId, qs.StartDate, qs.EndDate, serviceId, qs.Offset, qs.Limit).Scan(&cl).Error
+	return database.DB.Raw(sql, companyId, qs.StartDate, qs.EndDate, qs.Service, qs.ZipCode, qs.Offset, qs.Limit).Scan(&cl).Error
 }
 
 // Get Company from DB.
