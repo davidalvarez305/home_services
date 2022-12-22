@@ -94,12 +94,15 @@ const CompanyLeads: React.FC = () => {
       offset: String(0),
       limit: String(8),
     });
+    
+    setQuerystring(qs);
 
     makeRequest(
       {
         url: `${COMPANY_ROUTE}/${ctx?.user.company_id}/leads/?` + qs.toString(),
       },
       (res) => {
+        setHasMore(() => res.data.data.length === 8);
         setCompanyLeads([...res.data.data]);
 
         setToggleModal(false);
