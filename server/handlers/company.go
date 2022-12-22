@@ -719,22 +719,6 @@ func GetCompanyLeads(c *fiber.Ctx) error {
 		})
 	}
 
-	offset := c.Query("offset")
-
-	if len(offset) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Offset not found in URL querystring.",
-		})
-	}
-
-	limit := c.Query("limit")
-
-	if len(limit) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Limit not found in URL querystring.",
-		})
-	}
-
 	err = leads.GetCompanyLeads(companyId, qs)
 
 	if err != nil {
