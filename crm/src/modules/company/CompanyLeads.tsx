@@ -66,11 +66,11 @@ const CompanyLeads: React.FC = () => {
 
   function handleLoadMore() {
     setQuerystring((prev) => {
-      return {
-        ...prev,
-        offset: parseInt(prev.get("offset")!) + parseInt(prev.get("limit")!),
-        limit: String(8),
+      const current = {
+        ...Object.fromEntries(prev),
+        offset: String(parseInt(prev.get("offset")!) + parseInt(prev.get("limit")!)),
       };
+      return new URLSearchParams(current);
     });
   }
 

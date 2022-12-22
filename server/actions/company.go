@@ -157,7 +157,7 @@ func (cl *CompanyLeads) GetCompanyLeads(companyId string, qs types.CompanyLeadsQ
 	OFFSET ?
 	LIMIT ?;`
 
-	return database.DB.Raw(sql, companyId, qs.StartDate, qs.EndDate, qs.Service, qs.ZipCode, qs.Offset, qs.Limit).Scan(&cl).Error
+	return database.DB.Raw(sql, companyId, qs.StartDate/1000, qs.EndDate/1000, qs.Service, qs.ZipCode, qs.Offset, qs.Limit).Scan(&cl).Error
 }
 
 // Get Company from DB.
