@@ -64,3 +64,12 @@ type UpdateLeadInput struct {
 	StreetAddressLine3 string `json:"street_address_line_3"`
 	Budget             int    `json:"budget"`
 }
+
+type CompanyLeadsQS struct {
+	ZipCode   string `json:"zip_code"`
+	Service   string `json:"service_id"`
+	StartDate string `json:"start_date"`
+	EndDate   string `json:"end_date"`
+	Offset    string `json:"offset"`
+	Limit     string `json:"limit"`
+}

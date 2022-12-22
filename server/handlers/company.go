@@ -701,9 +701,15 @@ func DeleteCompanyLocation(c *fiber.Ctx) error {
 func GetCompanyLeads(c *fiber.Ctx) error {
 	leads := &actions.CompanyLeads{}
 
-	// This will be a query parser, I can then use the query struct as parameters in SQL
-	// For ex. how many days from today, offset, limit, etc...
-	// On frontend, this will be a new URLSearchParams() class
+	var qs types.CompanyLeadsQS
+
+	err := c.QueryParser(&qs)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to parse querystring from request.",
+		})
+	}
 
 	companyId := c.Params("id")
 
@@ -729,7 +735,7 @@ func GetCompanyLeads(c *fiber.Ctx) error {
 		})
 	}
 
-	err := leads.GetCompanyLeads(companyId, offset, limit)
+	err = leads.GetCompanyLeads(companyId, qs)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

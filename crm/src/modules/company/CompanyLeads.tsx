@@ -13,14 +13,22 @@ import Modal from "../../components/Modal";
 import CustomSelect from "../../components/CustomSelect";
 import DateRangePickerComponent from "../../components/DateRangePicker";
 
+const THIRTY_DAYS_AGO = new Date(new Date().setDate(new Date().getDate() - 30));
+const TODAY = new Date();
+
 const CompanyLeads: React.FC = () => {
   const ctx = useContext(UserContext);
   useLoginRequired();
   const { makeRequest, isLoading, error } = useFetch();
   const [companyLeads, setCompanyLeads] = useState<CompanyLead[]>([]);
-  const [offsetLimits, setOffsetLimits] = useState({
-    offset: 0,
-    limit: 8,
+  const [querystring, setQuerystring] = useState(() => {
+    return new URLSearchParams({
+      offset: String(0),
+      limit: String(8),
+      start_date: String(THIRTY_DAYS_AGO.getTime()),
+      end_date: String(TODAY.getTime()),
+      service_id: String(''),
+    });
   });
   const [hasMore, setHasMore] = useState(false);
   const [toggleModal, setToggleModal] = useState(false);
@@ -39,13 +47,12 @@ const CompanyLeads: React.FC = () => {
 
   useEffect(() => {
     if (ctx?.user.company_id) {
-      const qs = new URLSearchParams({
-        offset: String(offsetLimits.offset),
-        limit: String(offsetLimits.limit),
-      });
-
       makeRequest(
-        { url: `${COMPANY_ROUTE}/${ctx?.user.company_id}/leads/?` + qs },
+        {
+          url:
+            `${COMPANY_ROUTE}/${ctx?.user.company_id}/leads/?` +
+            querystring.toString(),
+        },
         (res) => {
           setHasMore(() => res.data.data.length === 8);
           setCompanyLeads((prev) => [...prev, ...res.data.data]);
@@ -54,13 +61,14 @@ const CompanyLeads: React.FC = () => {
     }
 
     fetchServices();
-  }, [makeRequest, ctx?.user.company_id, offsetLimits, fetchServices]);
+  }, [makeRequest, ctx?.user.company_id, querystring, fetchServices]);
 
   function handleLoadMore() {
-    setOffsetLimits((prev) => {
+    setQuerystring((prev) => {
       return {
-        offset: prev.offset + prev.limit,
-        limit: 8,
+        ...prev,
+        offset: parseInt(prev.get("offset")!) + parseInt(prev.get("limit")!),
+        limit: String(8),
       };
     });
   }
@@ -86,9 +94,20 @@ const CompanyLeads: React.FC = () => {
         >
           <div className="w-full">
             <Formik
-              initialValues={{ value: "", service: "", start_date: "" }}
+              initialValues={{
+                zip_code: "",
+                service: "",
+                start_date: "",
+                end_date: "",
+              }}
               onSubmit={(values) =>
-                console.log(new URLSearchParams(values).toString())
+                console.log(
+                  new URLSearchParams({
+                    ...values,
+                    offset: querystring.get("offset")!,
+                    limit: querystring.get("limit")!,
+                  }).toString()
+                )
               }
             >
               <Form>
@@ -104,14 +123,12 @@ const CompanyLeads: React.FC = () => {
                     <DateRangePickerComponent
                       name={"start_date"}
                       label={"Start Date"}
-                      defaultDate={
-                        new Date(new Date().setDate(new Date().getDate() - 30))
-                      }
+                      defaultDate={THIRTY_DAYS_AGO}
                     />
                     <DateRangePickerComponent
                       name={"end_date"}
                       label={"End Date"}
-                      defaultDate={new Date()}
+                      defaultDate={TODAY}
                     />
                   </div>
                   <FormInput
