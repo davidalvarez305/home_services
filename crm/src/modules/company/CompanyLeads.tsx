@@ -68,16 +68,51 @@ const CompanyLeads: React.FC = () => {
     setQuerystring((prev) => {
       const current = {
         ...Object.fromEntries(prev),
-        offset: String(parseInt(prev.get("offset")!) + parseInt(prev.get("limit")!)),
+        offset: String(
+          parseInt(prev.get("offset")!) + parseInt(prev.get("limit")!)
+        ),
       };
       return new URLSearchParams(current);
     });
   }
 
+  function handleFetchFilters(values: {
+    zip_code: string;
+    service_id: string;
+    start_date: string;
+    end_date: string;
+  }) {
+    const zip_code =
+      values.zip_code.length > 0 ? values.zip_code : String(null);
+    const service_id =
+      values.service_id.length > 0 ? values.service_id : String(null);
+
+    const qs = new URLSearchParams({
+      ...values,
+      zip_code,
+      service_id,
+      offset: String(0),
+      limit: String(8),
+    });
+
+    makeRequest(
+      {
+        url: `${COMPANY_ROUTE}/${ctx?.user.company_id}/leads` + qs.toString(),
+      },
+      (res) => {
+        setCompanyLeads([...res.data.data]);
+      }
+    );
+
+    setToggleModal(false);
+  }
+
   return (
     <Layout>
       <div className="flex flex-col min-w-full justify-center items-center">
-        <Button onClick={() => setToggleModal(true)}>Filters</Button>
+        <div className="my-2">
+          <Button onClick={() => setToggleModal(true)}>Filters</Button>
+        </div>
         <LeadsTable companyLeads={companyLeads} />
         {hasMore && (
           <div className="py-4">
@@ -97,23 +132,15 @@ const CompanyLeads: React.FC = () => {
             <Formik
               initialValues={{
                 zip_code: "",
-                service: "",
+                service_id: "",
                 start_date: "",
                 end_date: "",
               }}
-              onSubmit={(values) =>
-                console.log(
-                  new URLSearchParams({
-                    ...values,
-                    offset: querystring.get("offset")!,
-                    limit: querystring.get("limit")!,
-                  }).toString()
-                )
-              }
+              onSubmit={handleFetchFilters}
             >
               <Form>
                 <div className="flex flex-col justify-center items-center gap-4">
-                  <CustomSelect name={"service"} label={"Service"}>
+                  <CustomSelect name={"service_id"} label={"Service"}>
                     {services.map((service) => (
                       <option key={service.id} value={service.id}>
                         {service.service}
