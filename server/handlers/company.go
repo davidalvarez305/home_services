@@ -719,6 +719,17 @@ func GetCompanyLeads(c *fiber.Ctx) error {
 		})
 	}
 
+	service_id := c.Query("service_id")
+	zip_code := c.Query("zip_code")
+
+	if service_id != "null" {
+		qs.Service = service_id
+	}
+
+	if zip_code != "null" {
+		qs.ZipCode = zip_code
+	}
+
 	err = leads.GetCompanyLeads(companyId, qs)
 
 	if err != nil {
