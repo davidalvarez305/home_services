@@ -141,6 +141,7 @@ const CompanyLeads: React.FC = () => {
               <Form>
                 <div className="flex flex-col justify-center items-center gap-4">
                   <CustomSelect name={"service_id"} label={"Service"}>
+                    <option value=""></option>
                     {services.map((service) => (
                       <option key={service.id} value={service.id}>
                         {service.service}
