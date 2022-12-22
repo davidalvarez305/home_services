@@ -97,14 +97,14 @@ const CompanyLeads: React.FC = () => {
 
     makeRequest(
       {
-        url: `${COMPANY_ROUTE}/${ctx?.user.company_id}/leads` + qs.toString(),
+        url: `${COMPANY_ROUTE}/${ctx?.user.company_id}/leads/?` + qs.toString(),
       },
       (res) => {
         setCompanyLeads([...res.data.data]);
+
+        setToggleModal(false);
       }
     );
-
-    setToggleModal(false);
   }
 
   return (
