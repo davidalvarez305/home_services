@@ -161,7 +161,7 @@ const CompanyLeads: React.FC = () => {
                   </div>
                   <FormInput
                     className="w-full block border border-gray-200 rounded px-3 py-2 leading-5 text-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                    name={"value"}
+                    name={"zip_code"}
                     label={"Zip Code"}
                     placeholder={"Input..."}
                   />
