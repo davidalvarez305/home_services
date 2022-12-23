@@ -15,7 +15,7 @@ interface Props {
   lead: LeadDetails;
 }
 
-export default function UserAccountSettings({ lead }: Props) {
+export default function LeadAccountSettings({ lead }: Props) {
   const { makeRequest, isLoading, error } = useFetch();
   const ctx = useContext(LeadContext);
   const toast = useToast();

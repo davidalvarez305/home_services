@@ -4,7 +4,7 @@ import useFetch from "../../../hooks/useFetch";
 import { LEAD_ROUTE } from "../../../constants";
 import { LeadContext } from "../../../context/LeadContext";
 import Layout from "../../../components/Layout";
-import UserAccountSettings from "./UserAccountSettings";
+import UserAccountSettings from "./LeadAccountSettings";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 import LeadInformationSettings from "./LeadInformationSettings";
 import UploadPhotos from "./UploadPhotos";
