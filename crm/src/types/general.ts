@@ -39,6 +39,7 @@ export type Role = {
 };
 
 export type CreateCompanyInput = {
+  id?: number;
   name: string;
   logo: string;
   street_address_line_1: string;
