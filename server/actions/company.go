@@ -109,7 +109,7 @@ func (c *Company) DeleteCompany(companyId string) error {
 
 // Get Company from DB.
 func (c *Company) GetCompanyByID(id string) error {
-	return database.DB.Where("id = ?", id).First(&c).Error
+	return database.DB.Where("id = ?", id).Preload("Address").First(&c).Error
 }
 
 // Get Company from DB.

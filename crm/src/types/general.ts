@@ -17,17 +17,6 @@ export type User = {
   last_name: string;
 };
 
-export type Company = {
-  id: number;
-  name: string;
-  logo: string;
-  stripe_customer_id: string;
-  created_at: number;
-  updated_at: number;
-  account_status_id: number;
-  address_id: number;
-};
-
 export type AccountStatus = {
   id: number;
   status: string;
@@ -49,6 +38,30 @@ export type CreateCompanyInput = {
   state: number;
   zip_code: number;
 };
+
+export type Address = {
+  id: number;
+  street_address_line_1: string;
+  street_address_line_2: string;
+  street_address_line_3: string;
+  city_id: number;
+  state_id: number;
+  zip_code: string;
+  country_id: number;
+};
+
+export type Company = {
+  id: number;
+  name: string;
+  logo: string;
+  stripe_customer_id: string;
+  price_agreement: number;
+  created_at: number;
+  updated_at: number;
+  account_status_id: number;
+  address_id: number;
+  address: Address;
+}
 
 export type CompanyServicesByArea = {
   id: number;

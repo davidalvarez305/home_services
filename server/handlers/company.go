@@ -742,3 +742,27 @@ func GetCompanyLeads(c *fiber.Ctx) error {
 		"data": leads,
 	})
 }
+
+func GetCompany(c *fiber.Ctx) error {
+	companyId := c.Params("id")
+
+	if companyId == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "No company found in params.",
+		})
+	}
+
+	company := &actions.Company{}
+
+	err := company.GetCompanyByID(companyId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to fetch company details.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": company,
+	})
+}

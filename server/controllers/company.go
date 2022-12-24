@@ -11,6 +11,7 @@ func Company(router fiber.Router) {
 
 	// Manage Company
 	company.Post("/", handlers.CreateCompany)
+	company.Get("/:id", handlers.GetCompany)
 	company.Put("/:id", handlers.UpdateCompany)
 	company.Delete("/:id", handlers.DeleteCompany)
 
