@@ -36,7 +36,7 @@ export type CreateCompanyInput = {
   street_address_line_3: string;
   city: number;
   state: number;
-  zip_code: number;
+  zip_code: string;
 };
 
 export type Address = {

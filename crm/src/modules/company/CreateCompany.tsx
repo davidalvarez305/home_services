@@ -27,7 +27,7 @@ export default function CreateCompany() {
       values.street_address_line_1 == "" ||
       values.city === 0 ||
       values.state === 0 ||
-      values.zip_code === 0
+      values.zip_code === ""
     ) {
       return;
     }
@@ -65,7 +65,7 @@ export default function CreateCompany() {
                   street_address_line_3: "",
                   city: 0,
                   state: 0,
-                  zip_code: 0,
+                  zip_code: "",
                 }}
                 onSubmit={handleSubmit}
               >
