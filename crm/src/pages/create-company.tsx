@@ -1,3 +1,3 @@
-import CreateCompany from "../modules/company/CreateCompany";
+import CreateEditCompany from "../modules/company/CreateEditCompany";
 
-export default CreateCompany;
+export default CreateEditCompany;
