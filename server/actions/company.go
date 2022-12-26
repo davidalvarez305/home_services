@@ -77,7 +77,7 @@ func (c *Company) CreateCompany(input *types.CreateCompanyInput, user *User) err
 }
 
 // Update and return company model.
-func (c *Company) UpdateCompany(companyId string, input models.Company) error {
+func (c *Company) UpdateCompany(companyId string, input *types.CreateCompanyInput) error {
 
 	err := c.GetCompanyByID(companyId)
 
@@ -86,9 +86,12 @@ func (c *Company) UpdateCompany(companyId string, input models.Company) error {
 	}
 
 	// Update fields that are allowed to be updated
-	c.AccountStatusID = input.AccountStatusID
 	c.Logo = input.Logo
 	c.Name = input.Name
+	c.Address.StreetAddressLine1 = input.StreetAddressLine1
+	c.Address.StreetAddressLine2 = input.StreetAddressLine2
+	c.Address.StreetAddressLine3 = input.StreetAddressLine3
+	c.Address.ZipCode = input.ZipCode
 	c.UpdatedAt = time.Now().Unix()
 
 	return database.DB.Save(&c).First(&c).Error

@@ -235,7 +235,7 @@ func AddNewUserToCompany(c *fiber.Ctx) error {
 }
 
 func UpdateCompany(c *fiber.Ctx) error {
-	input := &actions.Company{}
+	input := &types.CreateCompanyInput{}
 	company := &actions.Company{}
 	user := &actions.User{}
 
@@ -270,7 +270,7 @@ func UpdateCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err = company.UpdateCompany(companyId, *input.Company)
+	err = company.UpdateCompany(companyId, input)
 
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{
