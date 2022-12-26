@@ -48,8 +48,8 @@ export default function EditCompany() {
 
     makeRequest(
       {
-        url: COMPANY_ROUTE,
-        method: "POST",
+        url: COMPANY_ROUTE + "/" + company?.id,
+        method: "PUT",
         data: {
           ...values,
           id: company?.id,
