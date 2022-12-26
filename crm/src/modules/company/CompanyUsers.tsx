@@ -15,6 +15,9 @@ import { User, Role, AccountStatus } from "../../types/general";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
 import { v4 as uuidv4 } from "uuid";
 import CustomSelect from "../../components/CustomSelect";
+import Button from "../../components/Button";
+import RequestErrorMessage from "../../components/RequestErrorMessage";
+import CustomModal from "../../components/ImageSliderModal";
 
 export default function CompanyUsers() {
   const ctx = useContext(UserContext);
@@ -23,6 +26,8 @@ export default function CompanyUsers() {
   const [accountStatus, setAccountStatus] = useState<AccountStatus[]>([]);
   const { makeRequest, isLoading, error } = useFetch();
   const toast = useToast();
+  const [inviteModal, setInviteModal] = useState(false);
+  const [inviteUserEmail, setInviteUserEmail] = useState("");
 
   const fetchAccountStatus = useCallback(() => {
     makeRequest(
@@ -161,63 +166,92 @@ export default function CompanyUsers() {
                         </tr>
                       </thead>
                       <tbody>
-                        {users.map((user, index) => {
-                          return (
-                            <React.Fragment key={user.username}>
-                              <tr
-                                className={index % 2 !== 0 ? "bg-gray-50" : undefined}
-                                key={uuidv4()}
-                              >
-                                <td className="p-3">
-                                  <div>{`${user.first_name} ${user.last_name}`}</div>
-                                </td>
-                                <td className="flex justify-center items-center gap-4 p-3">
-                                  <CustomSelect
-                                    className={selectClass}
-                                    name={`users.${index}.role_id`}
-                                    label={"Role"}
-                                  >
-                                    <option value=""></option>
-                                    {roles.map(({ id, role }) => (
-                                      <option key={id} value={id}>
-                                        {capitalizeFirstLetter(role)}
-                                      </option>
-                                    ))}
-                                  </CustomSelect>
-                                  <CustomSelect
-                                    className={selectClass}
-                                    name={`users.${index}.account_status_id`}
-                                    label={"Account Status"}
-                                  >
-                                    <option value=""></option>
-                                    {accountStatus.map(({ id, status }) => (
-                                      <option key={id} value={id}>
-                                        {capitalizeFirstLetter(status)}
-                                      </option>
-                                    ))}
-                                  </CustomSelect>
-                                </td>
-                                <td className="p-3">
-                                  <DeleteButton
-                                    onClick={() =>
-                                      handleRemoveUserFromCompany(user.id)
-                                    }
-                                    aria-label={"remove"}
-                                  />
-                                </td>
-                              </tr>
-                            </React.Fragment>
-                          );
-                        })}
+                        {users.map((user, index) => (
+                          <React.Fragment key={user.username}>
+                            <tr
+                              className={
+                                index % 2 !== 0 ? "bg-gray-50" : undefined
+                              }
+                              key={uuidv4()}
+                            >
+                              <td className="p-3">
+                                <div>{`${user.first_name} ${user.last_name}`}</div>
+                              </td>
+                              <td className="flex justify-center items-center gap-4 p-3">
+                                <CustomSelect
+                                  className={selectClass}
+                                  name={`users.${index}.role_id`}
+                                  label={"Role"}
+                                >
+                                  <option value=""></option>
+                                  {roles.map(({ id, role }) => (
+                                    <option key={id} value={id}>
+                                      {capitalizeFirstLetter(role)}
+                                    </option>
+                                  ))}
+                                </CustomSelect>
+                                <CustomSelect
+                                  className={selectClass}
+                                  name={`users.${index}.account_status_id`}
+                                  label={"Account Status"}
+                                >
+                                  <option value=""></option>
+                                  {accountStatus.map(({ id, status }) => (
+                                    <option key={id} value={id}>
+                                      {capitalizeFirstLetter(status)}
+                                    </option>
+                                  ))}
+                                </CustomSelect>
+                              </td>
+                              <td className="p-3">
+                                <DeleteButton
+                                  onClick={() =>
+                                    handleRemoveUserFromCompany(user.id)
+                                  }
+                                  aria-label={"remove"}
+                                />
+                              </td>
+                            </tr>
+                          </React.Fragment>
+                        ))}
                       </tbody>
                     </table>
                   )}
                 />
+                <div className="flex flex-row justify-center items-center gap-4 my-6">
+                  <Button disabled={isLoading} type={"submit"}>
+                    Save
+                  </Button>
+                  <Button
+                    onClick={() => setInviteModal(true)}
+                    disabled={isLoading}
+                  >
+                    Add
+                  </Button>
+                </div>
+                <RequestErrorMessage {...error} />
               </Form>
             </Formik>
           </div>
         </div>
       </div>
+      {inviteModal && (
+        <CustomModal isOpen={inviteModal} setIsOpen={setInviteModal}>
+          <div className="flex flex-col justify-center items-center gap-4">
+            <input
+              className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              type="email"
+              id="invite-user-email"
+              name="invite-user-email"
+              placeholder="Add user email..."
+              onChange={(e) => setInviteUserEmail(e.target.value)}
+            />
+            <Button onClick={() => handleInviteUser(inviteUserEmail)} disabled={isLoading}>
+              Send
+            </Button>
+          </div>
+        </CustomModal>
+      )}
     </div>
   );
 }
