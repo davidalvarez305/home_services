@@ -1,4 +1,3 @@
-import { Formik } from "formik";
 import { useCallback, useContext, useEffect, useState } from "react";
 import Button from "../../components/Button";
 import RequestErrorMessage from "../../components/RequestErrorMessage";
@@ -11,10 +10,11 @@ import { Company, CreateCompanyInput } from "../../types/general";
 import UserProfileIcon from "../../assets/UserProfileIcon";
 import LargeFormSection from "../../components/LargeFormSection";
 import CompanyForm from "./CompanyForm";
+import { useRouter } from "next/router";
+import CompanyUsers from "./CompanyUsers";
 
 export default function CreateEditCompany() {
   useLoginRequired();
-  const [hasCompany, setHasCompany] = useState(false);
   const [companyFields, setCompanyFields] = useState({
     name: "",
     logo: "",
@@ -28,6 +28,7 @@ export default function CreateEditCompany() {
   const [company, setCompany] = useState<Company>();
   const ctx = useContext(UserContext);
   const { isLoading, makeRequest, error } = useFetch();
+  const router = useRouter();
 
   useEffect(() => {
     if (ctx?.user.company_id) {
@@ -49,12 +50,8 @@ export default function CreateEditCompany() {
             state: comp.address.state_id,
             zip_code: comp.address.zip_code,
           });
-
-          setHasCompany(true);
         }
       );
-    } else {
-      setHasCompany(false);
     }
   }, [makeRequest, ctx?.user.company_id]);
 
@@ -70,14 +67,14 @@ export default function CreateEditCompany() {
         return;
       }
 
-      const API_ROUTE = hasCompany
+      const API_ROUTE = company
         ? COMPANY_ROUTE + "/" + company?.id
         : COMPANY_ROUTE;
 
       makeRequest(
         {
           url: API_ROUTE,
-          method: hasCompany ? "PUT" : "POST",
+          method: company ? "PUT" : "POST",
           data: {
             ...values,
             id: company?.id || undefined,
@@ -89,7 +86,7 @@ export default function CreateEditCompany() {
         }
       );
     },
-    [company?.id, ctx, hasCompany, makeRequest]
+    [company, ctx, makeRequest]
   );
 
   return (
@@ -118,6 +115,19 @@ export default function CreateEditCompany() {
             <RequestErrorMessage {...error} />
           </div>
         </div>
+        <div className="md:flex md:space-x-5">
+          <LargeFormSection
+            icon={<UserProfileIcon />}
+            iconHeader={"Edit Services"}
+            paragraphText={"Update your locations and services."}
+          />
+          <div className="flex flex-col rounded shadow-sm bg-white overflow-hidden md:w-2/3">
+            <div className="p-5 lg:p-6 grow w-full">
+              <Button onClick={() => router.push("/company-services")}>Edit Services</Button>
+            </div>
+          </div>
+        </div>
+      <CompanyUsers />
       </div>
     </Layout>
   );
