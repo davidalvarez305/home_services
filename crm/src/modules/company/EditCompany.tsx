@@ -1,7 +1,6 @@
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
 import { useContext, useEffect, useState } from "react";
 import Button from "../../components/Button";
-import FormInput from "../../components/FormInput";
 import RequestErrorMessage from "../../components/RequestErrorMessage";
 import { COMPANY_ROUTE } from "../../constants";
 import { UserContext } from "../../context/UserContext";
@@ -11,7 +10,7 @@ import Layout from "../../components/Layout";
 import { Company, CreateCompanyInput } from "../../types/general";
 import UserProfileIcon from "../../assets/UserProfileIcon";
 import LargeFormSection from "../../components/LargeFormSection";
-import CustomSelect from "../../components/CustomSelect";
+import CompanyForm from "./CompanyForm";
 
 export default function EditCompany() {
   useLoginRequired();
@@ -19,7 +18,6 @@ export default function EditCompany() {
   const ctx = useContext(UserContext);
   const { isLoading, makeRequest, error } = useFetch();
 
-  const inputClassName =
     "block border border-gray-200 rounded px-3 py-2 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
 
   useEffect(() => {
@@ -101,93 +99,13 @@ export default function EditCompany() {
                   }}
                   onSubmit={handleSubmit}
                 >
-                  <Form>
-                    <div className="space-y-6">
-                      <div className="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
-                        <div className="space-y-1 grow">
-                          <FormInput
-                            className={inputClassName}
-                            label="Company Name"
-                            name="name"
-                            placeholder="Company, Inc"
-                          />
-                        </div>
-                        <div className="space-y-1 grow">
-                          <FormInput
-                            className={inputClassName}
-                            label="Company Logo"
-                            name="logo"
-                            placeholder="Logo URL"
-                            type="url"
-                          />
-                        </div>
-                        <div className="space-y-1 grow">
-                          <FormInput
-                            className={inputClassName}
-                            label="Street Address Line 1"
-                            name="street_address_line_1"
-                            placeholder="Address Line 1..."
-                          />
-                        </div>
-                        <div className="space-y-1 grow">
-                          <FormInput
-                            className={inputClassName}
-                            label="Street Address Line 2"
-                            name="street_address_line_2"
-                            placeholder="Address Line 2..."
-                          />
-                        </div>
-                        <div className="space-y-1 grow">
-                          <FormInput
-                            className={inputClassName}
-                            label="Street Address Line 3"
-                            name="street_address_line_3"
-                            placeholder="Address Line 3..."
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <CustomSelect name="zip_code" label={"Zip Code"}>
-                          {[
-                            { label: "", value: 0 },
-                            { label: "33015", value: 1 },
-                            { label: "33012", value: 2 },
-                          ].map((option) => (
-                            <option key={option.label} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </CustomSelect>
-                        <CustomSelect name="city" label={"City"}>
-                          {[
-                            { label: "", value: 0 },
-                            { label: "miami", value: 1 },
-                            { label: "hialeah", value: 2 },
-                          ].map((option) => (
-                            <option key={option.label} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </CustomSelect>
-                        <CustomSelect name="state" label={"State"}>
-                          {[
-                            { label: "", value: 0 },
-                            { label: "florida", value: 1 },
-                            { label: "georgia", value: 2 },
-                          ].map((option) => (
-                            <option key={option.label} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </CustomSelect>
-                      </div>
-                    </div>
-                    <div className="my-2 gap-4">
-                      <Button type={"submit"} disabled={isLoading}>
-                        Submit
-                      </Button>
-                    </div>
-                  </Form>
+                  <CompanyForm />
+
+                  <div className="my-2 gap-4">
+                    <Button type={"submit"} disabled={isLoading}>
+                      Submit
+                    </Button>
+                  </div>
                 </Formik>
               </div>
               <RequestErrorMessage {...error} />
