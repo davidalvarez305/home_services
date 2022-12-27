@@ -129,9 +129,6 @@ export default function CompanyUsers() {
     );
   }
 
-  const selectClass =
-    "w-full block border border-gray-200 rounded px-3 py-2 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
-
   return (
     <div className="md:flex md:space-x-5">
       <LargeFormSection
@@ -170,16 +167,15 @@ export default function CompanyUsers() {
                           <React.Fragment key={user.username}>
                             <tr
                               className={
-                                index % 2 !== 0 ? "bg-gray-50" : undefined
+                                index % 2 !== 0 ? "flex flex-row w-full justify-center items-center bg-gray-50" : "flex flex-row w-full justify-center items-center bg-red-50"
                               }
                               key={uuidv4()}
                             >
                               <td className="p-3">
                                 <div>{`${user.first_name} ${user.last_name}`}</div>
                               </td>
-                              <td className="flex justify-center items-center gap-4 p-3">
+                              <td className="flex gap-4 p-3">
                                 <CustomSelect
-                                  className={selectClass}
                                   name={`users.${index}.role_id`}
                                   label={"Role"}
                                 >
@@ -191,7 +187,6 @@ export default function CompanyUsers() {
                                   ))}
                                 </CustomSelect>
                                 <CustomSelect
-                                  className={selectClass}
                                   name={`users.${index}.account_status_id`}
                                   label={"Account Status"}
                                 >
