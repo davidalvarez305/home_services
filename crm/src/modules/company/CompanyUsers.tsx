@@ -18,6 +18,7 @@ import CustomSelect from "../../components/CustomSelect";
 import Button from "../../components/Button";
 import RequestErrorMessage from "../../components/RequestErrorMessage";
 import CustomModal from "../../components/ImageSliderModal";
+import TrashIcon from "../../assets/TrashIcon";
 
 export default function CompanyUsers() {
   const ctx = useContext(UserContext);
@@ -198,13 +199,17 @@ export default function CompanyUsers() {
                                   ))}
                                 </CustomSelect>
                               </td>
-                              <td className="p-3">
-                                <DeleteButton
+                              <td className="p-3 text-center">
+                                <button
                                   onClick={() =>
                                     handleRemoveUserFromCompany(user.id)
                                   }
-                                  aria-label={"remove"}
-                                />
+                                  type="button"
+                                  className="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-2 py-1 leading-5 text-sm rounded border-gray-300 bg-white text-gray-800 shadow-sm hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none"
+                                >
+                                  <TrashIcon />
+                                  <span>Delete</span>
+                                </button>
                               </td>
                             </tr>
                           </React.Fragment>
@@ -220,6 +225,7 @@ export default function CompanyUsers() {
                   <Button
                     onClick={() => setInviteModal(true)}
                     disabled={isLoading}
+                    type={'button'}
                   >
                     Add
                   </Button>
