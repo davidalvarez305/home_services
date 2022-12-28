@@ -2,7 +2,6 @@ import { useToast } from "@chakra-ui/react";
 import { FieldArray, Form, Formik } from "formik";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import UserProfileIcon from "../../assets/UserProfileIcon";
-import DeleteButton from "../../components/DeleteIconButton";
 import LargeFormSection from "../../components/LargeFormSection";
 import {
   ACCOUNT_STATUS_ROUTE,
@@ -17,7 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import CustomSelect from "../../components/CustomSelect";
 import Button from "../../components/Button";
 import RequestErrorMessage from "../../components/RequestErrorMessage";
-import CustomModal from "../../components/ImageSliderModal";
+import CustomModal from "../../components/Modal";
 import TrashIcon from "../../assets/TrashIcon";
 
 export default function CompanyUsers() {
@@ -237,7 +236,7 @@ export default function CompanyUsers() {
         </div>
       </div>
       {inviteModal && (
-        <CustomModal isOpen={inviteModal} setIsOpen={setInviteModal}>
+        <CustomModal modalTitle={'Invite User'} isOpen={inviteModal} setIsOpen={setInviteModal}>
           <div className="flex flex-col justify-center items-center gap-4">
             <input
               className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
