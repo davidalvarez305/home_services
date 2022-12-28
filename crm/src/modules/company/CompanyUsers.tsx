@@ -150,16 +150,18 @@ export default function CompanyUsers() {
                     <table className="min-w-full text-sm align-middle whitespace-nowrap">
                       <thead>
                         <tr>
-                          {["User", "Action", "Delete"].map((header) => (
-                            <th
-                              key={header}
-                              className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
-                            >
-                              <div className="flex justify-center items-center gap-1">
-                                {header}
-                              </div>
-                            </th>
-                          ))}
+                          {["User", "Role", "Status", "Delete"].map(
+                            (header) => (
+                              <th
+                                key={header}
+                                className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
+                              >
+                                <div className="flex justify-center items-center gap-1">
+                                  {header}
+                                </div>
+                              </th>
+                            )
+                          )}
                         </tr>
                       </thead>
                       <tbody>
@@ -167,18 +169,15 @@ export default function CompanyUsers() {
                           <React.Fragment key={user.username}>
                             <tr
                               className={
-                                index % 2 !== 0 ? "flex flex-row w-full justify-center items-center bg-gray-50" : "flex flex-row w-full justify-center items-center bg-red-50"
+                                index % 2 !== 0 ? "bg-gray-50" : undefined
                               }
                               key={uuidv4()}
                             >
-                              <td className="p-3">
-                                <div>{`${user.first_name} ${user.last_name}`}</div>
+                              <td className="p-3 text-center">
+                                {`${user.first_name} ${user.last_name}`}
                               </td>
-                              <td className="flex gap-4 p-3">
-                                <CustomSelect
-                                  name={`users.${index}.role_id`}
-                                  label={"Role"}
-                                >
+                              <td className="p-3">
+                                <CustomSelect name={`users.${index}.role_id`}>
                                   <option value=""></option>
                                   {roles.map(({ id, role }) => (
                                     <option key={id} value={id}>
@@ -186,9 +185,10 @@ export default function CompanyUsers() {
                                     </option>
                                   ))}
                                 </CustomSelect>
+                              </td>
+                              <td>
                                 <CustomSelect
                                   name={`users.${index}.account_status_id`}
-                                  label={"Account Status"}
                                 >
                                   <option value=""></option>
                                   {accountStatus.map(({ id, status }) => (
@@ -241,7 +241,10 @@ export default function CompanyUsers() {
               placeholder="Add user email..."
               onChange={(e) => setInviteUserEmail(e.target.value)}
             />
-            <Button onClick={() => handleInviteUser(inviteUserEmail)} disabled={isLoading}>
+            <Button
+              onClick={() => handleInviteUser(inviteUserEmail)}
+              disabled={isLoading}
+            >
               Send
             </Button>
           </div>

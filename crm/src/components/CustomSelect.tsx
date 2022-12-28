@@ -6,7 +6,7 @@ type Props = DetailedHTMLProps<
   HTMLSelectElement
 > & {
   name: string;
-  label: string;
+  label?: string;
   children: React.ReactNode;
 };
 
@@ -23,9 +23,9 @@ export default function CustomSelect({ name, label, children, ...props }: Props)
 
   return (
     <div className="space-y-1">
-      <label className="font-medium" htmlFor={name}>
+      {label && <label className="font-medium" htmlFor={name}>
         {label}
-      </label>
+      </label>}
       <select
         className={defaultClassName}
         id={field.name}
