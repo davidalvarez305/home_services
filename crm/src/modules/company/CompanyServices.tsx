@@ -1,27 +1,25 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import PrimaryLayout from "../../../components/Layout";
-import useLoginRequired from "../../../hooks/useLoginRequired";
-import { Table, Tbody, Td, Thead, Tr } from "@chakra-ui/table";
-import DeleteButton from "../../../components/DeleteIconButton";
-import styles from "./CompanyServices.module.css";
-import FormSelect from "../../../components/FormSelect";
+import PrimaryLayout from "../../components/Layout";
+import useLoginRequired from "../../hooks/useLoginRequired";
+import DeleteButton from "../../components/DeleteIconButton";
+import FormSelect from "../../components/FormSelect";
 import { Form, Formik } from "formik";
-import Button from "../../../components/Button";
+import Button from "../../components/Button";
 import { Button as ChakraButton, useToast } from "@chakra-ui/react";
-import SelectMultipleModal from "../../../components/SelectMultipleModal";
-import useFetch from "../../../hooks/useFetch";
-import { COMPANY_ROUTE, SERVICE_ROUTE } from "../../../constants";
-import { UserContext } from "../../../context/UserContext";
+import SelectMultipleModal from "../../components/SelectMultipleModal";
+import useFetch from "../../hooks/useFetch";
+import { COMPANY_ROUTE, SERVICE_ROUTE } from "../../constants";
+import { UserContext } from "../../context/UserContext";
 import {
   CompanyServicesByArea,
   Service,
-  Location,
   CompanyServiceLocations,
   ZipCode,
-} from "../../../types/general";
-import { SelectType } from "../../../components/MultiFormSelect";
-import { createServices } from "../../../utils/createServices";
-import RequestErrorMessage from "../../../components/RequestErrorMessage";
+} from "../../types/general";
+import { SelectType } from "../../components/MultiFormSelect";
+import { createServices } from "../../utils/createServices";
+import RequestErrorMessage from "../../components/RequestErrorMessage";
+import { v4 as uuidv4 } from "uuid";
 
 const CompanyServices: React.FC = () => {
   useLoginRequired();
@@ -107,7 +105,9 @@ const CompanyServices: React.FC = () => {
     );
   }
   function handleMultipleDeleteLocation(service: string) {
-    const locations = serviceAreas.filter((serviceArea) => serviceArea.service === service);
+    const locations = serviceAreas.filter(
+      (serviceArea) => serviceArea.service === service
+    );
 
     const { company_id } = ctx!.user;
     const payload: CompanyServiceLocations[] = locations.map(
@@ -169,116 +169,132 @@ const CompanyServices: React.FC = () => {
 
   if (toggleZipCodes) {
     return (
-      <PrimaryLayout screenName="Company Services">
-        <Table>
-          <Thead>
-            <Tr>
+      <PrimaryLayout>
+        <table className="min-w-full text-sm align-middle whitespace-nowrap">
+          <thead>
+            <tr>
               {["City", "Zip Code"].map((header) => (
-                <Td key={header}>{header}</Td>
+                <th
+                  className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
+                  key={header}
+                >
+                  {header}
+                </th>
               ))}
-            </Tr>
-          </Thead>
-          <Tbody>
+            </tr>
+          </thead>
+          <tbody>
             {filteredAreas.map((location, index) => (
-              <Tr key={index}>
-                <Td>{location.city}</Td>
-                <Td>
-                  <div className={styles["zip-code-container"]}>
+              <tr
+                className={index % 2 !== 0 ? "bg-gray-50" : undefined}
+                key={uuidv4()}
+              >
+                <td className="p-3 text-center">{location.city}</td>
+                <td className="p-3 text-center">
+                  <div>
                     <div>{location.zip_code}</div>
                     <DeleteButton
                       aria-label={"remove"}
                       onClick={() => handleDeleteLocation(location)}
                     />
                   </div>
-                </Td>
-              </Tr>
+                </td>
+              </tr>
             ))}
-          </Tbody>
-        </Table>
+          </tbody>
+        </table>
       </PrimaryLayout>
     );
   }
 
   return (
-    <PrimaryLayout screenName="Company Services">
-      <div className={styles["main-container"]}>
-        <Table>
-          <Thead>
-            <Tr>
-              {["Service", "Locations"].map((header) => (
-                <Td key={header}>{header}</Td>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {uniqueCompanyServices.map((service, index) => (
-              <Tr key={index}>
-                <Td>{service}</Td>
-                <Td>
-                  <div className={styles["zip-code-container"]}>
-                    <ChakraButton
-                      onClick={() => {
-                        setFilterService(service);
-                        setFilteredAreas(() => {
-                          const services = serviceAreas.filter(
-                            (each) => each.service === service
-                          );
-                          return services;
-                        });
-                        setToggleZipCodes((prev) => !prev);
-                      }}
-                      variant={"outline"}
-                      colorScheme={"teal"}
-                    >
-                      See
-                    </ChakraButton>
-                    <DeleteButton
-                      aria-label={"remove"}
-                      onClick={() => handleMultipleDeleteLocation(service)}
-                      isLoading={isLoading}
-                    />
-                  </div>
-                </Td>
-              </Tr>
+    <PrimaryLayout>
+    <div className="flex flex-col justify-center items-center min-w-full text-sm align-middle whitespace-nowrap">
+      <table className="min-w-full text-sm align-middle whitespace-nowrap">
+        <thead>
+          <tr>
+            {["Service", "Locations"].map((header) => (
+              <th
+                className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
+                key={header}
+              >
+                {header}
+              </th>
             ))}
-          </Tbody>
-        </Table>
-        <Formik
-          initialValues={{ service: 0, locations: [], service_areas: [] }}
-          onSubmit={(values) => {
-            handleSubmit(values);
-          }}
-        >
-          {({ values }) => (
-            <Form>
-              <div className={styles["add-service"]}>
-                <FormSelect
-                  name={"service"}
-                  options={services.map((service) => {
-                    return { value: service.id, label: service.service };
-                  })}
-                />
-                <RequestErrorMessage {...error} />
-                <Button
-                  onClick={() => {
-                    if (!values.service) return;
-                    setMultipleSelectModal(true);
-                  }}
-                  className={"Dark"}
-                >
-                  Add
-                </Button>
-              </div>
-              {multipleSelectModal && (
-                <SelectMultipleModal
-                  selectMultipleModal={multipleSelectModal}
-                  setSelectMultipleModal={setMultipleSelectModal}
-                />
-              )}
-            </Form>
-          )}
-        </Formik>
-      </div>
+          </tr>
+        </thead>
+        <tbody>
+          {uniqueCompanyServices.map((service, index) => (
+            <tr
+              className={index % 2 !== 0 ? "bg-gray-50" : undefined}
+              key={uuidv4()}
+            >
+              <td className="p-3 text-center">{service}</td>
+              <td className="p-3 text-center">
+                <div>
+                  <ChakraButton
+                    onClick={() => {
+                      setFilterService(service);
+                      setFilteredAreas(() => {
+                        const services = serviceAreas.filter(
+                          (each) => each.service === service
+                        );
+                        return services;
+                      });
+                      setToggleZipCodes((prev) => !prev);
+                    }}
+                    variant={"outline"}
+                    colorScheme={"teal"}
+                  >
+                    See
+                  </ChakraButton>
+                  <DeleteButton
+                    aria-label={"remove"}
+                    onClick={() => handleMultipleDeleteLocation(service)}
+                    isLoading={isLoading}
+                  />
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <Formik
+        initialValues={{ service: 0, locations: [], service_areas: [] }}
+        onSubmit={(values) => {
+          handleSubmit(values);
+        }}
+      >
+        {({ values }) => (
+          <Form>
+            <div>
+              <FormSelect
+                name={"service"}
+                options={services.map((service) => {
+                  return { value: service.id, label: service.service };
+                })}
+              />
+              <RequestErrorMessage {...error} />
+              <Button
+                onClick={() => {
+                  if (!values.service) return;
+                  setMultipleSelectModal(true);
+                }}
+                type={"button"}
+              >
+                Add
+              </Button>
+            </div>
+            {multipleSelectModal && (
+              <SelectMultipleModal
+                selectMultipleModal={multipleSelectModal}
+                setSelectMultipleModal={setMultipleSelectModal}
+              />
+            )}
+          </Form>
+        )}
+      </Formik>
+            </div>
     </PrimaryLayout>
   );
 };
