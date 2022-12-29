@@ -11,7 +11,7 @@ import {
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
-import { Form, Formik, useFormikContext } from "formik";
+import { useFormikContext } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import ReactSelect, { SingleValue } from "react-select";
 import { LOCATION_ROUTE } from "../constants";
@@ -21,6 +21,7 @@ import { removeOptionAtIndex } from "../utils/removeOptionAtIndex";
 import { SelectType } from "./MultiFormSelect";
 import { SelectedComponent } from "./SelectedComponent";
 import { Location, State } from "../types/general";
+import CustomSelect from "./CustomSelect";
 
 interface MultiSelectProps {
   options: SelectType[];
@@ -48,49 +49,27 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
         height: 500,
       }}
     >
-      <Box
-        sx={{
-          ml: 2,
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          flexDirection: "column",
-          width: 250,
-          height: 150,
+      <CustomSelect
+        value={emptyValue}
+        onChange={(e) => {
+          const newOptions = removeOptionAtIndex(selectOptions, {
+            value: e!.value,
+            label: e!.label,
+          });
+          setSelectOptions(newOptions);
+          const newValues = [...selectedValues, e];
+          setSelectedValues(newValues);
+          setFieldValue("locations", newValues);
         }}
       >
-        <FormControl>
-          <FormLabel
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            htmlFor={"locations"}
-          >
-            {"Search for a city..."}
-          </FormLabel>
-          <ReactSelect
-            value={emptyValue}
-            onChange={(e) => {
-              const newOptions = removeOptionAtIndex(selectOptions, {
-                value: e!.value,
-                label: e!.label,
-              });
-              setSelectOptions(newOptions);
-              const newValues = [...selectedValues, e];
-              setSelectedValues(newValues);
-              setFieldValue("locations", newValues);
-            }}
-            options={selectOptions.map((op) => {
-              return {
-                value: op.value,
-                label: capitalizeFirstLetter(op.label),
-              };
-            })}
-          />
-        </FormControl>
-      </Box>
+        <option value=""></option>
+        {selectOptions.map(({ value, label }) => (
+          <option value={value} key={value}>
+            {capitalizeFirstLetter(label)}
+          </option>
+        ))}
+      </CustomSelect>
+
       <Box>
         {selectedValues.map((value) => (
           <React.Fragment key={value?.value}>
@@ -186,6 +165,7 @@ const SelectMultipleModal: React.FC<Props> = ({
         <ModalContent>
           <ModalHeader>{`Select a location...`}</ModalHeader>
           <ModalCloseButton />
+          ANDREW TATE,
           <ModalBody>
             <Box
               sx={{
