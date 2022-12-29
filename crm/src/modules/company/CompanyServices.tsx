@@ -2,10 +2,9 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import PrimaryLayout from "../../components/Layout";
 import useLoginRequired from "../../hooks/useLoginRequired";
 import DeleteButton from "../../components/DeleteIconButton";
-import FormSelect from "../../components/FormSelect";
 import { Form, Formik } from "formik";
 import Button from "../../components/Button";
-import { Button as ChakraButton, useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import SelectMultipleModal from "../../components/SelectMultipleModal";
 import useFetch from "../../hooks/useFetch";
 import { COMPANY_ROUTE, SERVICE_ROUTE } from "../../constants";
@@ -20,6 +19,7 @@ import { SelectType } from "../../components/MultiFormSelect";
 import { createServices } from "../../utils/createServices";
 import RequestErrorMessage from "../../components/RequestErrorMessage";
 import { v4 as uuidv4 } from "uuid";
+import CustomSelect from "../../components/CustomSelect";
 
 const CompanyServices: React.FC = () => {
   useLoginRequired();
@@ -209,92 +209,92 @@ const CompanyServices: React.FC = () => {
 
   return (
     <PrimaryLayout>
-    <div className="flex flex-col justify-center items-center min-w-full text-sm align-middle whitespace-nowrap">
-      <table className="min-w-full text-sm align-middle whitespace-nowrap">
-        <thead>
-          <tr>
-            {["Service", "Locations"].map((header) => (
-              <th
-                className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
-                key={header}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {uniqueCompanyServices.map((service, index) => (
-            <tr
-              className={index % 2 !== 0 ? "bg-gray-50" : undefined}
-              key={uuidv4()}
-            >
-              <td className="p-3 text-center">{service}</td>
-              <td className="p-3 text-center">
-                <div>
-                  <ChakraButton
-                    onClick={() => {
-                      setFilterService(service);
-                      setFilteredAreas(() => {
-                        const services = serviceAreas.filter(
-                          (each) => each.service === service
-                        );
-                        return services;
-                      });
-                      setToggleZipCodes((prev) => !prev);
-                    }}
-                    variant={"outline"}
-                    colorScheme={"teal"}
-                  >
-                    See
-                  </ChakraButton>
-                  <DeleteButton
-                    aria-label={"remove"}
-                    onClick={() => handleMultipleDeleteLocation(service)}
-                    isLoading={isLoading}
-                  />
-                </div>
-              </td>
+      <div className="flex flex-col justify-center items-center min-w-full text-sm align-middle whitespace-nowrap">
+        <table className="min-w-full text-sm align-middle whitespace-nowrap">
+          <thead>
+            <tr>
+              {["Service", "Locations"].map((header) => (
+                <th
+                  className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
+                  key={header}
+                >
+                  {header}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <Formik
-        initialValues={{ service: 0, locations: [], service_areas: [] }}
-        onSubmit={(values) => {
-          handleSubmit(values);
-        }}
-      >
-        {({ values }) => (
-          <Form>
-            <div>
-              <FormSelect
-                name={"service"}
-                options={services.map((service) => {
-                  return { value: service.id, label: service.service };
-                })}
-              />
-              <RequestErrorMessage {...error} />
-              <Button
-                onClick={() => {
-                  if (!values.service) return;
-                  setMultipleSelectModal(true);
-                }}
-                type={"button"}
+          </thead>
+          <tbody>
+            {uniqueCompanyServices.map((service, index) => (
+              <tr
+                className={index % 2 !== 0 ? "bg-gray-50" : undefined}
+                key={uuidv4()}
               >
-                Add
-              </Button>
-            </div>
-            {multipleSelectModal && (
-              <SelectMultipleModal
-                selectMultipleModal={multipleSelectModal}
-                setSelectMultipleModal={setMultipleSelectModal}
-              />
-            )}
-          </Form>
-        )}
-      </Formik>
-            </div>
+                <td className="p-3 text-center">{service}</td>
+                <td className="p-3 text-center">
+                  <div>
+                    <Button
+                      onClick={() => {
+                        setFilterService(service);
+                        setFilteredAreas(() => {
+                          const services = serviceAreas.filter(
+                            (each) => each.service === service
+                          );
+                          return services;
+                        });
+                        setToggleZipCodes((prev) => !prev);
+                      }}
+                    >
+                      See
+                    </Button>
+                    <DeleteButton
+                      aria-label={"remove"}
+                      onClick={() => handleMultipleDeleteLocation(service)}
+                      isLoading={isLoading}
+                    />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <Formik
+          initialValues={{ service: 0, locations: [], service_areas: [] }}
+          onSubmit={(values) => {
+            handleSubmit(values);
+          }}
+        >
+          {({ values }) => (
+            <Form>
+              <div className="flex flex-col justify-center items-center my-4 gap-4">
+                <CustomSelect name={"service"}>
+                  <option value=""></option>
+                  {services.map(({ id, service }) => (
+                    <option value={id} key={id}>
+                      {service}
+                    </option>
+                  ))}
+                </CustomSelect>
+                <RequestErrorMessage {...error} />
+                <Button
+                  onClick={() => {
+                    if (!values.service) return;
+                    setMultipleSelectModal(true);
+                  }}
+                  type={"button"}
+                >
+                  Add
+                </Button>
+              </div>
+              {multipleSelectModal && (
+                <SelectMultipleModal
+                  selectMultipleModal={multipleSelectModal}
+                  setSelectMultipleModal={setMultipleSelectModal}
+                />
+              )}
+            </Form>
+          )}
+        </Formik>
+      </div>
     </PrimaryLayout>
   );
 };
