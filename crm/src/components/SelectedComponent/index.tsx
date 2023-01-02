@@ -1,14 +1,10 @@
 import { MouseEventHandler } from "react";
-import { SingleValue } from "react-select";
 import { Line } from "../../assets/Line";
 import DeleteButton from "../DeleteIconButton";
 import styles from "./SelectedComponent.module.css";
 
 interface Props {
-  selected: SingleValue<{
-    value?: string | number;
-    label?: string;
-  }>;
+  selected: string;
   onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -28,7 +24,7 @@ export const SelectedComponent: React.FC<Props> = ({ selected, onClick }) => {
             />
           </div>
           <div className={styles["label"]}>
-            <div className={styles["label-body"]}>{selected?.label}</div>
+            <div className={styles["label-body"]}>{selected}</div>
             <div className={styles["sub-header"]}>{"Florida"}</div>
           </div>
         </div>

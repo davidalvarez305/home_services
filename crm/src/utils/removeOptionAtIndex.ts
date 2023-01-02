@@ -1,13 +1,11 @@
-import { SelectType } from "../components/MultiFormSelect";
-
 export const removeOptionAtIndex = (
-  arr: SelectType[],
-  value: SelectType
-): SelectType[] => {
+  arr: string[],
+  value: string
+): string[] => {
   var index;
 
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i].value === value.value) {
+    if (arr[i] === value) {
       index = i;
     }
   }

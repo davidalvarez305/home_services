@@ -3,7 +3,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import Slider from "react-slick";
 import Head from "next/head";
 import SmallCloseIcon from "../assets/SmallCloseIcon";
-import { createPortal } from "react-dom";
 
 type Props = {
   children: React.ReactNode;

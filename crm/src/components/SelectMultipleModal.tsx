@@ -1,41 +1,23 @@
-import {
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Modal,
-  Box,
-  FormControl,
-  FormLabel,
-} from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
-import React, { useEffect, useRef, useState } from "react";
-import ReactSelect, { SingleValue } from "react-select";
+import React, { useEffect, useState } from "react";
+import ReactSelect from "react-select";
 import { LOCATION_ROUTE } from "../constants";
 import useFetch from "../hooks/useFetch";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import { removeOptionAtIndex } from "../utils/removeOptionAtIndex";
-import { SelectType } from "./MultiFormSelect";
 import { SelectedComponent } from "./SelectedComponent";
 import { Location, State } from "../types/general";
-import CustomSelect from "./CustomSelect";
+import Modal from "./Modal";
+import SimpleSelect from "./SimpleSelect";
 
 interface MultiSelectProps {
-  options: SelectType[];
+  options: string[];
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
-  const emptyValue: SelectType = { value: "", label: "" };
-  const [selectOptions, setSelectOptions] = useState<SelectType[]>(options);
-  const [selectedValues, setSelectedValues] = useState<
-    SingleValue<{
-      value: string | number;
-      label: string;
-    }>[]
-  >([]);
+  const [selectOptions, setSelectOptions] = useState<string[]>(options);
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const { setFieldValue } = useFormikContext();
 
   return (
@@ -49,50 +31,40 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
         height: 500,
       }}
     >
-      <CustomSelect
-        value={emptyValue}
+      <SimpleSelect
+        value={""}
+        name={"location-select"}
         onChange={(e) => {
-          const newOptions = removeOptionAtIndex(selectOptions, {
-            value: e!.value,
-            label: e!.label,
-          });
+          const newOptions = removeOptionAtIndex(selectOptions, e.target.value);
           setSelectOptions(newOptions);
-          const newValues = [...selectedValues, e];
+          const newValues = [...selectedValues, e.target.value];
           setSelectedValues(newValues);
           setFieldValue("locations", newValues);
         }}
       >
         <option value=""></option>
-        {selectOptions.map(({ value, label }) => (
-          <option value={value} key={value}>
-            {capitalizeFirstLetter(label)}
+        {selectOptions.map((option) => (
+          <option value={option} key={option}>
+            {capitalizeFirstLetter(option)}
           </option>
         ))}
-      </CustomSelect>
+      </SimpleSelect>
 
       <Box>
         {selectedValues.map((value) => (
-          <React.Fragment key={value?.value}>
+          <React.Fragment key={value}>
             <SelectedComponent
               selected={value}
               onClick={() => {
                 // Remove the deleted option from the selected values ('the list')
                 const newSelectedValues = removeOptionAtIndex(
-                  selectedValues as any,
-                  {
-                    value: value!.value,
-                    label: value!.label,
-                  }
+                  selectedValues,
+                  value
                 );
                 setSelectedValues(newSelectedValues);
 
                 // Append the deleted value to the available selectable options
-                setSelectOptions((prev) => {
-                  return [
-                    ...prev,
-                    { value: value!.value, label: value!.label },
-                  ];
-                });
+                setSelectOptions((prev) => [...prev, value]);
 
                 // Set it to Formik
                 setFieldValue("locations", newSelectedValues);
@@ -120,8 +92,6 @@ const SelectMultipleModal: React.FC<Props> = ({
   const [states, setStates] = useState<State[]>([]);
   const formikCtx = useFormikContext();
   const { setFieldValue } = formikCtx;
-
-  const finalRef: React.RefObject<any> = useRef(null);
 
   // Fetch states && cities depending on selections
   useEffect(() => {
@@ -155,50 +125,26 @@ const SelectMultipleModal: React.FC<Props> = ({
 
   if (!selectedState) {
     return (
-      <Modal
-        size="3xl"
-        finalFocusRef={finalRef}
-        isOpen={selectMultipleModal}
-        onClose={() => setSelectMultipleModal(false)}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{`Select a location...`}</ModalHeader>
-          <ModalCloseButton />
-          ANDREW TATE,
-          <ModalBody>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: 700,
-                gap: 20,
-              }}
-            >
-              <Box sx={{ width: 250 }}>
-                <ReactSelect
-                  options={states.map(({ id, state }) => {
-                    return { value: id, label: state };
-                  })}
-                  onChange={(selected) => {
-                    setSelectedState(selected!.value);
-                  }}
-                />
-              </Box>
-            </Box>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              colorScheme="red"
-              mr={3}
-              onClick={() => setSelectMultipleModal(false)}
-            >
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <div className="h-200">
+        <Modal
+          modalTitle={"Select A State"}
+          isOpen={selectMultipleModal}
+          setIsOpen={() => setSelectMultipleModal(false)}
+        >
+          <SimpleSelect
+            onChange={(e) => {
+              setSelectedState(Number(e.target.value));
+            }}
+          >
+            <option value=""></option>
+            {states.map((state) => (
+              <option value={state.id} key={state.id}>
+                {state.state}
+              </option>
+            ))}
+          </SimpleSelect>
+        </Modal>
+      </div>
     );
   }
 
@@ -206,43 +152,11 @@ const SelectMultipleModal: React.FC<Props> = ({
     <>
       {locations.length > 0 && (
         <Modal
-          size="3xl"
-          finalFocusRef={finalRef}
+          modalTitle={"Select Locations..."}
           isOpen={selectMultipleModal}
-          onClose={() => setSelectMultipleModal(false)}
+          setIsOpen={() => setSelectMultipleModal(false)}
         >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>{`Adding Locations...`}</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <MultiSelect
-                options={locations.map((location) => {
-                  return {
-                    value: location.city_id,
-                    label: location.city,
-                  };
-                })}
-              />
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                colorScheme="blue"
-                mr={3}
-                type="submit"
-                onClick={formikCtx.submitForm}
-              >
-                Submit
-              </Button>
-              <Button
-                colorScheme="red"
-                mr={3}
-                onClick={() => setSelectMultipleModal(false)}
-              >
-                Close
-              </Button>
-            </ModalFooter>
-          </ModalContent>
+          <MultiSelect options={locations.map((location) => location.city)} />
         </Modal>
       )}
     </>
