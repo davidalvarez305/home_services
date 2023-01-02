@@ -143,7 +143,7 @@ const CompanyServices: React.FC = () => {
 
   function handleSubmit(values: {
     service: number;
-    locations: SelectType[];
+    locations: string[];
     service_areas: ZipCode[];
   }) {
     makeRequest(
@@ -260,8 +260,7 @@ const CompanyServices: React.FC = () => {
         <Formik
           initialValues={{ service: 0, locations: [], service_areas: [] }}
           onSubmit={(values) => {
-            console.log('v: ', values);
-            // handleSubmit(values);
+            handleSubmit(values);
           }}
         >
           {({ values }) => (
@@ -296,6 +295,15 @@ const CompanyServices: React.FC = () => {
           )}
         </Formik>
       </div>
+
+      {error.message.length > 0 && toast({
+          title: "Error!",
+          description: error.message,
+          status: "error",
+          isClosable: true,
+          duration: 5000,
+          variant: "left-accent",
+        })}
     </PrimaryLayout>
   );
 };

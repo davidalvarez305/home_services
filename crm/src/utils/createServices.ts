@@ -1,10 +1,9 @@
-import { SelectType } from "../components/MultiFormSelect";
 import { CompanyServiceLocations, ZipCode } from "../types/general";
 
 export const createServices = (
   values: {
     service: number;
-    locations: SelectType[];
+    locations: string[];
     service_areas: ZipCode[];
   },
   company_id: number
@@ -14,7 +13,7 @@ export const createServices = (
 
   values.service_areas.forEach((area) => {
     values.locations.forEach((location) => {
-      if (area.city_id === location.value) {
+      if (area.city === location) {
         // Split zip codes by comma && push them to the array one by one
         const zip_codes = area.zip_codes.split(",");
         if (zip_codes.length > 0) {
@@ -28,7 +27,7 @@ export const createServices = (
 
   zipCodes.forEach((zipCode) => {
     let serviceArea = {
-      service_id: values.service,
+      service_id: Number(values.service),
       company_id: company_id,
       zip_code: zipCode,
     };
