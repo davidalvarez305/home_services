@@ -260,7 +260,8 @@ const CompanyServices: React.FC = () => {
         <Formik
           initialValues={{ service: 0, locations: [], service_areas: [] }}
           onSubmit={(values) => {
-            handleSubmit(values);
+            console.log('v: ', values);
+            // handleSubmit(values);
           }}
         >
           {({ values }) => (

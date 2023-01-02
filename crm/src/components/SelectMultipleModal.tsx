@@ -1,4 +1,3 @@
-import { Box } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React, { useEffect, useState } from "react";
 import { LOCATION_ROUTE } from "../constants";
@@ -18,7 +17,7 @@ interface MultiSelectProps {
 const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
   const [selectOptions, setSelectOptions] = useState<string[]>(options);
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue, submitForm } = useFormikContext();
 
   return (
     <div className="flex flex-col justify-start items-center overflow-scroll h-[500px]">
@@ -65,7 +64,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
         ))}
       </div>
       <div className="my-2">
-        <Button>Save</Button>
+        <Button onClick={() => submitForm()}>Save</Button>
       </div>
     </div>
   );
@@ -146,7 +145,7 @@ const SelectMultipleModal: React.FC<Props> = ({
     <>
       {locations.length > 0 && (
         <Modal
-          modalTitle={"Select Locations..."}
+          modalTitle={"Select Cities..."}
           isOpen={selectMultipleModal}
           setIsOpen={() => setSelectMultipleModal(false)}
         >
