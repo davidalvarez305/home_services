@@ -1,7 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React, { useEffect, useState } from "react";
-import ReactSelect from "react-select";
 import { LOCATION_ROUTE } from "../constants";
 import useFetch from "../hooks/useFetch";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
@@ -10,6 +9,7 @@ import { SelectedComponent } from "./SelectedComponent";
 import { Location, State } from "../types/general";
 import Modal from "./Modal";
 import SimpleSelect from "./SimpleSelect";
+import Button from "./Button";
 
 interface MultiSelectProps {
   options: string[];
@@ -21,16 +21,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
   const { setFieldValue } = useFormikContext();
 
   return (
-    <Box
-      sx={{
-        ml: 2,
-        display: "flex",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        flexDirection: "column",
-        height: 500,
-      }}
-    >
+    <div className="flex flex-col justify-start items-center overflow-scroll h-[500px]">
       <SimpleSelect
         value={""}
         name={"location-select"}
@@ -50,7 +41,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
         ))}
       </SimpleSelect>
 
-      <Box>
+      <div>
         {selectedValues.map((value) => (
           <React.Fragment key={value}>
             <SelectedComponent
@@ -72,8 +63,11 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
             />
           </React.Fragment>
         ))}
-      </Box>
-    </Box>
+      </div>
+      <div className="my-2">
+        <Button>Save</Button>
+      </div>
+    </div>
   );
 };
 
