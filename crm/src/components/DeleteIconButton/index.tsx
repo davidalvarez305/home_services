@@ -1,6 +1,5 @@
 import { GrClose } from "react-icons/gr";
 import { IconButton, IconButtonProps } from "@chakra-ui/react";
-import { MouseEventHandler } from "react";
 
 type Props = IconButtonProps;
 

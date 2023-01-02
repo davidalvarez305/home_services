@@ -15,7 +15,6 @@ import {
   CompanyServiceLocations,
   ZipCode,
 } from "../../types/general";
-import { SelectType } from "../../components/MultiFormSelect";
 import { createServices } from "../../utils/createServices";
 import RequestErrorMessage from "../../components/RequestErrorMessage";
 import { v4 as uuidv4 } from "uuid";
@@ -231,27 +230,28 @@ const CompanyServices: React.FC = () => {
               >
                 <td className="p-3 text-center">{service}</td>
                 <td className="p-3 text-center">
-                  <div>
-                    <Button
-                      onClick={() => {
-                        setFilterService(service);
-                        setFilteredAreas(() => {
-                          const services = serviceAreas.filter(
-                            (each) => each.service === service
-                          );
-                          return services;
-                        });
-                        setToggleZipCodes((prev) => !prev);
-                      }}
-                    >
-                      See
-                    </Button>
-                    <DeleteButton
-                      aria-label={"remove"}
-                      onClick={() => handleMultipleDeleteLocation(service)}
-                      isLoading={isLoading}
-                    />
-                  </div>
+                  <Button
+                    onClick={() => {
+                      setFilterService(service);
+                      setFilteredAreas(() => {
+                        const services = serviceAreas.filter(
+                          (each) => each.service === service
+                        );
+                        return services;
+                      });
+                      setToggleZipCodes((prev) => !prev);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    onClick={() => handleMultipleDeleteLocation(service)}
+                    disabled={isLoading}
+                    type="button"
+                    className="inline-flex justify-center items-center space-x-2 rounded border font-semibold focus:outline-none mx-2 px-3 py-2 leading-5 border-red-700 bg-red-700 text-white hover:text-white hover:bg-red-800 hover:border-red-800 focus:ring focus:ring-red-500 focus:ring-opacity-50 active:bg-red-700 active:border-red-700"
+                  >
+                    Delete
+                  </Button>
                 </td>
               </tr>
             ))}
@@ -296,7 +296,8 @@ const CompanyServices: React.FC = () => {
         </Formik>
       </div>
 
-      {error.message.length > 0 && toast({
+      {error.message.length > 0 &&
+        toast({
           title: "Error!",
           description: error.message,
           status: "error",
