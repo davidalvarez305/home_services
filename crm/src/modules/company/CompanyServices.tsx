@@ -19,6 +19,7 @@ import { createServices } from "../../utils/createServices";
 import RequestErrorMessage from "../../components/RequestErrorMessage";
 import { v4 as uuidv4 } from "uuid";
 import CustomSelect from "../../components/CustomSelect";
+import { SelectedComponent } from "../../components/SelectedComponent";
 
 const CompanyServices: React.FC = () => {
   useLoginRequired();
@@ -191,11 +192,8 @@ const CompanyServices: React.FC = () => {
                 <td className="p-3 text-center">{location.city}</td>
                 <td className="p-3 text-center">
                   <div>
-                    <div>{location.zip_code}</div>
-                    <DeleteButton
-                      aria-label={"remove"}
-                      onClick={() => handleDeleteLocation(location)}
-                    />
+                    <SelectedComponent selected={location.zip_code} 
+                      onClick={() => handleDeleteLocation(location)} />
                   </div>
                 </td>
               </tr>

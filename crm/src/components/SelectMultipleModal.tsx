@@ -79,7 +79,7 @@ const SelectMultipleModal: React.FC<Props> = ({
   setSelectMultipleModal,
   selectMultipleModal,
 }) => {
-  const { makeRequest, isLoading, error } = useFetch();
+  const { makeRequest } = useFetch();
   const [locations, setLocations] = useState<Location[]>([]);
   const [selectedState, setSelectedState] = useState(0);
   const [states, setStates] = useState<State[]>([]);
