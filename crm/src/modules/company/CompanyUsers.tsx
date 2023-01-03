@@ -13,7 +13,7 @@ import useFetch from "../../hooks/useFetch";
 import { User, Role, AccountStatus } from "../../types/general";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
 import { v4 as uuidv4 } from "uuid";
-import CustomSelect from "../../components/CustomSelect";
+import CustomSelect from "../../components/FormSelect";
 import Button from "../../components/Button";
 import RequestErrorMessage from "../../components/RequestErrorMessage";
 import CustomModal from "../../components/Modal";

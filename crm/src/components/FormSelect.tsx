@@ -1,78 +1,39 @@
-import {
-  FormControl,
-  FormLabel,
-  Box,
-  FormErrorMessage,
-} from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import ReactSelect from "react-select";
-import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import { useField, useFormikContext } from "formik";
+import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
 
-type SelectType = { value: string | number; label: string };
-
-type Props = {
-  options: SelectType[];
+type Props = DetailedHTMLProps<
+  SelectHTMLAttributes<HTMLSelectElement>,
+  HTMLSelectElement
+> & {
   name: string;
-  className?: string;
+  label?: string;
+  children: React.ReactNode;
 };
 
-const FormSelect: React.FC<Props> = ({ options, name, className }) => {
+export default function CustomSelect({ name, label, children, ...props }: Props) {
+  const [field] = useField(name);
   const { setFieldValue } = useFormikContext();
-
-  const [field, meta] = useField(name);
-
-  const [selectedValue, setSelectedValue] = useState<null | SelectType>(null);
+  const defaultClassName = "w-full block border border-gray-200 rounded px-3 py-2 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
 
   useEffect(() => {
-    if (options.length === 1) {
-      setSelectedValue(options[0]);
+    if (props.value) {
+      setFieldValue(name, props.value);
     }
-  }, [options]);
+  }, [name, props.value, setFieldValue]);
 
   return (
-    <Box
-      sx={{
-        ml: 2,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: 250,
-      }}
-    >
-      <FormControl>
-        <FormLabel
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          htmlFor={field.name}
-        >
-          {capitalizeFirstLetter(name)}
-        </FormLabel>
-        <ReactSelect
-          className={className}
-          name={field.name}
-          id={field.name}
-          value={selectedValue}
-          onChange={(e) => {
-            setSelectedValue(e);
-            setFieldValue(field.name, e?.value);
-          }}
-          options={options.map((op) => {
-            return {
-              value: op.value,
-              label: capitalizeFirstLetter(op.label),
-            };
-          })}
-        />
-        {meta.error && meta.touched && (
-          <FormErrorMessage>{meta.error}</FormErrorMessage>
-        )}
-      </FormControl>
-    </Box>
+    <div className="space-y-1">
+      {label && <label className="font-medium" htmlFor={name}>
+        {label}
+      </label>}
+      <select
+        className={defaultClassName}
+        id={field.name}
+        {...props}
+        {...field}
+      >
+       {children}
+      </select>
+    </div>
   );
-};
-
-export default FormSelect;
+}

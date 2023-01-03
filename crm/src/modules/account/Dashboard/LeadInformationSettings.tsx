@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import { useContext, useEffect, useState } from "react";
 import BlueLockIcon from "../../../assets/BlueLockIcon";
 import Button from "../../../components/Button";
-import CustomSelect from "../../../components/CustomSelect";
+import CustomSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 import LargeFormSection from "../../../components/LargeFormSection";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";

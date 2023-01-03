@@ -17,7 +17,7 @@ import {
 import { createServices } from "../../utils/createServices";
 import RequestErrorMessage from "../../components/RequestErrorMessage";
 import { v4 as uuidv4 } from "uuid";
-import CustomSelect from "../../components/CustomSelect";
+import CustomSelect from "../../components/FormSelect";
 import { SelectedComponent } from "../../components/SelectedComponent";
 
 export default function CompanyServices() {
@@ -191,8 +191,10 @@ export default function CompanyServices() {
                 <td className="p-3 text-center">{location.city}</td>
                 <td className="p-3 text-center">
                   <div>
-                    <SelectedComponent selected={location.zip_code} 
-                      onClick={() => handleDeleteLocation(location)} />
+                    <SelectedComponent
+                      selected={location.zip_code}
+                      onClick={() => handleDeleteLocation(location)}
+                    />
                   </div>
                 </td>
               </tr>
@@ -304,4 +306,4 @@ export default function CompanyServices() {
         })}
     </PrimaryLayout>
   );
-};
+}

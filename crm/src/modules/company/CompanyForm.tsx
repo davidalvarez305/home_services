@@ -1,5 +1,5 @@
 import { Form, Formik } from "formik";
-import CustomSelect from "../../components/CustomSelect";
+import CustomSelect from "../../components/FormSelect";
 import FormInput from "../../components/FormInput";
 import { CreateCompanyInput } from "../../types/general";
 

@@ -10,7 +10,7 @@ import Button from "../../components/Button";
 import { Form, Formik } from "formik";
 import FormInput from "../../components/FormInput";
 import Modal from "../../components/Modal";
-import CustomSelect from "../../components/CustomSelect";
+import CustomSelect from "../../components/FormSelect";
 import DateRangePickerComponent from "../../components/DateRangePicker";
 
 const THIRTY_DAYS_AGO = new Date(new Date().setDate(new Date().getDate() - 30));
