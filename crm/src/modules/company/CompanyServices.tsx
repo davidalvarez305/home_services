@@ -1,7 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import PrimaryLayout from "../../components/Layout";
 import useLoginRequired from "../../hooks/useLoginRequired";
-import DeleteButton from "../../components/DeleteIconButton";
 import { Form, Formik } from "formik";
 import Button from "../../components/Button";
 import { useToast } from "@chakra-ui/react";
@@ -21,7 +20,7 @@ import { v4 as uuidv4 } from "uuid";
 import CustomSelect from "../../components/CustomSelect";
 import { SelectedComponent } from "../../components/SelectedComponent";
 
-const CompanyServices: React.FC = () => {
+export default function CompanyServices() {
   useLoginRequired();
   const ctx = useContext(UserContext);
   const toast = useToast();
@@ -306,4 +305,3 @@ const CompanyServices: React.FC = () => {
     </PrimaryLayout>
   );
 };
-export default CompanyServices;

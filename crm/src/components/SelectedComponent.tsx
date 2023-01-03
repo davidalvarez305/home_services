@@ -1,5 +1,5 @@
 import { MouseEventHandler } from "react";
-import SmallXIcon from "../../assets/SmallXIcon";
+import SmallXIcon from "../assets/SmallXIcon";
 
 interface Props {
   selected: string;
