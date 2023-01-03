@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { LOGOUT_ROUTE } from "../constants";
 import { User } from "../types/general";
@@ -5,6 +6,7 @@ import useFetch from "./useFetch";
 
 export default function useAuth() {
   const { makeRequest } = useFetch();
+  const router = useRouter();
   let userProps = {
     id: 0,
     username: "",
@@ -36,6 +38,7 @@ export default function useAuth() {
       (res) => {
         if (res.data.data === "Logged out!") {
           setUser(userProps);
+          router.push("/login");
         }
       }
     );

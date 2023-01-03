@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useState } from "react";
 import Clipboard from "../assets/Clipboard";
 import FourSquares from "../assets/FourSquares";
@@ -8,31 +9,37 @@ import Logo from "../assets/Logo";
 import { SettingsIcon } from "../assets/SettingsIcon";
 import SinglePerson from "../assets/SinglePerson";
 import StackedPeople from "../assets/StackedPeople";
+import useAuth from "../hooks/useAuth";
 
 export default function DarkSidebarFullContent() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(true);
+  const { Logout } = useAuth();
+
+  function handleLogout() {
+    Logout();
+  }
 
   const topNavLinks = [
     {
-      heading: "Manage",
+      heading: "Services",
       icon: <FourSquares />,
-      href: "",
+      href: "company-services",
     },
     {
-      heading: "Tasks",
+      heading: "Settings",
       icon: <Clipboard />,
-      href: "",
+      href: "company-settings",
     },
     {
-      heading: "Clients",
+      heading: "Leads",
       icon: <StackedPeople />,
-      href: "",
+      href: "leads",
     },
     {
-      heading: "Add New",
+      heading: "Billing",
       icon: <LightPlusIcon />,
-      href: "",
+      href: "company-billing",
     },
   ];
 
@@ -43,14 +50,15 @@ export default function DarkSidebarFullContent() {
       href: "",
     },
     {
-      heading: "Settings",
+      heading: "Account",
       icon: <SettingsIcon />,
-      href: "/profile-settings",
+      href: "profile-settings",
     },
     {
       heading: "Logout",
       icon: <Lock />,
       href: "",
+      onClick: handleLogout,
     },
   ];
 
@@ -67,13 +75,13 @@ export default function DarkSidebarFullContent() {
         {/* Sidebar Header */}
         <div className="h-16 bg-gray-600 bg-opacity-25 flex-none flex items-center justify-between lg:justify-center px-4 w-full">
           {/* Brand */}
-          <a
-            href="#"
+          <Link
+            href="/"
             className="inline-flex items-center space-x-2 font-bold text-lg tracking-wide text-white hover:opacity-75"
           >
             <Logo />
             <span>FindAPro.gg</span>
-          </a>
+          </Link>
           {/* END Brand */}
 
           {/* Close Sidebar on Mobile */}
@@ -105,8 +113,8 @@ export default function DarkSidebarFullContent() {
         <div className="overflow-y-auto">
           <div className="p-4 w-full">
             <nav className="space-y-1">
-              <a
-                href="#"
+              <Link
+                href="/"
                 className="flex items-center space-x-3 px-3 font-medium rounded text-gray-50 bg-gray-700 bg-opacity-60"
               >
                 <span className="flex-none flex items-center opacity-50">
@@ -116,13 +124,13 @@ export default function DarkSidebarFullContent() {
                 <span className="px-2 py-1 rounded-full text-xs font-medium leading-4 bg-opacity-10 text-gray-100 bg-gray-400">
                   3
                 </span>
-              </a>
+              </Link>
               <div className="px-3 pt-5 pb-2 text-xs font-medium uppercase tracking-wider text-gray-400">
                 Projects
               </div>
 
               {topNavLinks.map((link) => (
-                <a
+                <Link
                   key={link.heading}
                   href={link.href}
                   className="flex items-center space-x-3 px-3 font-medium rounded text-gray-300 hover:text-gray-100 hover:bg-gray-700 hover:bg-opacity-60 active:bg-gray-700 active:bg-opacity-40"
@@ -131,26 +139,24 @@ export default function DarkSidebarFullContent() {
                     {link.icon}
                   </span>
                   <span className="py-2 grow">{link.heading}</span>
-                  <span className="px-2 py-1 rounded-full text-xs font-medium leading-4 bg-opacity-10 text-gray-100 bg-gray-400">
-                    99+
-                  </span>
-                </a>
+                </Link>
               ))}
 
               <div className="px-3 pt-5 pb-2 text-xs font-medium uppercase tracking-wider text-gray-400">
                 Account
               </div>
               {subNavLinks.map((link) => (
-                <a
+                <Link
                   key={link.heading}
                   href={link.href}
                   className="flex items-center space-x-3 px-3 font-medium rounded text-gray-300 hover:text-gray-100 hover:bg-gray-700 hover:bg-opacity-60 active:bg-gray-700 active:bg-opacity-40"
+                  onClick={link.onClick}
                 >
                   <span className="flex-none flex items-center opacity-50">
                     {link.icon}
                   </span>
                   <span className="py-2 grow">{link.heading}</span>
-                </a>
+                </Link>
               ))}
             </nav>
           </div>
