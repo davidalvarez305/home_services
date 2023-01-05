@@ -1,5 +1,4 @@
 import React from "react";
-import { COMPANY_LEADS_HEADERS } from "../utils/companyLeadsHeaders";
 import { v4 as uuidv4 } from "uuid";
 import { Invoice } from "../types/general";
 
