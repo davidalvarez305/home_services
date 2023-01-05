@@ -766,3 +766,27 @@ func GetCompany(c *fiber.Ctx) error {
 		"data": company,
 	})
 }
+
+func GetCompanyInvoices(c *fiber.Ctx) error {
+	companyId := c.Params("id")
+
+	if companyId == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "No company found in params.",
+		})
+	}
+
+	invoices := &actions.Invoice{}
+	
+	err := invoices.GetCompanyInvoices(companyId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to fetch company invoices.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": invoices,
+	})
+}

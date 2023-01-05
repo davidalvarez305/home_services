@@ -19,7 +19,7 @@ func (i *Invoice) GetInvoiceByID(id string) error {
 	return database.DB.Where("id = ?", id).Preload("Lead").First(&i).Error
 }
 
-func (i *Invoices) GetInvoiceDetails(companyId string) error {
+func (i *Invoices) GetCompanyInvoices(companyId string) error {
 	return database.DB.Where("company_id = ?", companyId).Preload("Lead").Find(&i).Error
 }
 

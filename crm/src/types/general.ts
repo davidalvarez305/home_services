@@ -211,3 +211,13 @@ export type UpdateLeadInformation = {
 };
 
 export type PhotoResponse = { id: number; image_url: string; lead_id: number };
+
+export type Invoice = {
+  id: number;
+  invoice_id: string;
+  invoice_amount: number;
+  invoice_due_date: number;
+  invoice_payment_status_id: number;
+  company_id: number;
+  leads: Lead[];
+}

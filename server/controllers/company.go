@@ -30,6 +30,9 @@ func Company(router fiber.Router) {
 	company.Get("/:id/service", handlers.GetCompanyServices)
 	company.Post("/:id/service", handlers.CreateCompanyServices)
 
+	// Manage Company Invoices
+	company.Get("/:id/invoice", handlers.GetCompanyInvoices)
+
 	// Manage Quotes Assigned to Company
 	company.Get("/:id/leads", handlers.GetCompanyLeads)
 }
