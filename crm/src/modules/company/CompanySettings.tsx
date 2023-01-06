@@ -10,7 +10,6 @@ import { Company, CreateCompanyInput } from "../../types/general";
 import UserProfileIcon from "../../assets/UserProfileIcon";
 import LargeFormSection from "../../components/LargeFormSection";
 import CompanyForm from "./CompanyForm";
-import { useRouter } from "next/router";
 import CompanyUsers from "./CompanyUsers";
 import SimpleInput from "../../components/SimpleInput";
 
@@ -26,11 +25,10 @@ export default function CreateEditCompany() {
     state: 0,
     zip_code: "",
   });
-  const [monthlyLeadsLimit, setMonthlyLeadsLimit] = useState("");
+  const [monthlyLeadsLimit, setMonthlyLeadsLimit] = useState(0);
   const [company, setCompany] = useState<Company>();
   const ctx = useContext(UserContext);
   const { isLoading, makeRequest, error } = useFetch();
-  const router = useRouter();
 
   useEffect(() => {
     if (ctx?.user.company_id) {
@@ -52,6 +50,7 @@ export default function CreateEditCompany() {
             state: comp.address.state_id,
             zip_code: comp.address.zip_code,
           });
+          setMonthlyLeadsLimit(comp.max_limit);
         }
       );
     }
@@ -143,8 +142,9 @@ export default function CreateEditCompany() {
             <div className="flex flex-col gap-4 p-5 lg:p-6 grow w-full">
               <SimpleInput
                 onChange={(e) => {
-                  setMonthlyLeadsLimit(e.target.value);
+                  setMonthlyLeadsLimit(Number(e.target.value));
                 }}
+                type={'number'}
                 label={"Limit"}
                 name={"budget-limit"}
               />

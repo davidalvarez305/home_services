@@ -61,6 +61,7 @@ export type Company = {
   account_status_id: number;
   address_id: number;
   address: Address;
+  max_limit: number;
 }
 
 export type CompanyServicesByArea = {
