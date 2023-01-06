@@ -169,38 +169,43 @@ export default function CompanyServices() {
   if (toggleZipCodes) {
     return (
       <PrimaryLayout>
-        <table className="min-w-full text-sm align-middle whitespace-nowrap">
-          <thead>
-            <tr>
-              {["City", "Zip Code"].map((header) => (
-                <th
-                  className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
-                  key={header}
-                >
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAreas.map((location, index) => (
-              <tr
-                className={index % 2 !== 0 ? "bg-gray-50" : undefined}
-                key={uuidv4()}
-              >
-                <td className="p-3 text-center">{location.city}</td>
-                <td className="p-3 text-center">
-                  <div>
-                    <SelectedComponent
-                      selected={location.zip_code}
-                      onClick={() => handleDeleteLocation(location)}
-                    />
-                  </div>
-                </td>
+        <div className="min-w-full flex flex-col">
+          <table className="min-w-full text-sm align-middle whitespace-nowrap">
+            <thead>
+              <tr>
+                {["City", "Zip Code"].map((header) => (
+                  <th
+                    className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
+                    key={header}
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredAreas.map((location, index) => (
+                <tr
+                  className={index % 2 !== 0 ? "bg-gray-50" : undefined}
+                  key={uuidv4()}
+                >
+                  <td className="p-3 text-center">{location.city}</td>
+                  <td className="p-3 text-center">
+                    <div>
+                      <SelectedComponent
+                        selected={location.zip_code}
+                        onClick={() => handleDeleteLocation(location)}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="flex justify-center items-center">
+            <Button onClick={() => setToggleZipCodes(false)}>Return</Button>
+          </div>
+        </div>
       </PrimaryLayout>
     );
   }
