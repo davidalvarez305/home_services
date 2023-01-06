@@ -12,6 +12,7 @@ import LargeFormSection from "../../components/LargeFormSection";
 import CompanyForm from "./CompanyForm";
 import { useRouter } from "next/router";
 import CompanyUsers from "./CompanyUsers";
+import SimpleInput from "../../components/SimpleInput";
 
 export default function CreateEditCompany() {
   useLoginRequired();
@@ -25,6 +26,7 @@ export default function CreateEditCompany() {
     state: 0,
     zip_code: "",
   });
+  const [monthlyLeadsLimit, setMonthlyLeadsLimit] = useState("");
   const [company, setCompany] = useState<Company>();
   const ctx = useContext(UserContext);
   const { isLoading, makeRequest, error } = useFetch();
@@ -89,6 +91,22 @@ export default function CreateEditCompany() {
     [company, ctx, makeRequest]
   );
 
+  function handleUpdateLimit() {
+    const body = { ...companyFields, max_limit: monthlyLeadsLimit };
+
+    makeRequest(
+      {
+        url: COMPANY_ROUTE + "/" + company?.id,
+        method: "PUT",
+        data: body,
+      },
+      (res) => {
+        const updatedCompany: Company = res.data.data;
+        ctx?.SetUser({ ...ctx.user, company_id: updatedCompany.id });
+      }
+    );
+  }
+
   return (
     <Layout>
       <div className="space-y-8">
@@ -118,16 +136,27 @@ export default function CreateEditCompany() {
         <div className="md:flex md:space-x-5">
           <LargeFormSection
             icon={<UserProfileIcon />}
-            iconHeader={"Edit Services"}
-            paragraphText={"Update your locations and services."}
+            iconHeader={"Set Monthly Limits"}
+            paragraphText={"Set the max amount of leads you want per month."}
           />
           <div className="flex flex-col rounded shadow-sm bg-white overflow-hidden md:w-2/3">
-            <div className="p-5 lg:p-6 grow w-full">
-              <Button onClick={() => router.push("/company-services")}>Edit Services</Button>
+            <div className="flex flex-col gap-4 p-5 lg:p-6 grow w-full">
+              <SimpleInput
+                onChange={(e) => {
+                  setMonthlyLeadsLimit(e.target.value);
+                }}
+                label={"Limit"}
+                name={"budget-limit"}
+              />
+              <div>
+                <Button onClick={() =>  handleUpdateLimit()}>
+                  Save
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      <CompanyUsers />
+        <CompanyUsers />
       </div>
     </Layout>
   );

@@ -6,7 +6,7 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
   name: string;
 };
 
-const PrimaryInput: React.FC<Props> = ({ label, name, size: _, ...props }) => {
+export default function FormInput({ label, name, size: _, ...props }:Props) {
   const [field] = useField(name);
 
   const defaultClassName = "block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
@@ -18,5 +18,3 @@ const PrimaryInput: React.FC<Props> = ({ label, name, size: _, ...props }) => {
     </div>
   );
 };
-
-export default PrimaryInput;
