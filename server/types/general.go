@@ -9,6 +9,7 @@ type CreateCompanyInput struct {
 	City               int    `json:"city"`
 	State              int    `json:"state"`
 	ZipCode            string `json:"zip_code"`
+	MaxLimit           int    `json:"max_limit"`
 }
 
 type UsersByCompany struct {

@@ -88,6 +88,7 @@ func (c *Company) UpdateCompany(companyId string, input *types.CreateCompanyInpu
 	// Update fields that are allowed to be updated
 	c.Logo = input.Logo
 	c.Name = input.Name
+	c.MaxLimit = input.MaxLimit
 	c.Address.StreetAddressLine1 = input.StreetAddressLine1
 	c.Address.StreetAddressLine2 = input.StreetAddressLine2
 	c.Address.StreetAddressLine3 = input.StreetAddressLine3
