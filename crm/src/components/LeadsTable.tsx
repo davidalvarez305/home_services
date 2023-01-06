@@ -10,6 +10,8 @@ import formatPhoneNumber from "../utils/formatPhoneNumber";
 import ChevronUp from "../assets/ChevronUp";
 import ChevronDown from "../assets/ChevronDown";
 import sortCompanyLeads from "../utils/sortCompanyLeads";
+import DateComponent from "./TableDateComponent";
+import TableDateComponent from "./TableDateComponent";
 
 interface Props {
   companyLeads: CompanyLead[];
@@ -65,15 +67,6 @@ function RenderImages({
   );
 }
 
-function renderDate({ created_at }: CompanyLead) {
-  const t = new Date(0);
-  return (
-    <td key={uuidv4()}>
-      {new Date(t.setUTCSeconds(created_at)).toLocaleDateString()}
-    </td>
-  );
-}
-
 const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
   const [renderModal, setRenderModal] = useState(false);
   const [sortedLeads, setSortedLeads] = useState<CompanyLead[]>([]);
@@ -119,7 +112,7 @@ const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
                 <p className="font-medium">{`${lead.city}, ${lead.state}`}</p>
                 <p className="text-gray-500">{lead.zip_code}</p>
               </td>
-              {renderDate(lead)}
+              <TableDateComponent date={lead.created_at} />
               <td key={uuidv4()} className="p-3">
                 <p className="font-medium">{lead.service}</p>
               </td>
