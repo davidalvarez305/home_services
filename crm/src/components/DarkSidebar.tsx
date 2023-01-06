@@ -37,17 +37,17 @@ export default function DarkSidebarFullContent() {
       href: "leads",
     },
     {
-      heading: "Billing",
+      heading: "Invoices",
       icon: <LightPlusIcon />,
-      href: "company-billing",
+      href: "company-invoices",
     },
   ];
 
   const subNavLinks = [
     {
-      heading: "Invoices",
+      heading: "Profile",
       icon: <SinglePerson />,
-      href: "company-invoices",
+      href: "/",
     },
     {
       heading: "Account",

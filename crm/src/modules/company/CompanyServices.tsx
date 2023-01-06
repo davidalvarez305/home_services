@@ -152,7 +152,7 @@ export default function CompanyServices() {
         data: createServices(values, ctx!.user.company_id),
       },
       (res) => {
-        setServiceAreas(res.data.data);
+        adjustData(res.data.data);
         setMultipleSelectModal(false);
         toast({
           title: "Success!",
