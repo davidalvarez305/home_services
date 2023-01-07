@@ -19,11 +19,9 @@ export default function InvoicesTable({ invoices }: Props) {
   ];
 
   function handleDownloadFile(invoice: Invoice) {
-    const leads = invoice.leads.map(
-      ({ email, first_name, last_name, phone_number }) => {
-        return { email, first_name, last_name, phone_number };
-      }
-    );
+    const leads = invoice.leads.map(({ budget, created_at }) => {
+      return { budget, created_at };
+    });
 
     const results = XLSX.utils.json_to_sheet(leads);
     const path = `${invoice.invoice_id}.csv`;

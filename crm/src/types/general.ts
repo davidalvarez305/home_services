@@ -152,6 +152,10 @@ export type Lead = {
   phone_number: string;
   created_at: number;
   company_id: number;
+  invoice_id: number;
+  budget: number;
+  address_id: number;
+  service_id: number;
 };
 
 export type LeadDetails = {

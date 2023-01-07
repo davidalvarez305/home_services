@@ -9,8 +9,7 @@ interface Props {
 }
 
 export default function CompanyForm({ initialValues, handleSubmit }: Props) {
-  const inputClassName =
-    "block border border-gray-200 rounded px-3 py-2 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
+  const inputClassName = "block border border-gray-200 rounded px-3 py-2 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       <Form>

@@ -135,8 +135,8 @@ export default function CreateEditCompany() {
         <div className="md:flex md:space-x-5">
           <LargeFormSection
             icon={<UserProfileIcon />}
-            iconHeader={"Set Monthly Limits"}
-            paragraphText={"Set the max amount of leads you want per month."}
+            iconHeader={"Set Monthly Dollar Limits"}
+            paragraphText={"Set how much you're willing to spend on leads."}
           />
           <div className="flex flex-col rounded shadow-sm bg-white overflow-hidden md:w-2/3">
             <div className="flex flex-col gap-4 p-5 lg:p-6 grow w-full">
@@ -144,6 +144,7 @@ export default function CreateEditCompany() {
                 onChange={(e) => {
                   setMonthlyLeadsLimit(Number(e.target.value));
                 }}
+                value={monthlyLeadsLimit}
                 type={'number'}
                 label={"Limit"}
                 name={"budget-limit"}

@@ -776,7 +776,7 @@ func GetCompanyInvoices(c *fiber.Ctx) error {
 		})
 	}
 
-	invoices := &actions.Invoices{}
+	invoices := &actions.CompanyInvoices{}
 
 	err := invoices.GetCompanyInvoices(companyId)
 
