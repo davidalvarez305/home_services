@@ -780,6 +780,12 @@ func GetCompanyInvoices(c *fiber.Ctx) error {
 
 	err := invoices.GetCompanyInvoices(companyId)
 
+	for _, inv := range *invoices {
+
+		fmt.Printf("%+v\n", inv.Leads)
+
+	}
+
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Failed to fetch company invoices.",

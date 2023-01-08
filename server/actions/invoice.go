@@ -19,11 +19,11 @@ type CustomInvoiceLead struct {
 }
 
 type CompanyInvoice struct {
-	InvoiceID      string               `json:"invoice_id"`
-	InvoiceAmount  int                  `json:"invoice_amount"`
-	InvoiceDueDate int64                `json:"invoice_due_date"`
-	Status         string               `json:"status"`
-	InvoiceLeads   []*CustomInvoiceLead `json:"invoice_leads"`
+	InvoiceID      string      `json:"invoice_id"`
+	InvoiceAmount  int         `json:"invoice_amount"`
+	InvoiceDueDate int64       `json:"invoice_due_date"`
+	Status         string      `json:"status"`
+	Leads          interface{} `json:"leads"`
 }
 
 type CompanyInvoices []*CompanyInvoice
@@ -51,7 +51,6 @@ func (i *CompanyInvoices) GetCompanyInvoices(companyId string) error {
 	ON i.invoice_payment_status_id = p.id
 	WHERE i.company_id = ?;	
 	`
-
 	return database.DB.Raw(sql, companyId).Scan(&i).Error
 }
 

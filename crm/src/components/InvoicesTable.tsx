@@ -19,7 +19,7 @@ export default function InvoicesTable({ invoices }: Props) {
   ];
 
   function handleDownloadFile(invoice: Invoice) {
-    const leads = invoice.leads.map(({ budget, created_at }) => {
+    const leads = invoice.leads!.map(({ budget, created_at }) => {
       return { budget, created_at };
     });
 
@@ -72,10 +72,18 @@ export default function InvoicesTable({ invoices }: Props) {
                 </p>
               </td>
               <td key={uuidv4()} className="p-3 text-center">
-                <p className="font-medium">{`${invoice.leads.length} leads`}</p>
+                <p className="font-medium">
+                  {invoice.leads ? `${invoice.leads.length} Leads` : "0 Leads"}
+                </p>
               </td>
               <td key={uuidv4()} className="p-3 text-center">
-                <Button onClick={() => handleDownloadFile(invoice)}>
+                <Button
+                  onClick={() => {
+                    if (invoice.leads) {
+                      handleDownloadFile(invoice);
+                    }
+                  }}
+                >
                   <AiOutlineDownload />
                   <div
                     style={{ display: "none" }}

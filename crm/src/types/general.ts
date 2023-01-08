@@ -224,5 +224,5 @@ export type Invoice = {
   invoice_due_date: number;
   invoice_payment_status_id: number;
   company_id: number;
-  leads: Lead[];
+  leads: Lead[] | null;
 }
