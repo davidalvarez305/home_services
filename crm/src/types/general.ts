@@ -156,6 +156,8 @@ export type Lead = {
   budget: number;
   address_id: number;
   service_id: number;
+  address: Address;
+  service: Service;
 };
 
 export type LeadDetails = {
@@ -224,5 +226,5 @@ export type Invoice = {
   invoice_due_date: number;
   invoice_payment_status_id: number;
   company_id: number;
-  leads: Lead[] | null;
+  leads: Lead[];
 }

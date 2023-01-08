@@ -19,8 +19,9 @@ export default function InvoicesTable({ invoices }: Props) {
   ];
 
   function handleDownloadFile(invoice: Invoice) {
-    const leads = invoice.leads!.map(({ budget, created_at }) => {
-      return { budget, created_at };
+    const leads = invoice.leads.map((lead) => {
+      const { budget, created_at, address: { zip_code }, service: { service } } = lead;
+      return { budget, created_at, zip_code, service };
     });
 
     const results = XLSX.utils.json_to_sheet(leads);
@@ -73,7 +74,7 @@ export default function InvoicesTable({ invoices }: Props) {
               </td>
               <td key={uuidv4()} className="p-3 text-center">
                 <p className="font-medium">
-                  {invoice.leads ? `${invoice.leads.length} Leads` : "0 Leads"}
+                  {`${invoice.leads.length} Leads`}
                 </p>
               </td>
               <td key={uuidv4()} className="p-3 text-center">

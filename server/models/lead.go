@@ -12,9 +12,9 @@ type Lead struct {
 	InvoiceID     int            `gorm:"column:invoice_id;constraint:OnDelete:SET NULL,OnUpdate:CASCADE" json:"invoice_id"`
 	Budget        int            `gorm:"column:budget" json:"budget"`
 	AddressID     int            `json:"address_id"`
-	Address       *Address       `gorm:"column:address_id;foreignKey:AddressID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
+	Address       *Address       `gorm:"column:address_id;foreignKey:AddressID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"address"`
 	ServiceID     int            `gorm:"column:service_id" json:"service_id"`
-	Service       *Service       `gorm:"not null;column:service_id;foreignKey:ServiceID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
+	Service       *Service       `gorm:"not null;column:service_id;foreignKey:ServiceID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"service"`
 	LeadPhoto     []*LeadPhoto   `gorm:"foreignKey:LeadID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
 	LeadMarketing *LeadMarketing `json:"-"`
 	Log           []*LeadLog     `json:"-"`
