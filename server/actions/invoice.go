@@ -20,14 +20,10 @@ func (i *Invoice) GetInvoiceByID(id string) error {
 }
 
 func (i *Invoices) GetCompanyInvoices(companyId string) error {
-	err := database.DB.Where("company_id = ?", companyId).Preload("Lead.Address").Preload("Lead.Service").Find(&i).Error
+	err := database.DB.Where("company_id = ?", companyId).Preload("Lead.Address").Preload("Lead.Service").Preload("Company.Address.City").Preload("Company.Address.State").Preload("Company.Address.Country").Preload("PaymentStatus").Find(&i).Error
 	return err
 }
 
 func (i *Invoice) GetInvoiceByInvoiceID(invoice_id string) error {
 	return database.DB.Where("invoice_id = ?", invoice_id).First(&i).Error
-}
-
-func (i *Invoice) GetInvoiceDetails(companyId string) error {
-	return database.DB.Where("company_id = ?", companyId).Preload("Lead").Preload("Company.Address.City").Preload("Company.Address.State").Preload("Company.Address.Country").Preload("PaymentStatus").First(&i).Error
 }

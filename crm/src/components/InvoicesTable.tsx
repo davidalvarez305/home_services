@@ -5,22 +5,38 @@ import TableDateComponent from "./TableDateComponent";
 import { AiOutlineDownload } from "react-icons/ai";
 import Button from "./Button";
 import * as XLSX from "xlsx";
+import CustomModal from "./ImageSliderModal";
+import InvoiceDetail from "../modules/company/InvoiceDetail";
+import { GrDocumentPdf } from "react-icons/gr";
+
+interface ModalProps {
+  invoice: Invoice;
+}
 
 interface Props {
   invoices: Invoice[];
 }
+
 export default function InvoicesTable({ invoices }: Props) {
+  const [openInvoiceModal, setOpenInvoiceModal] = useState(false);
+  const [invoice, setInvoice] = useState<Invoice>();
   const INVOICE_TABLE_HEADERS = [
     "Invoice Amount",
     "Due Date",
     "Payment Status",
     "Qty. of Leads",
     "Download",
+    "PDF",
   ];
 
   function handleDownloadFile(invoice: Invoice) {
     const leads = invoice.leads.map((lead) => {
-      const { budget, created_at, address: { zip_code }, service: { service } } = lead;
+      const {
+        budget,
+        created_at,
+        address: { zip_code },
+        service: { service },
+      } = lead;
       return { budget, created_at, zip_code, service };
     });
 
@@ -73,9 +89,7 @@ export default function InvoicesTable({ invoices }: Props) {
                 </p>
               </td>
               <td key={uuidv4()} className="p-3 text-center">
-                <p className="font-medium">
-                  {`${invoice.leads.length} Leads`}
-                </p>
+                <p className="font-medium">{`${invoice.leads.length} Leads`}</p>
               </td>
               <td key={uuidv4()} className="p-3 text-center">
                 <Button
@@ -92,10 +106,27 @@ export default function InvoicesTable({ invoices }: Props) {
                   ></div>
                 </Button>
               </td>
+              <td className="p-3 text-center">
+                <button
+                  type="button"
+                  className="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-3 py-2 leading-5 text-sm rounded border-gray-200 bg-gray-200 text-gray-700 hover:text-gray-700 hover:bg-gray-300 hover:border-gray-300 focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-gray-200 active:border-gray-200"
+                  onClick={() => {
+                    setInvoice(invoice);
+                    setOpenInvoiceModal(true);
+                  }}
+                >
+                  <GrDocumentPdf />
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {openInvoiceModal && invoice && (
+        <CustomModal isOpen={openInvoiceModal} setIsOpen={setOpenInvoiceModal}>
+          <InvoiceDetail invoice={invoice} />
+        </CustomModal>
+      )}
     </div>
   );
 }
