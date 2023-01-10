@@ -5,13 +5,9 @@ import TableDateComponent from "./TableDateComponent";
 import { AiOutlineDownload } from "react-icons/ai";
 import Button from "./Button";
 import * as XLSX from "xlsx";
-import CustomModal from "./ImageSliderModal";
 import InvoiceDetail from "../modules/company/InvoiceDetail";
 import { GrDocumentPdf } from "react-icons/gr";
-
-interface ModalProps {
-  invoice: Invoice;
-}
+import InvoiceModal from "./InvoiceModal";
 
 interface Props {
   invoices: Invoice[];
@@ -123,9 +119,9 @@ export default function InvoicesTable({ invoices }: Props) {
         </tbody>
       </table>
       {openInvoiceModal && invoice && (
-        <CustomModal isOpen={openInvoiceModal} setIsOpen={setOpenInvoiceModal}>
+        <InvoiceModal isOpen={openInvoiceModal} setIsOpen={setOpenInvoiceModal}>
           <InvoiceDetail invoice={invoice} />
-        </CustomModal>
+        </InvoiceModal>
       )}
     </div>
   );
