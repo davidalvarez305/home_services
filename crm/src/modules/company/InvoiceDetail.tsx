@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import PrintIcon from "../../assets/PrintIcon";
+import InvoiceDescription from "../../components/InvoiceDescription";
 import { COMPANY_ROUTE } from "../../constants";
 import { UserContext } from "../../context/UserContext";
 import useFetch from "../../hooks/useFetch";
@@ -70,26 +71,28 @@ export default function InvoiceDetail() {
                 <address className="text-sm text-gray-500">
                   Street Address 1234
                   <br />
-                  Miami, Florida
+                  Hialeah, Florida
                   <br />
-                  33123
+                  33015
                   <br />
-                  ltd@example.com
+                  david@southfloridaathleticclub.com
                 </address>
               </div>
               {/* END Company Info */}
 
               {/* Client Info */}
               <div className="md:text-right print:text-right">
-                <div className="text-lg font-semibold mb-1">{invoice.company.name}</div>
+                <div className="text-lg font-semibold mb-1">
+                  {invoice.company.name}
+                </div>
                 <address className="text-sm text-gray-500">
                   {invoice.company.address.street_address_line_1}
                   <br />
                   {`${invoice.company.address.city.city}, ${invoice.company.address.state.state}`}
                   <br />
-                  Region, Postal Code
+                  {invoice.company.address.zip_code}
                   <br />
-                  ctr@example.com
+                  {ctx?.user.email}
                 </address>
               </div>
               {/* END Client Info */}
@@ -110,10 +113,7 @@ export default function InvoiceDetail() {
                       Qnt
                     </th>
                     <th className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-right">
-                      Unit
-                    </th>
-                    <th className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-right">
-                      Amount
+                      Price Agreement
                     </th>
                   </tr>
                 </thead>
@@ -123,72 +123,25 @@ export default function InvoiceDetail() {
                 <tbody>
                   <tr className="border-b border-gray-100">
                     <td className="p-3">
-                      <p className="font-semibold mb-1">Logo Creation</p>
-                      <p className="text-gray-500">
-                        Logo and business cards design
-                      </p>
+                      <p className="font-semibold mb-1">Leads Generated</p>
+                      <InvoiceDescription dueDate={invoice.invoice_due_date} />
                     </td>
                     <td className="p-3 text-center">
                       <div className="text-sm rounded text-blue-700 bg-blue-200 font-semibold inline-flex px-2 py-1 leading-4">
-                        1
+                        {invoice.leads.length}
                       </div>
                     </td>
-                    <td className="p-3 text-right">$1,800.00</td>
-                    <td className="p-3 text-right">$1,800.00</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="p-3">
-                      <p className="font-semibold mb-1">
-                        Online Store Design &amp; Development
-                      </p>
-                      <p className="text-gray-500">
-                        Design/Development for all popular modern browsers
-                      </p>
-                    </td>
-                    <td className="p-3 text-center">
-                      <div className="text-sm rounded text-blue-700 bg-blue-200 font-semibold inline-flex px-2 py-1 leading-4">
-                        1
-                      </div>
-                    </td>
-                    <td className="p-3 text-right">$20,000.00</td>
-                    <td className="p-3 text-right">$20,000.00</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="p-3">
-                      <p className="font-semibold mb-1">App Design</p>
-                      <p className="text-gray-500">
-                        Promotional mobile application
-                      </p>
-                    </td>
-                    <td className="p-3 text-center">
-                      <div className="text-sm rounded text-blue-700 bg-blue-200 font-semibold inline-flex px-2 py-1 leading-4">
-                        1
-                      </div>
-                    </td>
-                    <td className="p-3 text-right">$3,200.00</td>
-                    <td className="p-3 text-right">$3,200.00</td>
-                  </tr>
-                  <tr>
-                    <td colSpan={3} className="p-3 font-semibold text-right">
-                      Subtotal
-                    </td>
-                    <td className="p-3 text-right">$25,000.00</td>
-                  </tr>
-                  <tr>
-                    <td colSpan={3} className="p-3 font-semibold text-right">
-                      Vat Rate
-                    </td>
-                    <td className="p-3 text-right">20%</td>
+                    <td className="p-3 text-right">{`$${invoice.company.price_agreement}`}</td>
                   </tr>
                   <tr>
                     <td
-                      colSpan={3}
+                      colSpan={2}
                       className="p-3 font-bold uppercase text-right bg-gray-50"
                     >
                       Total Due
                     </td>
                     <td className="p-3 font-semibold text-right bg-gray-50">
-                      $30,000.00
+                      ${invoice.company.price_agreement * invoice.leads.length}
                     </td>
                   </tr>
                 </tbody>
