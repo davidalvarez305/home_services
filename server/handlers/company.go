@@ -790,3 +790,28 @@ func GetCompanyInvoices(c *fiber.Ctx) error {
 		"data": invoices,
 	})
 }
+
+func GetInvoiceDetails(c *fiber.Ctx) error {
+	companyId := c.Params("id")
+	invoiceId := c.Params("invoiceId")
+
+	if companyId == "" || invoiceId == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Missing params in URL.",
+		})
+	}
+
+	invoice := &actions.Invoice{}
+
+	err := invoice.GetInvoiceDetails(companyId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to fetch invoice.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": invoice,
+	})
+}

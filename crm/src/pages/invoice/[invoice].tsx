@@ -1,3 +1,3 @@
-import InvoiceDetail from "../../modules/billing/InvoiceDetail";
+import Invoice from "../../modules/company/InvoiceDetail";
 
-export default InvoiceDetail;
+export default Invoice;

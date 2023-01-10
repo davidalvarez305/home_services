@@ -219,6 +219,11 @@ export type UpdateLeadInformation = {
 
 export type PhotoResponse = { id: number; image_url: string; lead_id: number };
 
+export type PaymentStatus = {
+  id: number;
+  status: string;
+};
+
 export type Invoice = {
   id: number;
   invoice_id: string;
@@ -227,4 +232,6 @@ export type Invoice = {
   invoice_payment_status_id: number;
   company_id: number;
   leads: Lead[];
+  payment_status: PaymentStatus;
+  company: Company;
 }

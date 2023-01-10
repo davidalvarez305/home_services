@@ -3,5 +3,5 @@ import PrimaryLayout from "../components/Layout";
 
 export default function Home() {
   useLoginRequired();
-  return <PrimaryLayout screenName="Home">Hi!</PrimaryLayout>;
+  return <PrimaryLayout>Hi!</PrimaryLayout>;
 }
