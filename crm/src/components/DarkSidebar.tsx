@@ -45,9 +45,9 @@ export default function DarkSidebarFullContent() {
 
   const subNavLinks = [
     {
-      heading: "Profile",
+      heading: "Invoice",
       icon: <SinglePerson />,
-      href: "/",
+      href: "invoice/1",
     },
     {
       heading: "Account",

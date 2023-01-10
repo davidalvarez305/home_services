@@ -7,16 +7,16 @@ import useFetch from "../../hooks/useFetch";
 import { Invoice } from "../../types/general";
 
 export default function InvoiceDetail() {
+  const ctx = useContext(UserContext);
   const [invoice, setInvoice] = useState<Invoice>();
   const { makeRequest, error, isLoading } = useFetch();
-  const ctx = useContext(UserContext);
   const router = useRouter();
 
   useEffect(() => {
     if (ctx?.user.company_id) {
       makeRequest(
         {
-          url: `${COMPANY_ROUTE}/${ctx.user.company_id}/invoice/${router.query.invoice}`,
+          url: `${COMPANY_ROUTE}/1/invoice/${router.query.invoice}`,
         },
         (res) => {
           setInvoice(res.data.data);
@@ -49,7 +49,7 @@ export default function InvoiceDetail() {
           <div className="lg:w-10/12 mx-auto print:w-full">
             {/* Invoice Header */}
             <div className="flex justify-between items-center py-10 border-b border-gray-100 print:pt-0">
-              <h3 className="font-semibold">Invoice #000159</h3>
+              <h3 className="font-semibold">{invoice.payment_status.status}</h3>
               <div className="print:hidden">
                 <button
                   type="button"
@@ -81,11 +81,11 @@ export default function InvoiceDetail() {
 
               {/* Client Info */}
               <div className="md:text-right print:text-right">
-                <div className="text-lg font-semibold mb-1">Client</div>
+                <div className="text-lg font-semibold mb-1">{invoice.company.name}</div>
                 <address className="text-sm text-gray-500">
-                  Street Address
+                  {invoice.company.address.street_address_line_1}
                   <br />
-                  State, City
+                  {`${invoice.company.address.city.city}, ${invoice.company.address.state.state}`}
                   <br />
                   Region, Postal Code
                   <br />

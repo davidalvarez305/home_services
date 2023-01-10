@@ -28,6 +28,6 @@ func (i *Invoice) GetInvoiceByInvoiceID(invoice_id string) error {
 	return database.DB.Where("invoice_id = ?", invoice_id).First(&i).Error
 }
 
-func (i *Invoice) GetInvoiceDetails(id string) error {
-	return database.DB.Where("id = ?", id).Preload("Lead").Preload("PaymentStatus").First(&i).Error
+func (i *Invoice) GetInvoiceDetails(companyId string) error {
+	return database.DB.Where("company_id = ?", companyId).Preload("Lead").Preload("Company.Address.City").Preload("Company.Address.State").Preload("Company.Address.Country").Preload("PaymentStatus").First(&i).Error
 }

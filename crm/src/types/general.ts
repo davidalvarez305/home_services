@@ -17,6 +17,11 @@ export type User = {
   last_name: string;
 };
 
+export type Country = {
+  id: number;
+  country: string;
+}
+
 export type AccountStatus = {
   id: number;
   status: string;
@@ -48,6 +53,9 @@ export type Address = {
   state_id: number;
   zip_code: string;
   country_id: number;
+  city: City;
+  state: State;
+  country: Country;
 };
 
 export type Company = {
