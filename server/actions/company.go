@@ -181,3 +181,7 @@ func FindCompanyIDByZipCodeAndService(zipCode string, serviceID int) (int, error
 
 	return companyId, res.Error
 }
+
+func (l *Leads) GetCompanyLeadsByDate(date, company string) error {
+	return database.DB.Where("created_at > ? AND company_id = ?", date, company).Find(&l).Error
+}

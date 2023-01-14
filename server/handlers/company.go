@@ -790,3 +790,35 @@ func GetCompanyInvoices(c *fiber.Ctx) error {
 		"data": invoices,
 	})
 }
+
+func GetCompanyLeadsByDate(c *fiber.Ctx) error {
+	leads := &actions.Leads{}
+
+	date := c.Params("date")
+
+	if len(date) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Date not found in QS.",
+		})
+	}
+
+	companyId := c.Params("id")
+
+	if len(companyId) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Company ID not found in URL params.",
+		})
+	}
+
+	err := leads.GetCompanyLeadsByDate(date, companyId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Failed to fetch company leads.",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"data": leads,
+	})
+}

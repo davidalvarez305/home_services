@@ -33,6 +33,7 @@ func Company(router fiber.Router) {
 	// Manage Company Invoices
 	company.Get("/:id/invoice", handlers.GetCompanyInvoices)
 
-	// Manage Quotes Assigned to Company
+	// Manage Leads Assigned to Company
+	company.Get("/:id/leads/:date", handlers.GetCompanyLeadsByDate)
 	company.Get("/:id/leads", handlers.GetCompanyLeads)
 }
