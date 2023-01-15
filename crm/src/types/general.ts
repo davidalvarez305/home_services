@@ -172,7 +172,7 @@ export type Lead = {
   service_id: number;
   address: Address;
   service: Service;
-  lead_photos: LeadPhotos[];
+  lead_photos: LeadPhotos[] | null;
 };
 
 export type LeadDetails = {

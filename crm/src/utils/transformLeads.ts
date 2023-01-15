@@ -3,7 +3,11 @@ import { CompanyLead, Lead } from "../types/general";
 export default function transformLeads(leads: Lead[]) {
     let companyLeads: CompanyLead[] = [];
 
-    leads.forEach((lead) => {
+    for (let i = 0; i < 10; i++) {
+        const lead = leads[i];
+        
+        if (!lead) break;
+
         companyLeads.push({
             ...lead,
             city: lead.address.city.city,
@@ -17,9 +21,9 @@ export default function transformLeads(leads: Lead[]) {
             street_address_line_3: lead.address.street_address_line_3,
             service: lead.service.service,
             zip_code: lead.address.zip_code,
-            photos: lead.lead_photos.map((photo) => photo.image_url).join(",")
+            photos: lead.lead_photos ? lead.lead_photos.map((photo) => photo.image_url).join(",") : ""
         })
-    })
+    }
 
     return companyLeads;
 }
