@@ -151,6 +151,12 @@ export type CreateLeadInput = {
   budget: number;
 };
 
+export type LeadPhotos = {
+	id: number;
+	image_url:  string;
+	lead_id: number;
+}
+
 export type Lead = {
   id: number;
   email: string;
@@ -166,6 +172,7 @@ export type Lead = {
   service_id: number;
   address: Address;
   service: Service;
+  lead_photos: LeadPhotos[];
 };
 
 export type LeadDetails = {

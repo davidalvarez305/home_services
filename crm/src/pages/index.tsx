@@ -4,8 +4,9 @@ import { useContext, useState, useEffect, useCallback } from "react";
 import { COMPANY_ROUTE } from "../constants";
 import { UserContext } from "../context/UserContext";
 import useFetch from "../hooks/useFetch";
-import { Lead } from "../types/general";
 import LeadsCard from "../components/LeadsCard";
+import LeadsTable from "../components/LeadsTable";
+import transformLeads from "../utils/transformLeads";
 
 const DAYS_SINCE_MONTH_START = Math.floor(
   new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getTime() /
@@ -73,6 +74,14 @@ export default function Home() {
           cardTitle={"Amount Owed ($USD)"}
           subText={"This Month"}
         />
+        <LeadsCard
+          leads={leads['YESTERDAY'].length * 4}
+          cardTitle={"Leads"}
+          subText={"Yesterday"}
+        />
+      </div>
+      <div className="m-2">
+        <LeadsTable companyLeads={transformLeads(leads['SEVEN_DAYS_AGO'])} />
       </div>
     </PrimaryLayout>
   );

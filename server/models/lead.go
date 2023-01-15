@@ -15,7 +15,7 @@ type Lead struct {
 	Address       *Address       `gorm:"column:address_id;foreignKey:AddressID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"address"`
 	ServiceID     int            `gorm:"column:service_id" json:"service_id"`
 	Service       *Service       `gorm:"not null;column:service_id;foreignKey:ServiceID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"service"`
-	LeadPhoto     []*LeadPhoto   `gorm:"foreignKey:LeadID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"-"`
+	LeadPhoto     []*LeadPhoto   `gorm:"foreignKey:LeadID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"lead_photos"`
 	LeadMarketing *LeadMarketing `json:"-"`
 	Log           []*LeadLog     `json:"-"`
 }
