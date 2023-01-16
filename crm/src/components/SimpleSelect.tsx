@@ -15,12 +15,12 @@ export default function SimpleSelect({
   ...props
 }: Props) {
   const defaultClassName =
-    "w-full block border border-gray-200 rounded px-3 py-2 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
+    "w-full block border border-gray-200 text-black rounded px-3 py-2 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50";
 
   return (
     <div className="space-y-1">
       {label && (
-        <label className="font-medium" htmlFor={name}>
+        <label className="font-medium text-black" htmlFor={name}>
           {label}
         </label>
       )}

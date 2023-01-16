@@ -23,7 +23,7 @@ export default function CustomSelect({ name, label, children, ...props }: Props)
 
   return (
     <div className="space-y-1">
-      {label && <label className="font-medium" htmlFor={name}>
+      {label && <label className="font-medium text-black" htmlFor={name}>
         {label}
       </label>}
       <select

@@ -101,22 +101,22 @@ const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
           {sortedLeads.map((lead, index) => (
             <tr className={index % 2 !== 0 ? "bg-gray-50" : ""} key={uuidv4()}>
               <td key={uuidv4()} className="p-3">
-                <p className="font-medium">
+                <p className="font-medium text-black">
                   {`${lead.first_name} ${lead.last_name}`}
                 </p>
               </td>
               <td key={uuidv4()} className="p-3">
-                <p className="font-medium">
+                <p className="font-medium text-black">
                   {formatPhoneNumber(lead.phone_number)}
                 </p>
               </td>
               <td key={uuidv4()} className="p-3">
-                <p className="font-medium">{`${lead.city}, ${lead.state}`}</p>
+                <p className="font-medium text-black">{`${lead.city}, ${lead.state}`}</p>
                 <p className="text-gray-500">{lead.zip_code}</p>
               </td>
               <TableDateComponent date={lead.created_at} />
               <td key={uuidv4()} className="p-3">
-                <p className="font-medium">{lead.service}</p>
+                <p className="font-medium text-black">{lead.service}</p>
               </td>
               <RenderImages
                 lead={lead}
@@ -124,7 +124,7 @@ const LeadsTable: React.FC<Props> = ({ companyLeads }) => {
                 setRenderModal={setRenderModal}
               />
               <td key={uuidv4()} className="p-3">
-                <p className="font-medium">{`$${lead.budget}`}</p>
+                <p className="font-medium text-black">{`$${lead.budget}`}</p>
               </td>
             </tr>
           ))}

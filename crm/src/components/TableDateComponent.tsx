@@ -7,7 +7,7 @@ interface Props {
 export default function TableDateComponent({ date }:Props) {
   const t = new Date(0);
   return (
-    <td className="p-3 text-center" key={uuidv4()}>
+    <td className="p-3 text-center font-medium text-black" key={uuidv4()}>
       {new Date(t.setUTCSeconds(date)).toLocaleDateString()}
     </td>
   );

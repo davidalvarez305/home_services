@@ -28,11 +28,11 @@ export default function LeadsCard({ leads, cardTitle, subText }: Props) {
   return (
     <div className="flex flex-col rounded-xl border bg-white">
       <div className="flex items-center justify-between py-4 px-5 lg:px-6 w-full">
-        <h3 className="text-lg font-medium">{cardTitle}</h3>
+        <h3 className="text-lg font-medium text-black">{cardTitle}</h3>
       </div>
       <div className="pb-5 px-5 lg:pb-6 lg:px-6 grow w-full flex justify-between items-center">
         <dl>
-          <dt className="text-2xl font-bold">{leads}</dt>
+          <dt className="text-2xl font-bold text-black">{leads}</dt>
           <dd className="text-sm font-medium text-gray-500">{subText}</dd>
         </dl>
         <Delta number={8.4} isPositive={true} />

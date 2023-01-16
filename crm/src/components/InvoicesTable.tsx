@@ -76,16 +76,16 @@ export default function InvoicesTable({ invoices }: Props) {
               key={invoice.invoice_id}
             >
               <td key={uuidv4()} className="p-3 text-center">
-                <p className="font-medium">{invoice.invoice_amount}</p>
+                <p className="font-medium text-black">{invoice.invoice_amount}</p>
               </td>
               <TableDateComponent date={invoice.invoice_due_date} />
               <td key={uuidv4()} className="p-3 text-center">
-                <p className="font-medium">
+                <p className="font-medium text-black">
                   {invoice.invoice_payment_status_id}
                 </p>
               </td>
               <td key={uuidv4()} className="p-3 text-center">
-                <p className="font-medium">{`${invoice.leads.length} Leads`}</p>
+                <p className="font-medium text-black">{`${invoice.leads.length} Leads`}</p>
               </td>
               <td key={uuidv4()} className="p-3 text-center">
                 <Button

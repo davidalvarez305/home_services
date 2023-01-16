@@ -22,6 +22,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
   return (
     <div className="flex flex-col justify-start items-center overflow-scroll h-[500px]">
       <SimpleSelect
+        className="text-black"
         value={""}
         name={"location-select"}
         onChange={(e) => {
@@ -34,7 +35,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
       >
         <option value=""></option>
         {selectOptions.map((option) => (
-          <option value={option} key={option}>
+          <option className="text-black" value={option} key={option}>
             {capitalizeFirstLetter(option)}
           </option>
         ))}
