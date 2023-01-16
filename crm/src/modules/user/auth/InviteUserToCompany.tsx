@@ -1,4 +1,3 @@
-import { useToast } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import Button from "../../../components/Button";
@@ -12,7 +11,6 @@ import FormWrapper from "./FormWrapper";
 export default function InviteUserToCompany() {
   const { isLoading, makeRequest, error } = useFetch();
   const router = useRouter();
-  const toast = useToast();
 
   function handleSubmit(values: {
     username: string;
@@ -28,13 +26,6 @@ export default function InviteUserToCompany() {
         data: values,
       },
       (_) => {
-        toast({
-          title: "Success!",
-          description: "User registration was successful.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
         router.push("/login");
       }
     );

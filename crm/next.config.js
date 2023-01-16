@@ -7,12 +7,6 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'anima-uploads.s3.amazonaws.com',
-        port: '',
-        pathname: '/projects/**',
-      },
-      {
-        protocol: 'https',
         hostname: 'home-services-app.s3.amazonaws.com',
         port: '',
         pathname: '/profile-pictures/**',

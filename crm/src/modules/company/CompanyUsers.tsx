@@ -1,4 +1,3 @@
-import { useToast } from "@chakra-ui/react";
 import { FieldArray, Form, Formik } from "formik";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import UserProfileIcon from "../../assets/UserProfileIcon";
@@ -25,7 +24,6 @@ export default function CompanyUsers() {
   const [roles, setRoles] = useState<Role[]>([]);
   const [accountStatus, setAccountStatus] = useState<AccountStatus[]>([]);
   const { makeRequest, isLoading, error } = useFetch();
-  const toast = useToast();
   const [inviteModal, setInviteModal] = useState(false);
   const [inviteUserEmail, setInviteUserEmail] = useState("");
 
@@ -78,15 +76,7 @@ export default function CompanyUsers() {
         method: "POST",
         data: { email },
       },
-      (_) => {
-        toast({
-          title: "Success!",
-          description: "User has been invited.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
+      (_) => {}
     );
   }
 
@@ -98,13 +88,6 @@ export default function CompanyUsers() {
       },
       (res) => {
         setUsers(res.data.data);
-        toast({
-          title: "Success!",
-          description: "User has been removed.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
       }
     );
   }
@@ -118,13 +101,6 @@ export default function CompanyUsers() {
       },
       (res) => {
         setUsers(res.data.data);
-        toast({
-          title: "Success!",
-          description: "Users have been successfully updated.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
       }
     );
   }
@@ -224,7 +200,7 @@ export default function CompanyUsers() {
                   <Button
                     onClick={() => setInviteModal(true)}
                     disabled={isLoading}
-                    type={'button'}
+                    type={"button"}
                   >
                     Add
                   </Button>
@@ -236,7 +212,11 @@ export default function CompanyUsers() {
         </div>
       </div>
       {inviteModal && (
-        <CustomModal modalTitle={'Invite User'} isOpen={inviteModal} setIsOpen={setInviteModal}>
+        <CustomModal
+          modalTitle={"Invite User"}
+          isOpen={inviteModal}
+          setIsOpen={setInviteModal}
+        >
           <div className="flex flex-col justify-center items-center gap-4">
             <input
               className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"

@@ -5,13 +5,11 @@ import useFetch from "../../../hooks/useFetch";
 import { USER_ROUTE } from "../../../constants";
 import Button from "../../../components/Button";
 import UserWrapper from "./UserWrapper";
-import { useToast } from "@chakra-ui/react";
 import FormWrapper from "./FormWrapper";
 import RequestErrorMessage from "../../../components/RequestErrorMessage";
 
 export default function ForgotPassword() {
   const { makeRequest, isLoading, error } = useFetch();
-  const toast = useToast();
 
   function handleSubmit(values: { email: string }) {
     makeRequest(
@@ -20,16 +18,7 @@ export default function ForgotPassword() {
         method: "POST",
         data: values,
       },
-      (_) => {
-        toast({
-          title: "Sent!",
-          description:
-            "Use the link sent to your inbox within the next 5 minutes.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
+      (_) => {}
     );
   }
 
@@ -57,4 +46,4 @@ export default function ForgotPassword() {
       </Formik>
     </UserWrapper>
   );
-};
+}

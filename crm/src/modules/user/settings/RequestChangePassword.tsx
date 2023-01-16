@@ -1,4 +1,3 @@
-import { useToast } from "@chakra-ui/react";
 import { useContext } from "react";
 import Button from "../../../components/Button";
 import { USER_ROUTE } from "../../../constants";
@@ -8,7 +7,6 @@ import useFetch from "../../../hooks/useFetch";
 export default function ChangePasswordForm() {
   const { makeRequest, isLoading, error } = useFetch();
   const ctx = useContext(UserContext);
-  const toast = useToast();
   function handleSubmit() {
     if (!ctx?.user || ctx?.user.email === "") {
       return;
@@ -22,15 +20,7 @@ export default function ChangePasswordForm() {
           email: ctx.user.email,
         },
       },
-      (_) => {
-        toast({
-          title: "Success!",
-          description: "Check your e-mail for instructions.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
+      (_) => {}
     );
   }
 

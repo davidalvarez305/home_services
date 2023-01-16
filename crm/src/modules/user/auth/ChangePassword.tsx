@@ -1,4 +1,3 @@
-import { useToast } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import Button from "../../../components/Button";
@@ -12,7 +11,6 @@ import UserWrapper from "./UserWrapper";
 export default function ChangePassword() {
   const { isLoading, makeRequest, error } = useFetch();
   const router = useRouter();
-  const toast = useToast();
 
   type formValues = { newPassword: string; confirmNewPassword: string };
   function handleSubmit(values: formValues) {
@@ -21,14 +19,6 @@ export default function ChangePassword() {
     }
 
     if (values.newPassword !== values.confirmNewPassword) {
-      toast({
-        title: "Error!",
-        description: "Passwords don't match.",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-      });
-
       return;
     }
 

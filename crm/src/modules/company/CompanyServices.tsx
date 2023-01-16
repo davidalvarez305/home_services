@@ -3,7 +3,6 @@ import PrimaryLayout from "../../components/Layout";
 import useLoginRequired from "../../hooks/useLoginRequired";
 import { Form, Formik } from "formik";
 import Button from "../../components/Button";
-import { useToast } from "@chakra-ui/react";
 import SelectMultipleModal from "../../components/SelectMultipleModal";
 import useFetch from "../../hooks/useFetch";
 import { COMPANY_ROUTE, SERVICE_ROUTE } from "../../constants";
@@ -23,7 +22,6 @@ import { SelectedComponent } from "../../components/SelectedComponent";
 export default function CompanyServices() {
   useLoginRequired();
   const ctx = useContext(UserContext);
-  const toast = useToast();
   const [toggleZipCodes, setToggleZipCodes] = useState(false);
   const [filteredAreas, setFilteredAreas] = useState<CompanyServicesByArea[]>(
     []
@@ -154,14 +152,6 @@ export default function CompanyServices() {
       (res) => {
         adjustData(res.data.data);
         setMultipleSelectModal(false);
-        toast({
-          title: "Success!",
-          description: "Services have been added to the chosen locations.",
-          status: "success",
-          isClosable: true,
-          duration: 5000,
-          variant: "left-accent",
-        });
       }
     );
   }
@@ -299,16 +289,6 @@ export default function CompanyServices() {
           )}
         </Formik>
       </div>
-
-      {error.message.length > 0 &&
-        toast({
-          title: "Error!",
-          description: error.message,
-          status: "error",
-          isClosable: true,
-          duration: 5000,
-          variant: "left-accent",
-        })}
     </PrimaryLayout>
   );
 }

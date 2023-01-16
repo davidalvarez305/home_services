@@ -1,4 +1,3 @@
-import { useToast } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { useContext } from "react";
 import UserProfileIcon from "../../../assets/UserProfileIcon";
@@ -18,10 +17,8 @@ interface Props {
 export default function LeadAccountSettings({ lead }: Props) {
   const { makeRequest, isLoading, error } = useFetch();
   const ctx = useContext(LeadContext);
-  const toast = useToast();
 
   function handleSubmit(values: LeadDetails) {
-
     // In this case, service has to be set to service_id because that's what the server expects.
 
     makeRequest(
@@ -35,14 +32,6 @@ export default function LeadAccountSettings({ lead }: Props) {
       },
       (res) => {
         ctx?.SetLead(res.data.data);
-
-        toast({
-          title: "Success!",
-          description: "Account settings have been updated.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
       }
     );
   }
@@ -61,10 +50,7 @@ export default function LeadAccountSettings({ lead }: Props) {
       />
       <div className="flex flex-col rounded shadow-sm bg-white overflow-hidden md:w-2/3">
         <div className="p-5 lg:p-6 grow w-full">
-          <Formik
-            initialValues={lead}
-            onSubmit={handleSubmit}
-          >
+          <Formik initialValues={lead} onSubmit={handleSubmit}>
             <Form>
               <div className="space-y-6">
                 <div className="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">

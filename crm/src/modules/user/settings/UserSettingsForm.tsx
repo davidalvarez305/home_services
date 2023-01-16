@@ -5,7 +5,6 @@ import { UserContext } from "../../../context/UserContext";
 import Image from "next/image";
 import FormInput from "../../../components/FormInput";
 import useFetch from "../../../hooks/useFetch";
-import { useToast } from "@chakra-ui/react";
 import ProfileIcon from "../../../assets/ProfileIcon";
 import { User } from "../../../types/general";
 import Button from "../../../components/Button";
@@ -16,7 +15,6 @@ export default function UserSettingsForm() {
   const { isLoading, makeRequest, error } = useFetch();
   const USER_IMAGE = `${BUCKET_URL}/profile-pictures/${ctx?.user.profile_picture}`;
   const hasProfileImg = ctx!.user.profile_picture.length > 0;
-  const toast = useToast();
 
   function handleUpload(event: ChangeEvent<HTMLInputElement>) {
     if (event.target.files) {
@@ -38,14 +36,6 @@ export default function UserSettingsForm() {
         },
         (res) => {
           ctx?.SetUser(res.data.data);
-
-          toast({
-            title: "Success!",
-            description: "Images has been uploaded.",
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
         }
       );
     }
@@ -60,14 +50,6 @@ export default function UserSettingsForm() {
       },
       (res) => {
         ctx?.SetUser(res.data.data);
-
-        toast({
-          title: "Success!",
-          description: "User has been updated.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
       }
     );
   }

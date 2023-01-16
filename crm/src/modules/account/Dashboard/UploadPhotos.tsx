@@ -1,4 +1,3 @@
-import { useToast } from "@chakra-ui/react";
 import Image from "next/image";
 import { useContext, useState } from "react";
 import GreyInfoIcon from "../../../assets/GreyInfoIcon";
@@ -18,7 +17,6 @@ export default function UploadPhotos() {
   const { makeRequest, isLoading, error } = useFetch();
   const [photos, setPhotos] = useState<FileList | null>(null);
   const ctx = useContext(LeadContext);
-  const toast = useToast();
   const [openCarousel, setOpenCarousel] = useState(false);
   const [leadPhotos, setLeadPhotos] = useState(() => {
     if (ctx?.lead?.photos) {
@@ -50,14 +48,6 @@ export default function UploadPhotos() {
         const updatedLead = { ...ctx!.lead, photos: returnedPhotos.map((photo) => photo.image_url).join(',') } as LeadDetails;
         ctx?.SetLead(updatedLead);
         setLeadPhotos(returnedPhotos.map((photo) => photo.image_url));
-
-        toast({
-          title: "Success!",
-          description: "Photos have been uploaded.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
       }
     );
   }

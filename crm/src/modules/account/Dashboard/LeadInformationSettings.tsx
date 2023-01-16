@@ -1,4 +1,3 @@
-import { useToast } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useContext, useEffect, useState } from "react";
 import BlueLockIcon from "../../../assets/BlueLockIcon";
@@ -19,7 +18,6 @@ interface Props {
 export default function LeadInformationSettings({ lead }: Props) {
   const { makeRequest, isLoading, error } = useFetch();
   const ctx = useContext(LeadContext);
-  const toast = useToast();
   const [services, setServices] = useState<Service[]>([]);
   const [selectedValue, setSelectedValue] = useState<Service>({
     id: 0,
@@ -52,14 +50,6 @@ export default function LeadInformationSettings({ lead }: Props) {
       },
       (res) => {
         ctx?.SetLead(res.data.data);
-
-        toast({
-          title: "Success!",
-          description: "Account settings have been updated.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
       }
     );
   }

@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.3.4",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@headlessui/react": "^1.7.5",
@@ -34,7 +33,7 @@
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.3",
-    "@tailwindcss/typography": "^0.5.8",
+    "@tailwindcss/typography": "^0.5.9",
     "@types/node": "18.11.7",
     "@types/react": "18.0.24",
     "@types/react-dom": "18.0.8",
