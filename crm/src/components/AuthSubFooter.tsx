@@ -1,5 +1,3 @@
-import Checkbox from "./Checkbox";
-import Link from "next/link";
 import useAuthFooterLinks from "../hooks/useAuthFooterLinks";
 
 export default function AuthSubFooter() {

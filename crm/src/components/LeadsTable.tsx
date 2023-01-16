@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { IconButton } from "@chakra-ui/react";
 import { CompanyLead } from "../types/general";
 import { COMPANY_LEADS_HEADERS } from "../utils/companyLeadsHeaders";
 import { BiImages } from "react-icons/bi";
@@ -12,6 +11,7 @@ import ChevronDown from "../assets/ChevronDown";
 import sortCompanyLeads from "../utils/sortCompanyLeads";
 import DateComponent from "./TableDateComponent";
 import TableDateComponent from "./TableDateComponent";
+import Button from "./Button";
 
 interface Props {
   companyLeads: CompanyLead[];
@@ -33,7 +33,10 @@ function RenderImages({
   if (photos.length < 2 && photos[0].length === 0) {
     return (
       <td key={uuidv4()} className="p-3">
-        <p className="font-medium">No Images</p>
+        <Button
+        onClick={() => setRenderModal(true)}
+        aria-label={"photos"}
+      ></Button>
       </td>
     );
   }
@@ -58,11 +61,10 @@ function RenderImages({
 
   return (
     <td key={uuidv4()}>
-      <IconButton
+      <Button
         onClick={() => setRenderModal(true)}
-        icon={<BiImages />}
         aria-label={"photos"}
-      />
+      ></Button>
     </td>
   );
 }
