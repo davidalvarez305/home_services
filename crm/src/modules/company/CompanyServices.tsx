@@ -165,7 +165,7 @@ export default function CompanyServices() {
               <tr>
                 {["City", "Zip Code"].map((header) => (
                   <th
-                    className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center"
+                    className="p-3 text-gray-700 bg-gray-100 font-semibold text-sm tracking-wider uppercase text-center text-black"
                     key={header}
                   >
                     {header}
@@ -179,8 +179,8 @@ export default function CompanyServices() {
                   className={index % 2 !== 0 ? "bg-gray-50" : undefined}
                   key={uuidv4()}
                 >
-                  <td className="p-3 text-center">{location.city}</td>
-                  <td className="p-3 text-center">
+                  <td className="p-3 text-center text-black">{location.city}</td>
+                  <td className="p-3 text-center text-black">
                     <div>
                       <SelectedComponent
                         selected={location.zip_code}
@@ -222,8 +222,8 @@ export default function CompanyServices() {
                 className={index % 2 !== 0 ? "bg-gray-50" : undefined}
                 key={uuidv4()}
               >
-                <td className="p-3 text-center">{service}</td>
-                <td className="p-3 text-center">
+                <td className="p-3 text-center text-black">{service}</td>
+                <td className="p-3 text-center text-black">
                   <Button
                     onClick={() => {
                       setFilterService(service);
