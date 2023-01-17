@@ -12,3 +12,6 @@ def home(request):
 
 def get_a_quote(request):
     return render(request, 'blog/get-a-quote.html')
+
+def contact(request):
+    return render(request, 'blog/contact.html')
