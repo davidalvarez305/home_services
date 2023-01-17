@@ -105,50 +105,53 @@
     var companyName = document.getElementById('company-name');
     var streetAddressOne = document.getElementById('street-address-1');
     var streetAddressTwo = document.getElementById('street-address-2');
-    var streetAddressThree = document.getElementById('street-address-3');
     var city = document.getElementById('city');
     var zipCode = document.getElementById('zip-code');
     var employees = document.getElementById('employees');
 
     var values = {
-        full_name: fullName,
-        email: email,
-        job_title: jobTitle,
-        phone_number: phoneNumber,
-        company_name: companyName,
-        street_address_one: streetAddressOne,
-        street_address_two: streetAddressTwo,
-        street_address_three: streetAddressThree,
-        city: city,
-        zip_code: zipCode,
-        employees: employees
+        full_name: fullName.value,
+        email: email.value,
+        job_title: jobTitle.value,
+        phone_number: phoneNumber.value,
+        company_name: companyName.value,
+        street_address_one: streetAddressOne.value,
+        street_address_two: streetAddressTwo.value,
+        city: city.value,
+        zip_code: zipCode.value,
+        employees: employees.value
     };
 
-    fetch('localhost:4015/api/partner/work-with-us', {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      fetch('localhost:4015/api/partner/work-with-us', {
       method: 'POST',
       credentials: "include",
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(values)
-    }).then((response) => response.json())
-      .then((data) => {
-        if (data.data) {
+    })
+    .then((response) => response.json())
+    .then((data) => {
 
-          // Send successful lead creation to Google Analytics
-          window.gtag("event", "partner_request", {
-            currency: "USD",
-            budgetAmount: budget.value,
-          });
+      if (data.data) {
+        // Send successful lead creation to Google Analytics
+        window.gtag("event", "partner_request", {
+          currency: "USD",
+          budgetAmount: budget.value,
+        });
 
-          // Send successful lead creation to Meta Analytics
-          window.fbq("trackCustom", "partner_request", {
-            currency: "USD",
-            value: budget.value,
-          });
-        }
-      })
-      .catch(console.error);
+        // Send successful lead creation to Meta Analytics
+        window.fbq("trackCustom", "partner_request", {
+          currency: "USD",
+          value: budget.value,
+        });
+      }
+    })
+    .catch(console.error);
+    });
 
   </script>
 {% endblock %}
