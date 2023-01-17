@@ -15,3 +15,6 @@ def get_a_quote(request):
 
 def contact(request):
     return render(request, 'blog/contact.html')
+
+def  partners_sign_up(request):
+    return render(request, 'blog/partners-sign-up.html')

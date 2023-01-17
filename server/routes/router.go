@@ -17,5 +17,5 @@ func Router(app *fiber.App) {
 	controllers.Lead(api)
 	controllers.SMS(api)
 	controllers.Stripe(api)
-	controllers.ContactForm(api)
+	controllers.Contact(api)
 }
