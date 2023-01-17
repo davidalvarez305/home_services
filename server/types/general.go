@@ -74,3 +74,10 @@ type CompanyLeadsQS struct {
 	Offset    int `query:"offset"`
 	Limit     int `query:"limit"`
 }
+
+type ContactForm struct {
+	FirstName string `json:"first_name"`
+	LastName string `json:"last_name"`
+	Email string `json:"email"`
+	Message string `json:"message"`
+}
