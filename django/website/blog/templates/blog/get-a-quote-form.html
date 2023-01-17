@@ -1,0 +1,115 @@
+{% load static %}
+<section id="content">
+  <div class="content-wrap clearfix">
+    <div class="container">
+      <div class="form-widget mt-5 mx-auto" style="max-width: 750px">
+        <div class="form-result"></div>
+
+        <form class="row mb-0" id="get-a-quote-form">
+          <div class="form-process">
+            <div class="css3-spinner">
+              <div class="css3-spinner-scaler"></div>
+            </div>
+          </div>
+
+          <div class="col-md-6 form-group">
+            <label class="nott" for="quote-first-name">First Name <small>*</small></label>
+            <input type="text" id="quote-first-name" value="" class="sm-form-control required" />
+          </div>
+
+          <div class="col-md-6 form-group">
+            <label class="nott" for="quote-last-name">Last Name <small>*</small></label>
+            <input type="text" id="quote-last-name" value="" class="sm-form-control required" />
+          </div>
+
+          <div class="col-md-6 form-group">
+            <label class="nott" for="quote-phone">Phone</label>
+            <input type="tel" id="quote-phone" value="" class="sm-form-control" />
+          </div>
+
+          <div class="col-md-6 form-group">
+            <label class="nott" for="quote-email">Email <small>*</small></label>
+            <input type="email" id="quote-email" value="" class="required email sm-form-control" />
+          </div>
+
+          <div class="col-md-6 form-group">
+            <label class="nott" for="quote-budget">Project Budget <small>*</small></label>
+            <input type="number" id="quote-budget" value="" class="required budget sm-form-control" />
+          </div>
+
+          <div class="clear"></div>
+
+          <div class="col-12 form-group">
+            <label for="quote-services">Choose Services:</label>
+            <select id="quote-services">
+              <option value="">--Please choose an option--</option>
+              <option value="home remodeling">Home Remodeling</option>
+              <option value="bathroom remodeling">Bathroom Remodeling</option>
+            </select>
+          </div>
+
+          <div class="col-12 form-group">
+            <button class="button button-rounded button-large m-0" type="submit" id="quote-submit-button">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  var getAQuoteForm = document.getElementById("get-a-quote-form");
+  var firstName = document.getElementById("quote-first-name");
+  var lastName = document.getElementById("quote-last-name");
+  var email = document.getElementById("quote-email");
+  var phone = document.getElementById("quote-phone");
+  var service = document.getElementById("quote-services");
+  var budget = document.getElementById("quote-budget");
+
+  getAQuoteForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    var marketing = Object.fromEntries(window.qs);
+
+    var body = {
+      ...marketing,
+      first_name: firstName.value,
+      last_name: lastName.value,
+      email: email.value,
+      phone_number: phone.value,
+      service: 6, // service.value
+      budget: Number(budget.value),
+    };
+
+    console.log(body);
+
+    fetch("http://localhost:4015/api/lead", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.data) {
+
+          // Send successful lead creation to Google Analytics
+          window.gtag("event", "lead_created", {
+            currency: "USD",
+            budgetAmount: budget.value,
+          });
+
+          // Send successful lead creation to Meta Analytics
+          window.fbq("trackCustom", "lead_created", {
+            currency: "USD",
+            value: budget.value,
+          });
+        }
+      })
+      .catch(console.error);
+  });
+</script>
