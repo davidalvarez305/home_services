@@ -827,6 +827,10 @@ select{
   width: 75%;
 }
 
+.w-96{
+  width: 24rem;
+}
+
 .max-w-full{
   max-width: 100%;
 }
