@@ -3,7 +3,116 @@
 {% block content %}
 
 <!-- Get A Quote Form -->
-{% include "blog/get-a-quote-form.html" %}
+<div class="space-y-4 lg:space-y-8">
+    <div class="flex flex-col rounded shadow-sm bg-white overflow-hidden">
+        <div class="p-5 lg:p-6 grow w-full">
+            <div class="md:flex">
+                <div class="md:flex-none md:w-1/3 border-b md:border-0 mb-5 md:mb-0">
+                    <h3 class="flex items-center space-x-2 font-semibold mb-2">
+                        <svg class="hi-solid hi-user-circle inline-block w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path></svg>
+                        <span>User Profile</span>
+                    </h3>
+                    <p class="text-gray-500 text-sm mb-5">
+                        Tell us some information about you and your role.
+                    </p>
+                </div>
+                    <div class="md:w-2/3 md:pl-24">
+                    <form class="space-y-6" id="work-with-us-form">
+                        <div class="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
+                            <div class="space-y-1 grow">
+                                <label class="font-medium" for="first-name">First Name</label>
+                                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="first-name" name="first-name" placeholder="John Doe">
+                            </div>
+                            <div class="space-y-1 grow">
+                                <label class="font-medium" for="last-name">Last Name</label>
+                                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="last-name" name="last-name" placeholder="John Doe">
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="font-medium" for="email">Email</label>
+                            <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="email" id="email" name="email" placeholder="john.doe@example.com">
+                        </div>
+                        <div class="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
+                            <div class="space-y-1 grow">
+                                <label class="font-medium" for="phone-number">Phone Number</label>
+                                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="phone-number" name="phone-number" placeholder="Phone Number">
+                            </div>
+                            <div class="space-y-1 grow">
+                                <label class="font-medium" for="budget">Budget</label>
+                                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="number" id="budget" name="budget">
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="font-medium" for="service">Service</label>
+                            <select class="w-full block border border-gray-200 rounded px-3 py-2 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" id="service" name="service">
+                              <option value=""></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-3 py-2 leading-5 text-sm rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700">
+                            Submit
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END Personal Information -->
+
+</div>
 <!-- Get A Quote Form End -->
+<script src="{% static 'blog/quote.js' %}"></script>
+
+<script>
+  var getAQuoteForm = document.getElementById("get-a-quote-form");
+  var firstName = document.getElementById("quote-first-name");
+  var lastName = document.getElementById("quote-last-name");
+  var email = document.getElementById("quote-email");
+  var phone = document.getElementById("quote-phone");
+  var service = document.getElementById("quote-services");
+  var budget = document.getElementById("quote-budget");
+
+  getAQuoteForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    var marketing = Object.fromEntries(window.qs);
+
+    var body = {
+      ...marketing,
+      first_name: firstName.value,
+      last_name: lastName.value,
+      email: email.value,
+      phone_number: phone.value,
+      service: 6, // service.value
+      budget: Number(budget.value),
+    };
+
+    fetch("http://localhost:4015/api/lead", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.data) {
+
+          // Send successful lead creation to Google Analytics
+          window.gtag("event", "lead_created", {
+            currency: "USD",
+            budgetAmount: budget.value,
+          });
+
+          // Send successful lead creation to Meta Analytics
+          window.fbq("trackCustom", "lead_created", {
+            currency: "USD",
+            value: budget.value,
+          });
+        }
+      })
+      .catch(console.error);
+  });
+</script>
 
 {% endblock %}
