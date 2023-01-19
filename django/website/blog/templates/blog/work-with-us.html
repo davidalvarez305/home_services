@@ -1,192 +1,190 @@
 {% extends "blog/base.html" %}
 {% load static %}
 {% block content %}
-
 <!-- User Profile -->
 <div class="space-y-4 lg:space-y-8">
-    <!-- Personal Information -->
-    <div class="flex flex-col rounded shadow-sm bg-white overflow-hidden">
+   <!-- Personal Information -->
+   <div class="flex flex-col rounded shadow-sm bg-white overflow-hidden">
       <div class="p-5 lg:p-6 grow w-full">
-        <div class="md:flex">
-          <div class="md:flex-none md:w-1/3 border-b md:border-0 mb-5 md:mb-0">
-            <h3 class="flex items-center space-x-2 font-semibold mb-2">
-              <svg class="hi-solid hi-user-circle inline-block w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path></svg>
-              <span>User Profile</span>
-            </h3>
-            <p class="text-gray-500 text-sm mb-5">
-              Tell us some information about you and your role.
-            </p>
-          </div>
-          <div class="md:w-2/3 md:pl-24">
-            <form class="space-y-6" id="work-with-us-form">
-              <div class="space-y-1">
-                <label class="font-medium" for="full-name">Full Name</label>
-                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="full-name" name="full-name" placeholder="John Doe">
-              </div>
-              <div class="space-y-1">
-                <label class="font-medium" for="email">Email</label>
-                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="email" id="email" name="email" placeholder="john.doe@example.com">
-              </div>
-              <div class="space-y-1">
-                <label class="font-medium" for="job-title">Job Title</label>
-                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="job-title" name="job-title" placeholder="Product Manager">
-              </div>
-              <div class="space-y-1">
-                <label class="font-medium" for="phone-number">Phone Number</label>
-                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="phone-number" name="phone-number" placeholder="Phone Number">
-              </div>
+         <div class="md:flex">
+            <div class="md:flex-none md:w-1/3 border-b md:border-0 mb-5 md:mb-0">
+               <h3 class="flex items-center space-x-2 font-semibold mb-2">
+                  <svg class="hi-solid hi-user-circle inline-block w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span>User Profile</span>
+               </h3>
+               <p class="text-gray-500 text-sm mb-5">
+                  Tell us some information about you and your role.
+               </p>
             </div>
-          </div>
-        </div>
+            <div class="md:w-2/3 md:pl-24">
+               <form class="space-y-6" id="work-with-us-form">
+                  <div class="space-y-1">
+                     <label class="font-medium" for="full-name">Full Name</label>
+                     <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="full-name" name="full-name" placeholder="John Doe">
+                  </div>
+                  <div class="space-y-1">
+                     <label class="font-medium" for="email">Email</label>
+                     <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="email" id="email" name="email" placeholder="john.doe@example.com">
+                  </div>
+                  <div class="space-y-1">
+                     <label class="font-medium" for="job-title">Job Title</label>
+                     <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="job-title" name="job-title" placeholder="Product Manager">
+                  </div>
+                  <div class="space-y-1">
+                     <label class="font-medium" for="phone-number">Phone Number</label>
+                     <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="phone-number" name="phone-number" placeholder="Phone Number">
+                  </div>
+            </div>
+         </div>
       </div>
-    </div>
-    <!-- END Personal Information -->
-  
-    <!-- Company Information -->
-    <div class="flex flex-col rounded shadow-sm bg-white overflow-hidden">
-      <div class="p-5 lg:p-6 grow w-full">
-        <div class="md:flex">
-          <div class="md:flex-none md:w-1/3 border-b md:border-0 mb-5 md:mb-0">
-            <h3 class="flex items-center space-x-2 font-semibold mb-2">
-              <svg class="hi-solid hi-credit-card inline-block w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg>
-              <span>Company Information</span>
-            </h3>
-            <p class="text-gray-500 text-sm mb-5">
-              Tell us a little bit more about your company.
-            </p>
-          </div>
-          <div class="md:w-2/3 md:pl-24">
-            <div class="space-y-6">
-              <div class="space-y-1">
-                <label class="font-medium" for="company-name">Company Name</label>
-                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="company-name" name="company-name">
-              </div>
-              <div class="space-y-1">
-                <label class="font-medium" for="street-address-1">Street Address 1</label>
-                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="street-address-1" name="street-address-1">
-              </div>
-              <div class="space-y-1">
-                <label class="font-medium" for="street-address-2">Street Address 2</label>
-                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="street-address-2" name="street-address-2">
-              </div>
-              <div class="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
-                <div class="space-y-1 sm:w-2/3">
-                  <label class="font-medium" for="city">City</label>
-                  <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="city" name="city">
-                </div>
-                <div class="space-y-1 sm:w-1/3">
-                  <label class="font-medium" for="zip-code">Zip Code</label>
-                  <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="zip-code" name="zip-code">
-                </div>
-              </div>
-              <div class="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
-                <div class="space-y-1 grow">
-                  <label class="font-medium" for="employees">No. of Employees</label>
-                  <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="number" id="employees" name="employees">
-                </div>
-                <div class="space-y-1 grow">
-                  <label class="font-medium" for="business-years">Years in Business</label>
-                  <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="number" id="business-years" name="business-years">
-                </div>
-              </div>
-              <div class="space-y-1">
-                <label class="font-medium" for="company-type">Company Type</label>
-                <select class="w-full block border border-gray-200 rounded px-3 py-2 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" id="company-type" name="company-type">
-                  <option value=""></option>
-                  <option>Construction Company</option>
-                  <option>General Contractor</option>
-                  <option>Electrical Contractor</option>
-                  <option>Roofing Contractor</option>
-                  <option>Landscaping Contractor</option>
-                  <option>Plumbing</option>
-                  <option>HVAC</option>
-                  <option>Excavator</option>
-                  <option>Carpenter</option>
-                  <option>Drywall</option>
-                  <option>Concrete Specialist</option>
-                  <option>Flooring Contractor</option>
-                  <option>Other</option>
-                </select>
-              </div>
-              <div class="space-y-1">
-                <label for="message" class="font-medium">Message</label>
-                <textarea class="block border border-gray-200 rounded placeholder-gray-400 px-5 py-3 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" id="contact-message" name="message" rows="6"></textarea>
-              </div>
-              <button type="submit" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-3 py-2 leading-5 text-sm rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700">
-                Submit
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- END Company Information -->
-
-  </div>
-  <!-- END User Profile -->
-
-  <script>
-    var form = document.getElementById('work-with-us-form');
-    var fullName = document.getElementById('full-name');
-    var email = document.getElementById('email');
-    var jobTitle = document.getElementById('job-title');
-    var phoneNumber = document.getElementById('phone-number');
-    var companyName = document.getElementById('company-name');
-    var streetAddressOne = document.getElementById('street-address-1');
-    var streetAddressTwo = document.getElementById('street-address-2');
-    var city = document.getElementById('city');
-    var zipCode = document.getElementById('zip-code');
-    var employees = document.getElementById('employees');
-    var companyType = document.getElementById('company-type');
-    var yearsInBusiness = document.getElementById('business-years');
-    var message = document.getElementById("contact-message");
-
-    var values = {
-        full_name: fullName.value,
-        email: email.value,
-        job_title: jobTitle.value,
-        phone_number: phoneNumber.value,
-        company_name: companyName.value,
-        street_address_one: streetAddressOne.value,
-        street_address_two: streetAddressTwo.value,
-        city: city.value,
-        zip_code: zipCode.value,
-        employees: employees.value,
-        company_type: companyType.value,
-        business_years: yearsInBusiness.value,
-        message: message.value
-    };
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      fetch('localhost:4015/api/partner/work-with-us', {
-      method: 'POST',
-      credentials: "include",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values)
-      })
-      .then((response) => response.json())
-      .then((data) => {
-
-        if (data.data) {
-          // Send successful lead creation to Google Analytics
-          window.gtag("event", "partner_request", {
-            currency: "USD",
-            budgetAmount: budget.value,
-          });
-
-          // Send successful lead creation to Meta Analytics
-          window.fbq("trackCustom", "partner_request", {
-            currency: "USD",
-            value: budget.value,
-          });
-        }
-      })
-      .catch(console.error);
-    });
-
-  </script>
+   </div>
+</div>
+<!-- END Personal Information -->
+<!-- Company Information -->
+<div class="flex flex-col rounded shadow-sm bg-white overflow-hidden">
+<div class="p-5 lg:p-6 grow w-full">
+<div class="md:flex">
+<div class="md:flex-none md:w-1/3 border-b md:border-0 mb-5 md:mb-0">
+<h3 class="flex items-center space-x-2 font-semibold mb-2">
+<svg class="hi-solid hi-credit-card inline-block w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg>
+<span>Company Information</span>
+</h3>
+<p class="text-gray-500 text-sm mb-5">
+Tell us a little bit more about your company.
+</p>
+</div>
+<div class="md:w-2/3 md:pl-24">
+<div class="space-y-6">
+<div class="space-y-1">
+<label class="font-medium" for="company-name">Company Name</label>
+<input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="company-name" name="company-name">
+</div>
+<div class="space-y-1">
+<label class="font-medium" for="street-address-1">Street Address 1</label>
+<input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="street-address-1" name="street-address-1">
+</div>
+<div class="space-y-1">
+<label class="font-medium" for="street-address-2">Street Address 2</label>
+<input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="street-address-2" name="street-address-2">
+</div>
+<div class="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
+<div class="space-y-1 sm:w-2/3">
+<label class="font-medium" for="city">City</label>
+<input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="city" name="city">
+</div>
+<div class="space-y-1 sm:w-1/3">
+<label class="font-medium" for="zip-code">Zip Code</label>
+<input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="zip-code" name="zip-code">
+</div>
+</div>
+<div class="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
+<div class="space-y-1 grow">
+<label class="font-medium" for="employees">No. of Employees</label>
+<input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="number" id="employees" name="employees">
+</div>
+<div class="space-y-1 grow">
+<label class="font-medium" for="business-years">Years in Business</label>
+<input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="number" id="business-years" name="business-years">
+</div>
+</div>
+<div class="space-y-1">
+<label class="font-medium" for="company-type">Company Type</label>
+<select class="w-full block border border-gray-200 rounded px-3 py-2 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" id="company-type" name="company-type">
+<option value=""></option>
+<option>Construction Company</option>
+<option>General Contractor</option>
+<option>Electrical Contractor</option>
+<option>Roofing Contractor</option>
+<option>Landscaping Contractor</option>
+<option>Plumbing</option>
+<option>HVAC</option>
+<option>Excavator</option>
+<option>Carpenter</option>
+<option>Drywall</option>
+<option>Concrete Specialist</option>
+<option>Flooring Contractor</option>
+<option>Other</option>
+</select>
+</div>
+<div class="space-y-1">
+<label for="message" class="font-medium">Message</label>
+<textarea class="block border border-gray-200 rounded placeholder-gray-400 px-5 py-3 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" id="contact-message" name="message" rows="6"></textarea>
+</div>
+<button type="submit" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-3 py-2 leading-5 text-sm rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700">
+Submit
+</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+<!-- END Company Information -->
+</div>
+<!-- END User Profile -->
+<script>
+   var form = document.getElementById('work-with-us-form');
+   var fullName = document.getElementById('full-name');
+   var email = document.getElementById('email');
+   var jobTitle = document.getElementById('job-title');
+   var phoneNumber = document.getElementById('phone-number');
+   var companyName = document.getElementById('company-name');
+   var streetAddressOne = document.getElementById('street-address-1');
+   var streetAddressTwo = document.getElementById('street-address-2');
+   var city = document.getElementById('city');
+   var zipCode = document.getElementById('zip-code');
+   var employees = document.getElementById('employees');
+   var companyType = document.getElementById('company-type');
+   var yearsInBusiness = document.getElementById('business-years');
+   var message = document.getElementById("contact-message");
+   
+   var values = {
+       full_name: fullName.value,
+       email: email.value,
+       job_title: jobTitle.value,
+       phone_number: phoneNumber.value,
+       company_name: companyName.value,
+       street_address_one: streetAddressOne.value,
+       street_address_two: streetAddressTwo.value,
+       city: city.value,
+       zip_code: zipCode.value,
+       employees: employees.value,
+       company_type: companyType.value,
+       business_years: yearsInBusiness.value,
+       message: message.value
+   };
+   
+   form.addEventListener('submit', function (e) {
+     e.preventDefault();
+   
+     fetch('localhost:4015/api/partner/work-with-us', {
+     method: 'POST',
+     credentials: "include",
+     headers: {
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify(values)
+     })
+     .then((response) => response.json())
+     .then((data) => {
+   
+       if (data.data) {
+         // Send successful lead creation to Google Analytics
+         window.gtag("event", "partner_request", {
+           currency: "USD",
+           budgetAmount: budget.value,
+         });
+   
+         // Send successful lead creation to Meta Analytics
+         window.fbq("trackCustom", "partner_request", {
+           currency: "USD",
+           value: budget.value,
+         });
+       }
+     })
+     .catch(console.error);
+   });
+   
+</script>
 {% endblock %}

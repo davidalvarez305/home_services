@@ -1,120 +1,115 @@
 {% extends "blog/base.html" %}
 {% load static %}
 {% block content %}
-
 <!-- Contact Section: Simple Boxed -->
 <div class="bg-gray-100">
-  <div class="space-y-16 container xl:max-w-7xl mx-auto px-4 py-16 lg:px-8 lg:py-32">
-    <!-- Heading -->
-    <div class="text-center">
-      <div class="text-sm uppercase font-bold tracking-wider mb-1 text-blue-700">
-        Looking for a contractor?
+   <div class="space-y-16 container xl:max-w-7xl mx-auto px-4 py-16 lg:px-8 lg:py-32">
+      <!-- Heading -->
+      <div class="text-center">
+         <div class="text-sm uppercase font-bold tracking-wider mb-1 text-blue-700">
+            Looking for a contractor?
+         </div>
+         <h2 class="text-3xl md:text-4xl font-extrabold mb-4">
+            Get Your Quote in Seconds
+         </h2>
+         <h3 class="text-lg md:text-xl md:leading-relaxed font-medium text-gray-600 lg:w-2/3 mx-auto">
+            Enter some basic information and we'll match you with a highly rated local contractor.
+         </h3>
       </div>
-      <h2 class="text-3xl md:text-4xl font-extrabold mb-4">
-        Get Your Quote in Seconds
-      </h2>
-      <h3 class="text-lg md:text-xl md:leading-relaxed font-medium text-gray-600 lg:w-2/3 mx-auto">
-        Enter some basic information and we'll match you with a highly rated local contractor.
-      </h3>
-    </div>
-    <!-- END Heading -->
-
-    <!-- Contact Form -->
-    <div class="lg:w-2/3 mx-auto bg-white p-5 md:p-10 rounded-lg shadow-sm">
-      <form class="space-y-6" id="work-with-us-form">
-        <div class="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
-            <div class="space-y-1 grow">
-                <label class="font-medium" for="first-name">First Name</label>
-                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="first-name" name="first-name" placeholder="John Doe">
+      <!-- END Heading -->
+      <!-- Contact Form -->
+      <div class="lg:w-2/3 mx-auto bg-white p-5 md:p-10 rounded-lg shadow-sm">
+         <form class="space-y-6" id="work-with-us-form">
+            <div class="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
+               <div class="space-y-1 grow">
+                  <label class="font-medium" for="first-name">First Name</label>
+                  <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="first-name" name="first-name" placeholder="John Doe">
+               </div>
+               <div class="space-y-1 grow">
+                  <label class="font-medium" for="last-name">Last Name</label>
+                  <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="last-name" name="last-name" placeholder="John Doe">
+               </div>
             </div>
-            <div class="space-y-1 grow">
-                <label class="font-medium" for="last-name">Last Name</label>
-                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="last-name" name="last-name" placeholder="John Doe">
+            <div class="space-y-1">
+               <label class="font-medium" for="email">Email</label>
+               <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="email" id="email" name="email" placeholder="john.doe@example.com">
             </div>
-        </div>
-        <div class="space-y-1">
-            <label class="font-medium" for="email">Email</label>
-            <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="email" id="email" name="email" placeholder="john.doe@example.com">
-        </div>
-        <div class="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
-            <div class="space-y-1 grow">
-                <label class="font-medium" for="phone-number">Phone Number</label>
-                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="phone-number" name="phone-number" placeholder="Phone Number">
+            <div class="space-y-6 sm:space-y-0 sm:flex sm:space-x-3">
+               <div class="space-y-1 grow">
+                  <label class="font-medium" for="phone-number">Phone Number</label>
+                  <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="phone-number" name="phone-number" placeholder="Phone Number">
+               </div>
+               <div class="space-y-1 grow">
+                  <label class="font-medium" for="budget">Budget</label>
+                  <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="number" id="budget" name="budget">
+               </div>
             </div>
-            <div class="space-y-1 grow">
-                <label class="font-medium" for="budget">Budget</label>
-                <input class="block border placeholder-gray-400 px-3 py-2 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="number" id="budget" name="budget">
+            <div class="space-y-1">
+               <label class="font-medium" for="service">Service</label>
+               <select class="w-full block border border-gray-200 rounded px-3 py-2 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" id="service" name="service">
+                  <option value=""></option>
+               </select>
             </div>
-        </div>
-        <div class="space-y-1">
-            <label class="font-medium" for="service">Service</label>
-            <select class="w-full block border border-gray-200 rounded px-3 py-2 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" id="service" name="service">
-              <option value=""></option>
-            </select>
-        </div>
-        <button type="submit" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-3 py-2 leading-5 text-sm rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700">
+            <button type="submit" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-3 py-2 leading-5 text-sm rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700">
             Submit
-        </button>
-      </form>
-    </div>
-    <!-- END Contact Form -->
-  </div>
+            </button>
+         </form>
+      </div>
+      <!-- END Contact Form -->
+   </div>
 </div>
 <!-- END Contact Section: Simple Boxed -->
-
 <script src="{% static 'blog/quote.js' %}"></script>
-
 <script>
-  var getAQuoteForm = document.getElementById("get-a-quote-form");
-  var firstName = document.getElementById("first-name");
-  var lastName = document.getElementById("last-name");
-  var email = document.getElementById("email");
-  var phone = document.getElementById("phone");
-  var service = document.getElementById("services");
-  var budget = document.getElementById("budget");
-
-  getAQuoteForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    var marketing = Object.fromEntries(window.qs);
-
-    var body = {
-      ...marketing,
-      first_name: firstName.value,
-      last_name: lastName.value,
-      email: email.value,
-      phone_number: phone.value,
-      service: 6, // service.value
-      budget: Number(budget.value),
-    };
-
-    fetch("http://localhost:4015/api/lead", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      credentials: "include",
-      body: JSON.stringify(body),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.data) {
-
-          // Send successful lead creation to Google Analytics
-          window.gtag("event", "lead_created", {
-            currency: "USD",
-            budgetAmount: budget.value,
-          });
-
-          // Send successful lead creation to Meta Analytics
-          window.fbq("trackCustom", "lead_created", {
-            currency: "USD",
-            value: budget.value,
-          });
-        }
-      })
-      .catch(console.error);
-  });
+   var getAQuoteForm = document.getElementById("get-a-quote-form");
+   var firstName = document.getElementById("first-name");
+   var lastName = document.getElementById("last-name");
+   var email = document.getElementById("email");
+   var phone = document.getElementById("phone");
+   var service = document.getElementById("services");
+   var budget = document.getElementById("budget");
+   
+   getAQuoteForm.addEventListener("submit", function (e) {
+     e.preventDefault();
+   
+     var marketing = Object.fromEntries(window.qs);
+   
+     var body = {
+       ...marketing,
+       first_name: firstName.value,
+       last_name: lastName.value,
+       email: email.value,
+       phone_number: phone.value,
+       service: 6, // service.value
+       budget: Number(budget.value),
+     };
+   
+     fetch("http://localhost:4015/api/lead", {
+       headers: {
+         "Content-Type": "application/json",
+       },
+       method: "POST",
+       credentials: "include",
+       body: JSON.stringify(body),
+     })
+       .then((response) => response.json())
+       .then((data) => {
+         if (data.data) {
+   
+           // Send successful lead creation to Google Analytics
+           window.gtag("event", "lead_created", {
+             currency: "USD",
+             budgetAmount: budget.value,
+           });
+   
+           // Send successful lead creation to Meta Analytics
+           window.fbq("trackCustom", "lead_created", {
+             currency: "USD",
+             value: budget.value,
+           });
+         }
+       })
+       .catch(console.error);
+   });
 </script>
-
 {% endblock %}
