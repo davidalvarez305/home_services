@@ -18,3 +18,6 @@ def contact(request):
 
 def  work_with_us(request):
     return render(request, 'blog/work-with-us.html')
+
+def about(request):
+    return render(request, 'blog/about.html')
