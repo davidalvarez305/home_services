@@ -60,7 +60,9 @@
 </div>
 <!-- END Contact Section: Simple Boxed -->
 <script src="{% static 'blog/quote.js' %}"></script>
+{{ crm_domain|json_script:"crm_domain" }}
 <script>
+   var CRM_DOMAIN = JSON.parse(document.getElementById('crm_domain').textContent);
    var getAQuoteForm = document.getElementById("get-a-quote-form");
    var firstName = document.getElementById("first-name");
    var lastName = document.getElementById("last-name");
@@ -84,7 +86,7 @@
        budget: Number(budget.value),
      };
    
-     fetch("http://localhost:4015/api/lead", {
+     fetch(CRM_DOMAIN + "/api/lead", {
        headers: {
          "Content-Type": "application/json",
        },

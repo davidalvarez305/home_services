@@ -6,18 +6,49 @@ from django.shortcuts import render
 DOMAIN = str(os.environ.get('DOMAIN'))
 SITE_NAME = str(os.environ.get('SITE_NAME'))
 CURRENT_YEAR = date.today().year
+CRM_DOMAIN = str(os.environ.get('CRM_DOMAIN'))
 
 def home(request):
-    return render(request, 'blog/service.html')
+    context = {
+        "domain": DOMAIN,
+        "crm_domain": CRM_DOMAIN,
+        "current_year": CURRENT_YEAR,
+        "site_name": SITE_NAME
+    }
+    return render(request, 'blog/service.html', context)
 
 def get_a_quote(request):
-    return render(request, 'blog/get-a-quote.html')
+    context = {
+        "domain": DOMAIN,
+        "crm_domain": CRM_DOMAIN,
+        "current_year": CURRENT_YEAR,
+        "site_name": SITE_NAME
+    }
+    return render(request, 'blog/get-a-quote.html', context)
 
 def contact(request):
-    return render(request, 'blog/contact.html')
+    context = {
+        "domain": DOMAIN,
+        "crm_domain": CRM_DOMAIN,
+        "current_year": CURRENT_YEAR,
+        "site_name": SITE_NAME
+    }
+    return render(request, 'blog/contact.html', context)
 
 def  work_with_us(request):
-    return render(request, 'blog/work-with-us.html')
+    context = {
+        "domain": DOMAIN,
+        "crm_domain": CRM_DOMAIN,
+        "current_year": CURRENT_YEAR,
+        "site_name": SITE_NAME
+    }
+    return render(request, 'blog/work-with-us.html', context)
 
 def about(request):
-    return render(request, 'blog/about.html')
+    context = {
+        "domain": DOMAIN,
+        "crm_domain": CRM_DOMAIN,
+        "current_year": CURRENT_YEAR,
+        "site_name": SITE_NAME
+    }
+    return render(request, 'blog/about.html', context)

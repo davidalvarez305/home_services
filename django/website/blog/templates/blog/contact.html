@@ -50,7 +50,10 @@
    </div>
 </div>
 <!-- END Contact Section: Simple Boxed -->
+
+{{ crm_domain|json_script:"crm_domain" }}
 <script>
+   var CRM_DOMAIN = JSON.parse(document.getElementById('crm_domain').textContent);
    var contactForm = document.getElementById("contact-form");
    var firstName = document.getElementById("first-name");
    var lastName = document.getElementById("last-name");
@@ -67,7 +70,7 @@
        message: message.value
      };
    
-     fetch("http://localhost:4015/api/contact", {
+     fetch(CRM_DOMAIN + "/api/contact", {
        headers: {
          "Content-Type": "application/json",
        },
