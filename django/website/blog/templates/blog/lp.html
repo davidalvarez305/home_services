@@ -2,38 +2,21 @@
 {% load static %}
 {% block content %}
 <!-- Hero Content -->
-<div class="container xl:max-w-7xl mx-auto px-4 py-16 lg:px-8 lg:py-32 text-center relative">
-    <div class="text-sm rounded text-amber-700 bg-amber-200 font-semibold inline-flex px-2 py-1 leading-4 mb-2 border border-amber-300">
-      Brand new features in v3.5!
-    </div>
+<div class="container xl:max-w-7xl mx-auto px-4 py-12 lg:px-8 lg:py-26 text-center relative">
     <div class="w-24 h-24 mx-auto my-10 flex items-center justify-center rounded-2xl text-white bg-blue-600 border border-blue-800 ring-4 ring-blue-300 rotate-6">
       <svg class="hi-outline hi-lightning-bolt inline-block w-12 h-12" stroke="currentColor" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
     </div>
     <h1 class="text-3xl md:text-4xl font-extrabold mb-4">
-      Power up your web project with the ultimate tool
+      Connect with a local contractor near you
     </h1>
     <h2 class="text-lg md:text-xl md:leading-relaxed font-medium text-gray-600 lg:w-2/3 mx-auto">
-      Build, test and deploy your code with ease of mind. Easily add it in any project you are working on and make it work wonders.
+      Give us some basic details about your project, and we'll match you with a highly qualified professional
     </h2>
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-center space-y-2 sm:space-y-0 sm:space-x-2 py-10">
-      <div class="flex items-center space-x-2 bg-blue-50 border border-blue-300 text-gray-600 font-medium rounded px-6 py-4 leading-6">
-        <span class="opacity-75 font-semibold text-blue-700">&gt;</span> <code>npm i plugin</code>
-      </div>
-      <a href="javascript:void(0)" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-6 py-4 leading-6 rounded border-gray-700 bg-gray-700 text-white hover:text-white hover:bg-gray-800 hover:border-gray-800 focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-gray-700 active:border-gray-700">
+      <button id="get-started-button" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-6 py-4 leading-6 rounded border-gray-700 bg-gray-700 text-white hover:text-white hover:bg-gray-800 hover:border-gray-800 focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-gray-700 active:border-gray-700">
         <svg class="hi-solid hi-document-text inline-block w-5 h-5 opacity-50" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
-        <span>Get Started</span>
-      </a>
-    </div>
-    <div class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3">
-      <a href="javascript:void(0)" class="text-blue-600 hover:text-blue-400 text-sm font-semibold">
-        <span>Currently v3.5</span>
-      </a>
-      <a href="javascript:void(0)" class="text-gray-600 hover:text-gray-500 text-sm font-semibold underline">
-        <span>Download</span>
-      </a>
-      <a href="javascript:void(0)" class="text-gray-600 hover:text-gray-500 text-sm font-semibold underline">
-        <span>All Releases</span>
-      </a>
+        <span>Start Now</span>
+      </button>
     </div>
   </div>
   <!-- END Hero Content -->  
@@ -282,7 +265,6 @@
 <!-- END Features Section: Secondary Features List -->
 <!-- Blog Post -->
 <article class="prose prose-indigo prose-lg mx-auto">
-    <img src="https://cdn.tailkit.com/media/placeholders/photo-VWcPlbHglYc-800x400.jpg" alt="Featured Image of blog post" class="rounded-lg">
     <p>
       Integer fermentum tincidunt auctor. Vestibulum ullamcorper, odio sed rhoncus imperdiet, enim elit sollicitudin orci, eget dictum leo mi nec lectus. Nam commodo turpis id lectus scelerisque vulputate. Integer sed dolor erat. Fusce
       erat ipsum, varius vel euismod sed, tristique et lectus? Etiam egestas fringilla enim, id convallis lectus laoreet at. Fusce purus nisi, gravida sed consectetur ut, interdum quis nisi.
@@ -361,14 +343,10 @@
   
             <!-- Actions -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-center space-y-4 sm:space-y-0 sm:space-x-2">
-              <a href="javascript:void(0)" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-6 py-4 leading-6 rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700">
+              <button id="bottom-cta-button" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-6 py-4 leading-6 rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700">
                 <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="opacity-50 hi-solid hi-arrow-right inline-block w-5 h-5"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                 <span>Get Started</span>
-              </a>
-              <a href="javascript:void(0)" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-6 py-4 leading-6 rounded border-gray-200 bg-gray-200 text-gray-700 hover:text-gray-700 hover:bg-gray-300 hover:border-gray-300 focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-gray-200 active:border-gray-200">
-                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="opacity-50 hi-solid hi-information-circle inline-block w-5 h-5"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
-                <span>Learn More</span>
-              </a>
+              </button>
             </div>
             <!-- END Actions -->
           </div>
@@ -377,4 +355,6 @@
     </div>
   </div>
   <!-- END CTA Section: Simple Boxed -->
+  <script src="{% static 'blog/index.js' %}"></script>
+  {{ domain|json_script:"domain" }}
 {% endblock %}

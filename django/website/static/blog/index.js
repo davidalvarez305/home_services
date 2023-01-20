@@ -1,5 +1,5 @@
-var quoteButton = document.getElementById("quote-button");
-var zipCodeInput = document.getElementById("widget-subscribe-form-email");
+var startButton = document.getElementById("get-started-button");
+var bottomCTAButton = document.getElementById("bottom-cta-button");
 
 var qs = new URLSearchParams(window.location.search);
 
@@ -12,18 +12,20 @@ function getLeadChannel() {
   if (qs.entries.length === 0) return "organic";
 
   return "paid";
-}
+};
 
-quoteButton.addEventListener("click", function (e) {
-
+function handleCTAClick() {
   // This set method must be first in order for the getLeadChannel logic to work correctly
   // Because it checks that all qs.entries are of length 0 ('meaning organic traffic')
+  // It also checks document.referrer to differentiate direct vs organic
   qs.set('lead_channel', getLeadChannel());
-  qs.set('zip_code', zipCodeInput.value);
   qs.set('referrer', document.referrer);
   qs.set('landing_page', window.location.href);
 
-  window.location.replace(
-    "http://127.0.0.1:8000/get-a-quote/?" + qs.toString()
-  );
-});
+  var currentDomain = JSON.parse(document.getElementById("domain").textContent);
+
+  window.location.replace(currentDomain + "/get-a-quote/?" + qs.toString());
+};
+
+startButton.addEventListener("click", handleCTAClick);
+bottomCTAButton.addEventListener("click", handleCTAClick);
