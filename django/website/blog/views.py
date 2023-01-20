@@ -52,3 +52,12 @@ def about(request):
         "site_name": SITE_NAME
     }
     return render(request, 'blog/about.html', context)
+
+def lp(request):
+    context = {
+        "domain": DOMAIN,
+        "crm_domain": CRM_DOMAIN,
+        "current_year": CURRENT_YEAR,
+        "site_name": SITE_NAME
+    }
+    return render(request, 'blog/lp.html', context)
