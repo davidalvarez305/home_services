@@ -1,6 +1,7 @@
 from datetime import date
 import os
 from django.shortcuts import render
+from blog.models import LandingPage
 
 # Environment Variables
 DOMAIN = str(os.environ.get('DOMAIN'))
@@ -54,6 +55,10 @@ def about(request):
     return render(request, 'blog/about.html', context)
 
 def lp(request):
+    print(request)
+
+    '''lp = LandingPage.objects.get(pk=)'''
+
     context = {
         "domain": DOMAIN,
         "crm_domain": CRM_DOMAIN,
