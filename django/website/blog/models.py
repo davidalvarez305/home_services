@@ -5,6 +5,7 @@ class LandingPage(models.Model):
     description = models.CharField(max_length=255)
     headline = models.TextField()
     content = models.TextField()
+    slug = models.TextField()
 
     def __str__(self):
         return self.title

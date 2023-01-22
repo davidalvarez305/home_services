@@ -54,15 +54,17 @@ def about(request):
     }
     return render(request, 'blog/about.html', context)
 
-def lp(request):
-    print(request)
+def lp(request, **kwargs):
+    slug = kwargs['service']
+    print('request: ', request.GET.dict())
 
-    '''lp = LandingPage.objects.get(pk=)'''
+    content = LandingPage.objects.get(slug=slug)
 
     context = {
         "domain": DOMAIN,
         "crm_domain": CRM_DOMAIN,
         "current_year": CURRENT_YEAR,
-        "site_name": SITE_NAME
+        "site_name": SITE_NAME,
+        "content": content
     }
     return render(request, 'blog/lp.html', context)
