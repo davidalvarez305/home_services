@@ -7,5 +7,6 @@ urlpatterns = [
     path('contact', views.contact, name='contact'),
     path('partners/work-with-us', views.work_with_us, name='work-with-us'),
     path('about', views.about, name='about'),
-    path('lp/<slug:service>', views.lp, name='lp')
+    path('lp/<slug:service>', views.lp, name='lp'),
+    path('lp/create', views.create_lp, name='create-lp')
 ]

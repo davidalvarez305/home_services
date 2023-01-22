@@ -68,3 +68,13 @@ def lp(request, **kwargs):
         "content": content
     }
     return render(request, 'blog/lp.html', context)
+
+def create_lp(request):
+
+    context = {
+        "domain": DOMAIN,
+        "crm_domain": CRM_DOMAIN,
+        "current_year": CURRENT_YEAR,
+        "site_name": SITE_NAME,
+    }
+    return render(request, 'blog/create-lp.html', context)
