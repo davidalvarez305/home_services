@@ -65,6 +65,6 @@ def lp(request, **kwargs):
         "crm_domain": CRM_DOMAIN,
         "current_year": CURRENT_YEAR,
         "site_name": SITE_NAME,
-        "content": content
+        "page": "content"
     }
     return render(request, 'blog/lp.html', context)
