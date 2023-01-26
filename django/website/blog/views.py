@@ -58,7 +58,7 @@ def lp(request, **kwargs):
     slug = kwargs['service']
     print('request: ', request.GET.dict())
 
-    content = LandingPage.objects.get(slug=slug)
+    '''content = LandingPage.objects.get(slug=slug)'''
 
     context = {
         "domain": DOMAIN,
