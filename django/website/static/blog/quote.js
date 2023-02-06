@@ -1,4 +1,5 @@
 var serviceSelect = document.getElementById('service');
+var CRM_DOMAIN = JSON.parse(document.getElementById('crm_domain').textContent);
 
 function createOption(value, service) {
     var opt = document.createElement('option');
@@ -8,7 +9,7 @@ function createOption(value, service) {
 }
 
 document.addEventListener('DOMContentLoaded', function (e) {
-    fetch('http://localhost:4015/api/service', {
+    fetch(CRM_DOMAIN + '/api/service', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
