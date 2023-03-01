@@ -22,12 +22,12 @@
          <form id="contact-form" class="space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                <div class="space-y-1">
-                  <label for="first-name" class="font-medium">First Name</label>
-                  <input class="block border placeholder-gray-400 px-5 py-3 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="first-name" name="first-name">
+                  <label for="first_name" class="font-medium">First Name</label>
+                  <input class="block border placeholder-gray-400 px-5 py-3 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="first_name" name="first_name">
                </div>
                <div class="space-y-1">
-                  <label for="last-name" class="font-medium">Last Name</label>
-                  <input class="block border placeholder-gray-400 px-5 py-3 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="last-name" name="last-name">
+                  <label for="last_name" class="font-medium">Last Name</label>
+                  <input class="block border placeholder-gray-400 px-5 py-3 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="text" id="last_name" name="last_name">
                </div>
             </div>
             <div class="space-y-1">
@@ -35,8 +35,8 @@
                <input class="block border placeholder-gray-400 px-5 py-3 leading-6 w-full rounded border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" type="email" id="email" name="email">
             </div>
             <div class="space-y-1">
-               <label for="contact-message" class="font-medium">Message</label>
-               <textarea class="block border border-gray-200 rounded placeholder-gray-400 px-5 py-3 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" id="contact-message" name="contact-message" rows="6"></textarea>
+               <label for="message" class="font-medium">Message</label>
+               <textarea class="block border border-gray-200 rounded placeholder-gray-400 px-5 py-3 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" id="message" name="message" rows="6"></textarea>
             </div>
             <button type="submit" class="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none px-3 py-2 leading-6 rounded border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-800 hover:border-blue-800 focus:ring focus:ring-blue-500 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700">
                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="opacity-50 hi-solid hi-paper-airplane inline-block w-5 h-5">
@@ -60,6 +60,8 @@
      e.preventDefault();
    
      var body = Object.fromEntries(new FormData(e.target).entries());
+
+     console.log('body: ', body);
    
      fetch(CRM_DOMAIN + "/api/contact", {
        headers: {
