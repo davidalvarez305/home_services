@@ -19,7 +19,8 @@
       <!-- END Heading -->
       <!-- Contact Form -->
       <div class="lg:w-2/3 mx-auto bg-white p-5 md:p-10 rounded-lg shadow-sm">
-         <form id="contact-form" class="space-y-6">
+         <form method="POST" action="/contact" id="contact-form" class="space-y-6">
+            {% csrf_token %}
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                <div class="space-y-1">
                   <label for="first_name" class="font-medium">First Name</label>
