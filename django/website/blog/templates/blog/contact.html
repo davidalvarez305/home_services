@@ -55,20 +55,11 @@
 <script>
    var CRM_DOMAIN = JSON.parse(document.getElementById('crm_domain').textContent);
    var contactForm = document.getElementById("contact-form");
-   var firstName = document.getElementById("first-name");
-   var lastName = document.getElementById("last-name");
-   var email = document.getElementById("email");
-   var message = document.getElementById("contact-message");
    
    contactForm.addEventListener("submit", function (e) {
      e.preventDefault();
    
-     var body = {
-       first_name: firstName.value,
-       last_name: lastName.value,
-       email: email.value,
-       message: message.value
-     };
+     var body = Object.fromEntries(new FormData(e.target).entries());
    
      fetch(CRM_DOMAIN + "/api/contact", {
        headers: {

@@ -64,25 +64,17 @@
 <script>
    var CRM_DOMAIN = JSON.parse(document.getElementById('crm_domain').textContent);
    var getAQuoteForm = document.getElementById("get-a-quote-form");
-   var firstName = document.getElementById("first-name");
-   var lastName = document.getElementById("last-name");
-   var email = document.getElementById("email");
-   var phone = document.getElementById("phone-number");
-   var service = document.getElementById("service");
    var budget = document.getElementById("budget");
    
    getAQuoteForm.addEventListener("submit", function (e) {
      e.preventDefault();
    
      var marketing = Object.fromEntries(window.qs);
+     var data = Object.fromEntries(new FormData(e.target).entries());
    
      var body = {
        ...marketing,
-       first_name: firstName.value,
-       last_name: lastName.value,
-       email: email.value,
-       phone_number: phone.value,
-       service: service.value,
+       ...data,
        budget: Number(budget.value),
      };
    
