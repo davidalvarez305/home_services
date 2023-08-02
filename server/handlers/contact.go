@@ -21,7 +21,7 @@ func ContactForm(c *fiber.Ctx) error {
 	email := form.Email
 	title := "Contact Form Submission"
 
-	err := utils.SendGmail(message, email, title)
+	err = utils.SendGmail(message, email, title)
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
