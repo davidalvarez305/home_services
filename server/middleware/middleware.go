@@ -26,3 +26,29 @@ func AuthMiddleware(c *fiber.Ctx) error {
 
 	return c.Next()
 }
+
+func CanEditCompanyResources(fn fiber.Handler) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		user, err := actions.GetUserFromSession(c)
+
+		if err != nil {
+			return c.Status(403).JSON(fiber.Map{
+				"data": "Not authenticated.",
+			})
+		}
+
+		if user.RoleID != 0 {
+			return c.Status(400).JSON(fiber.Map{
+				"data": "Cannot be assigned to more than one company.",
+			})
+		}
+
+		if user.AccountStatusID != 1 {
+			return c.Status(403).JSON(fiber.Map{
+				"data": "Account status ID not active.",
+			})
+		}
+
+		return fn(c)
+	}
+}

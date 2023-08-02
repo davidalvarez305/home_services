@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"mime/multipart"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/database"
@@ -16,19 +15,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type User struct {
-	*models.User
-}
-
-type Users []*models.User
-
-// Persist users to database & returns the users.
-func (user *User) Save() error {
-	return database.DB.Save(&user).First(&user).Error
+// Persist users to database & returns the newly created user.
+func SaveUser(user models.User) (models.User, error) {
+	var newUser models.User
+	err := database.DB.Save(&user).First(&newUser).Error
+	return newUser, err
 }
 
 // Destroy session.
-func (user *User) Logout(c *fiber.Ctx) error {
+func Logout(c *fiber.Ctx) error {
 	sess, err := sessions.Sessions.Get(c)
 
 	if err != nil {
@@ -41,18 +36,16 @@ func (user *User) Logout(c *fiber.Ctx) error {
 }
 
 // Delete user.
-func (user *User) Delete() error {
-	result := database.DB.Delete(&user)
-
-	return result.Error
+func DeleteUser(user models.User) error {
+	return database.DB.Delete(&user).Error
 }
 
 // Create new user and set default account status to inactive.
-func (user *User) CreateUser() error {
+func CreateUser(user models.User) (models.User, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 
 	if err != nil {
-		return err
+		return user, err
 	}
 
 	// Set user fields
@@ -62,17 +55,18 @@ func (user *User) CreateUser() error {
 	user.UpdatedAt = time.Now().Unix()
 	user.AccountStatusID = 2
 
-	err = user.Save()
+	createdUser, err := SaveUser(user)
 
 	if err != nil {
-		return err
+		return user, err
 	}
 
-	return err
+	return createdUser, err
 }
 
 // Update and return updated user.
-func (user *User) UpdateUser(body User) error {
+func UpdateUser(body models.User) (models.User, error) {
+	var user models.User
 
 	user.Username = body.Username
 	user.Email = body.Email
@@ -82,79 +76,76 @@ func (user *User) UpdateUser(body User) error {
 	user.JobTitle = body.JobTitle
 	user.PhoneNumber = body.PhoneNumber
 
-	err := user.Save()
-
-	return err
+	return SaveUser(user)
 }
 
 // Takes user ID as string value and returns the user from the database.
-func (user *User) GetUserById(userId string) error {
-	result := database.DB.Where("id = ?", userId).First(&user)
-
-	return result.Error
+func getUserById(userId string) (models.User, error) {
+	var user models.User
+	err := database.DB.Where("id = ?", userId).First(&user).Error
+	return user, err
 }
 
 // Takes user email as string value and returns the user from the database.
-func (user *User) GetUserByEmail(email string) error {
-	result := database.DB.Where("email = ?", email).First(&user)
-
-	return result.Error
+func GetUserByEmail(email string) (models.User, error) {
+	var user models.User
+	err := database.DB.Where("email = ?", email).First(&user).Error
+	return user, err
 }
 
 // Grabs userId from session, and then performs select query from the database.
-func (user *User) GetUserFromSession(c *fiber.Ctx) error {
+func GetUserFromSession(c *fiber.Ctx) (models.User, error) {
+	var user models.User
 	sess, err := sessions.Sessions.Get(c)
 
 	if err != nil {
-		return err
+		return user, err
 	}
 
 	userId := sess.Get("userId")
 
 	if userId == nil {
-		return errors.New("user not found")
+		return user, errors.New("user not found")
 	}
 
 	uId := fmt.Sprintf("%v", userId)
 
-	err = user.GetUserById(uId)
-
-	return err
+	return getUserById(uId)
 }
 
 // Create new session with user.
-func (user *User) Login(c *fiber.Ctx) error {
+func Login(c *fiber.Ctx) (models.User, error) {
+	var user models.User
+
 	userPassword := user.Password
 	result := database.DB.Where("email = ?", user.Email).First(&user)
 
 	if result.Error != nil {
-		return errors.New("incorrect username")
+		return user, errors.New("incorrect username")
 	}
 
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userPassword))
 
 	if err != nil {
-		return errors.New("incorrect password")
+		return user, errors.New("incorrect password")
 	}
 
 	sess, err := sessions.Sessions.Get(c)
 
 	if err != nil {
-		return err
+		return user, err
 	}
 
 	sess.Set("userId", user.ID)
 
 	err = sess.Save()
 
-	return err
+	return user, err
 }
 
 // Generates new token to ensure that user at least has access to the user's e-mail.
-func (user *User) RequestChangePasswordCode() error {
-	var token Token
-
-	err := token.GenerateToken(user)
+func RequestChangePasswordCode(user models.User) error {
+	token, err := generateToken(user.ID)
 
 	if err != nil {
 		return err
@@ -172,8 +163,7 @@ func (user *User) RequestChangePasswordCode() error {
 }
 
 // Verifies that user clicked the generated token with 5 minutes, and then saves the password sent from client.
-func (user *User) ChangePassword(password string) error {
-
+func ChangePassword(user models.User, password string) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 
 	if err != nil {
@@ -183,13 +173,13 @@ func (user *User) ChangePassword(password string) error {
 	user.APIToken = utils.GenerateAPIToken(user.Email + user.Password)
 	user.UpdatedAt = time.Now().Unix()
 
-	err = user.Save()
+	_, err = SaveUser(user)
 
 	return err
 }
 
 // Takes form data from the client, and sends it to S3 bucket using AWS SDK v2.
-func (user *User) ChangeProfilePicture(file *multipart.FileHeader) error {
+func ChangeProfilePicture(user models.User, file *multipart.FileHeader) error {
 
 	contents, err := file.Open()
 
@@ -208,7 +198,7 @@ func (user *User) ChangeProfilePicture(file *multipart.FileHeader) error {
 	user.ProfileImage = fileName
 	user.UpdatedAt = time.Now().Unix()
 
-	err = user.Save()
+	_, err = SaveUser(user)
 
 	if err != nil {
 		return err
@@ -218,12 +208,14 @@ func (user *User) ChangeProfilePicture(file *multipart.FileHeader) error {
 }
 
 // Get all users that belong to a company
-func (users *Users) GetUsersByCompany(companyId int) error {
-	return database.DB.Where("company_id = ?", companyId).Find(&users).Error
+func GetUsersByCompany(companyId int) ([]models.User, error) {
+	var users []models.User
+	err := database.DB.Where("company_id = ?", companyId).Find(&users).Error
+	return users, err
 }
 
 // Check that user can mutate company attributes
-func (user *User) CheckUserPermission(c *fiber.Ctx, companyId string) (bool, error) {
+/* func (user *User) CheckUserPermission(c *fiber.Ctx, companyId string) (bool, error) {
 
 	cId, err := strconv.Atoi(companyId)
 
@@ -239,10 +231,11 @@ func (user *User) CheckUserPermission(c *fiber.Ctx, companyId string) (bool, err
 
 	// Assert that (A) the user is an owner, and (B) that the company being updated belongs to that user.
 	return user.RoleID == 1 && user.CompanyID == cId, nil
-}
+} */
 
 // Set company and role ID's to zero
-func (user *User) RemoveUserFromCompany(companyId, userId string) error {
+func RemoveUserFromCompany(companyId, userId string) error {
+	var user models.User
 
 	result := database.DB.Where("id = ? AND company_id = ?", userId, companyId).First(&user)
 
@@ -251,14 +244,14 @@ func (user *User) RemoveUserFromCompany(companyId, userId string) error {
 	}
 
 	// Fetch company to ensure that there's at least another owner.
-	companyOwners := &Users{}
+	var companyOwners []models.User
 	res := database.DB.Where("company_id = ? AND role_id = 1", companyId).Find(&companyOwners)
 
 	if res.Error != nil {
 		return res.Error
 	}
 
-	if len(*companyOwners) < 2 {
+	if len(companyOwners) < 2 {
 		return errors.New("cannot delete user, there must be at least one other owner")
 	}
 
@@ -267,11 +260,14 @@ func (user *User) RemoveUserFromCompany(companyId, userId string) error {
 	user.RoleID = 0
 	user.UpdatedAt = time.Now().Unix()
 
-	return user.Save()
+	_, err := SaveUser(user)
+
+	return err
 }
 
 // Set company and role ID's to zero
-func (users *Users) UpdateCompanyUsers(companyId string, clientInput *Users) error {
+func UpdateCompanyUsers(companyId string, clientInput []models.User) error {
+	var users []models.User
 
 	res := database.DB.Where("company_id = ?", companyId).Find(&users)
 
@@ -280,8 +276,8 @@ func (users *Users) UpdateCompanyUsers(companyId string, clientInput *Users) err
 	}
 
 	// Match client input users to DB users and adjust RoleID & AccountStatusID based on the form values
-	for _, user := range *users {
-		for _, input := range *clientInput {
+	for _, user := range users {
+		for _, input := range clientInput {
 			if input.ID == user.ID {
 				user.RoleID = input.RoleID
 				user.AccountStatusID = input.AccountStatusID
@@ -294,7 +290,7 @@ func (users *Users) UpdateCompanyUsers(companyId string, clientInput *Users) err
 }
 
 // Check for user invite permissions
-func (user *User) CheckInvitePermissions(companyId string, clientEmail string) bool {
+func CheckInvitePermissions(user models.User, companyId string, clientEmail string) bool {
 
 	// Check that user has permission to invite
 	if user.RoleID != 1 {
@@ -314,7 +310,7 @@ func (user *User) CheckInvitePermissions(companyId string, clientEmail string) b
 	return true
 }
 
-func (user *User) CheckCanAcceptInvitation(companyId string, companyToken *CompanyToken) bool {
+func CheckCanAcceptInvitation(user models.User, companyId string, companyToken *CompanyToken) bool {
 
 	// Token expires after 5 minutes.
 	if time.Now().Unix()-companyToken.CreatedAt > 300 {
@@ -338,6 +334,8 @@ func (user *User) CheckCanAcceptInvitation(companyId string, companyToken *Compa
 	return true
 }
 
-func (users *Users) GetCompanyOwners(companyId string) error {
-	return database.DB.Where("company_id = ? AND role_id = 1", companyId).Find(&users).Error
+func GetCompanyOwners(companyId string) ([]models.User, error) {
+	var users []models.User
+	err := database.DB.Where("company_id = ? AND role_id = 1", companyId).Find(&users).Error
+	return users, err
 }

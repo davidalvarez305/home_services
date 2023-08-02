@@ -66,13 +66,11 @@ func GetCompanyIdFromSession(c *fiber.Ctx) (int, error) {
 
 // Invite user to company
 func InviteUserToCompany(companyId int, email string) error {
-	user := User{}
-
 	// If the user exists, they will be taken to a page to accept the invitation.
 	// Otherwise, they will be taken to a page to register.
 	clientDestination := "accept-invite"
 
-	err := user.GetUserByEmail(email)
+	user, err := GetUserByEmail(email)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "record not found") {
