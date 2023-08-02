@@ -1,17 +1,18 @@
 package handlers
 
 import (
-	"github.com/davidalvarez305/home_services/server/actions"
+	"github.com/davidalvarez305/home_services/server/database"
+	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetAllAccountStatus(c *fiber.Ctx) error {
-	accountStatuses := &actions.AccountStatuses{}
+	var accountStatuses []*models.AccountStatus
 
-	err := accountStatuses.GetAll()
+	err := database.DB.Find(&accountStatuses).Error
 
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
+		return c.Status(500).JSON(fiber.Map{
 			"data": "Could not query account status fields.",
 		})
 	}
