@@ -2,7 +2,6 @@ package database
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/davidalvarez305/home_services/server/models"
@@ -12,9 +11,7 @@ import (
 	"gorm.io/gorm/schema"
 )
 
-type DBInstance = *gorm.DB
-
-var DB DBInstance
+var DB gorm.DB
 
 type connection struct {
 	Host     string
@@ -24,7 +21,7 @@ type connection struct {
 	DB       string
 }
 
-func Connect() {
+func Connect() (*gorm.DB, error) {
 	conn := connection{
 		Host:     os.Getenv("POSTGRES_HOST"),
 		Port:     os.Getenv("POSTGRES_PORT"),
@@ -42,7 +39,7 @@ func Connect() {
 	})
 
 	if err != nil {
-		log.Fatalf("Error connecting to the DB: %s\n", err.Error())
+		return db, err
 	}
 
 	fmt.Printf("Connected to Database.\n")
@@ -69,7 +66,9 @@ func Connect() {
 		&models.Address{},
 	)
 
-	DB = db
+	DB = *db
+
+	return db, nil
 }
 
 func connToString(info connection) string {

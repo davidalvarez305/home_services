@@ -10,9 +10,9 @@ import (
 	"github.com/gofiber/storage/postgres"
 )
 
-var Sessions *session.Store
+var Sessions session.Store
 
-func Init() {
+func Init() *session.Store {
 	storage := postgres.New(postgres.Config{
 		Username:   os.Getenv("POSTGRES_USER"),
 		Password:   os.Getenv("POSTGRES_PASSWORD"),
@@ -21,19 +21,20 @@ func Init() {
 		Database:   "fiber",
 		Table:      "fiber_storage",
 		SslMode:    "disable",
-		GCInterval: 60 * 60 * 24 * 365 * time.Second,
+		GCInterval: 1 * time.Hour,
 	})
 
 	key := fmt.Sprintf("cookie:%s", os.Getenv("COOKIE_NAME"))
 
 	store := session.New(session.Config{
-		Expiration:     24 * 365 * time.Hour,
+		Expiration:     1 * time.Hour,
 		Storage:        storage,
 		KeyLookup:      key,
 		CookieSameSite: "lax",
 		KeyGenerator:   utils.UUID,
 	})
 
-	Sessions = store
-	fmt.Println(store)
+	Sessions = *store
+
+	return store
 }

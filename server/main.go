@@ -2,16 +2,14 @@ package main
 
 import (
 	"encoding/gob"
-	"fmt"
 	"log"
 	"os"
 
 	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
-	"github.com/davidalvarez305/home_services/server/routes"
+	"github.com/davidalvarez305/home_services/server/server"
 	"github.com/davidalvarez305/home_services/server/sessions"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 )
 
@@ -21,24 +19,27 @@ func main() {
 	err := godotenv.Load()
 
 	if err != nil {
-		log.Fatal("Error loading env file.")
+		log.Fatalf("ERROR LOADING ENV FILE: %+v\n", err)
 	}
 
-	CLIENT_URL := os.Getenv("CLIENT_URL")
-	DJANGO_URL := os.Getenv("DJANGO_URL")
-	PORT := os.Getenv("PORT")
-	origins := CLIENT_URL + ", " + DJANGO_URL
-	fmt.Println(origins)
+	db, err := database.Connect()
 
-	app := fiber.New()
-	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",
-		AllowCredentials: true,
-	}))
+	if err != nil {
+		log.Fatalf("ERROR CONNECTING TO DB: %+v\n", err)
+	}
 
-	database.Connect()
-	sessions.Init()
+	sessionStore := sessions.Init()
 
-	routes.Router(app)
-	app.Listen(":" + PORT)
+	if err != nil {
+		log.Fatalf("ERROR CONNECTING TO DB: %+v\n", err)
+	}
+
+	server := server.NewServer(&server.Server{
+		App:     fiber.New(),
+		DB:      db,
+		Session: sessionStore,
+		Port:    os.Getenv("SERVER_PORT"),
+	})
+
+	server.Start()
 }
