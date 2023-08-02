@@ -5,14 +5,14 @@ import (
 	"github.com/davidalvarez305/home_services/server/models"
 )
 
-type Address struct {
-	*models.Address
+func SaveAddress(address models.User) (models.Address, error) {
+	var newAddress models.Address
+	err := database.DB.Save(&address).First(&newAddress).Error
+	return newAddress, err
 }
 
-func (a *Address) Save() error {
-	return database.DB.Save(&a).First(&a).Error
-}
-
-func (a *Address) GetAddress(addressId string) error {
-	return database.DB.Where("id = ?", addressId).First(&a).Error
+func GetAddress(addressId string) (models.Address, error) {
+	var address models.Address
+	err := database.DB.Where("id = ?", addressId).First(&address).Error
+	return address, err
 }

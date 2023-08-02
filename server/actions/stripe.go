@@ -13,7 +13,7 @@ import (
 	"github.com/stripe/stripe-go/v74/invoiceitem"
 )
 
-func (company *Company) CreateStripeCustomer(owner *User) error {
+func (company *Company) CreateStripeCustomer(owner models.User) error {
 
 	stripe.Key = os.Getenv("STRIPE_SECRET_KEY")
 
