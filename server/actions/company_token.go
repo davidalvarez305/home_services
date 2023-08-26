@@ -8,37 +8,29 @@ import (
 	"github.com/google/uuid"
 )
 
-type CompanyToken struct {
-	*models.CompanyToken
-}
-
-func (c *CompanyToken) GenerateCompanyToken(companyId int, email string) error {
-
+func GenerateCompanyToken(companyId int, email string) (models.CompanyToken, error) {
 	// Create UUID for CompanyToken
 	uuid := uuid.New().String()
 
 	// Initialize & Generate CompanyToken
-	t := models.CompanyToken{
+	companyToken := models.CompanyToken{
 		UUID:      uuid,
 		CompanyID: companyId,
 		Email:     email,
 		CreatedAt: time.Now().Unix(),
 	}
 
-	// Assign CompanyToken to struct
-	c.CompanyToken = &t
+	err := database.DB.Save(&companyToken).Preload("Company").First(&companyToken).Error
 
-	err := database.DB.Save(&c).Preload("Company").First(&c).Error
-
-	return err
+	return companyToken, err
 }
 
-func (CompanyToken *CompanyToken) GetCompanyToken(uuid string) error {
-	result := database.DB.Where("uuid = ?", uuid).First(&CompanyToken)
-	return result.Error
+func GetCompanyToken(uuid string) (models.CompanyToken, error) {
+	var companyToken models.CompanyToken
+	err := database.DB.Where("uuid = ?", uuid).First(&companyToken).Error
+	return companyToken, err
 }
 
-func (CompanyToken *CompanyToken) DeleteCompanyToken() error {
-	result := database.DB.Delete(&CompanyToken)
-	return result.Error
+func DeleteCompanyToken(companyToken models.CompanyToken) error {
+	return database.DB.Delete(&companyToken).Error
 }
