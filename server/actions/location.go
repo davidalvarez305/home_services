@@ -17,11 +17,8 @@ type Location struct {
 	Country   string `json:"country"`
 }
 
-type Locations []*Location
-
-type States []*models.State
-
-func (l *Locations) GetAllLocations(stateId string) error {
+func GetAllLocations(stateId string) ([]Location, error) {
+	var locations []Location
 	sql := `
 	SELECT c.id AS city_id, c.city AS city,
 	s.id AS state_id, s.state AS state,
@@ -40,9 +37,12 @@ func (l *Locations) GetAllLocations(stateId string) error {
 	WHERE s.id = ?
 	GROUP BY c.id, c.city, s.id, s.state, cty.id, cty.county , ctry.id, ctry.country;
 	`
-	return database.DB.Raw(sql, stateId).Scan(&l).Error
+	err := database.DB.Raw(sql, stateId).Scan(&locations).Error
+	return locations, err
 }
 
-func (s *States) GetAllStates() error {
-	return database.DB.Find(&s).Error
+func GetAllStates() ([]models.State, error) {
+	var states []models.State
+	err := database.DB.Find(&states).Error
+	return states, err
 }

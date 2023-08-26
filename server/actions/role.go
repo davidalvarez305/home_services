@@ -5,8 +5,8 @@ import (
 	"github.com/davidalvarez305/home_services/server/models"
 )
 
-type Roles []*models.Role
-
-func (r *Roles) GetAll() error {
-	return database.DB.Find(&r).Error
+func GetAll() ([]models.Role, error) {
+	var roles []models.Role
+	err := database.DB.Find(&roles).Error
+	return roles, err
 }

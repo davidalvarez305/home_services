@@ -5,8 +5,8 @@ import (
 	"github.com/davidalvarez305/home_services/server/models"
 )
 
-type Services []*models.Service
-
-func (s *Services) GetAllServices() error {
-	return database.DB.Find(&s).Error
+func GetAllServices() ([]models.Service, error) {
+	var services []models.Service
+	err := database.DB.Find(&services).Error
+	return services, err
 }
