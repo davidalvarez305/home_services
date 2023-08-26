@@ -8,34 +8,29 @@ import (
 	"github.com/davidalvarez305/home_services/server/utils"
 )
 
-type LeadCode struct {
-	*models.LeadCode
-}
-
-func (lc *LeadCode) GenerateLoginCode(leadId int) error {
+func GenerateLoginLeadCode(leadId int) (models.LeadCode, error) {
 
 	// Create Six Digit Code for Login
 	code := utils.GenerateSixDigitCode(6)
 
 	// Initialize & Generate Token
-	t := models.LeadCode{
+	leadCode := models.LeadCode{
 		Code:      code,
 		LeadID:    leadId,
 		CreatedAt: time.Now().Unix(),
 	}
 
-	// Assign token to struct
-	lc.LeadCode = &t
+	err := database.DB.Save(&leadCode).First(&leadCode).Error
 
-	result := database.DB.Save(&lc).First(&lc)
-
-	return result.Error
+	return leadCode, err
 }
 
-func (lc *LeadCode) GetLoginCode(code string) error {
-	return database.DB.Where("code = ?", code).Preload("Lead").First(&lc).Error
+func GetLoginLeadCode(code string) (models.LeadCode, error) {
+	var leadCode models.LeadCode
+	err := database.DB.Where("code = ?", code).Preload("Lead").First(&leadCode).Error
+	return leadCode, err
 }
 
-func (lc *LeadCode) DeleteCode() error {
-	return database.DB.Where("code = ? AND lead_id = ?", lc.Code, lc.LeadID).Delete(&lc).Error
+func DeleteLeadCode(leadCode models.LeadCode) error {
+	return database.DB.Where("code = ? AND lead_id = ?", leadCode.Code, leadCode.LeadID).Delete(&leadCode).Error
 }
