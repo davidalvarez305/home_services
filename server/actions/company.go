@@ -8,10 +8,6 @@ import (
 	"github.com/davidalvarez305/home_services/server/types"
 )
 
-type Company struct {
-	*models.Company
-}
-
 type CompanyLead struct {
 	ID                 int    `json:"id"`
 	Email              string `json:"email"`
@@ -37,18 +33,16 @@ type CompanyLead struct {
 	// Eventually I will add things like lead_score
 }
 
-type CompanyLeads []*CompanyLead
-
-func (c *Company) Save() error {
+func Save(c models.Company) error {
 	return database.DB.Save(&c).First(&c).Error
 }
 
 // Create and return company model.
-func (c *Company) CreateCompany(input *types.CreateCompanyInput, user *User) error {
-	user.User.RoleID = 2
-	user.User.UpdatedAt = time.Now().Unix()
+func CreateCompany(input *types.CreateCompanyInput, user models.User) (models.Company, error) {
+	user.RoleID = 2
+	user.UpdatedAt = time.Now().Unix()
 
-	var users Users
+	var users []*models.User
 
 	// Create New Company With Default Status as 'inactive'
 	// By attaching the address like this, it will create a START TRANSACTION, where both the company and address insertion must be successful.
@@ -68,56 +62,54 @@ func (c *Company) CreateCompany(input *types.CreateCompanyInput, user *User) err
 			StreetAddressLine3: input.StreetAddressLine3,
 		},
 		// Create company with authenticated user set as 'Owner' as default
-		Users: append(users, user.User),
+		Users: append(users, &user),
 	}
 
-	c.Company = &company
-
-	return database.DB.Save(&c).First(&c).Error
+	return company, database.DB.Save(&company).First(&company).Error
 }
 
 // Update and return company model.
-func (c *Company) UpdateCompany(companyId string, input *types.CreateCompanyInput) error {
-
-	err := c.GetCompanyByID(companyId)
+func UpdateCompany(companyId string, input *types.CreateCompanyInput) (models.Company, error) {
+	company, err := getCompanyByID(companyId)
 
 	if err != nil {
-		return err
+		return company, err
 	}
 
 	// Update fields that are allowed to be updated
-	c.Logo = input.Logo
-	c.Name = input.Name
-	c.MaxLimit = input.MaxLimit
-	c.Address.StreetAddressLine1 = input.StreetAddressLine1
-	c.Address.StreetAddressLine2 = input.StreetAddressLine2
-	c.Address.StreetAddressLine3 = input.StreetAddressLine3
-	c.Address.ZipCode = input.ZipCode
-	c.UpdatedAt = time.Now().Unix()
+	company.Logo = input.Logo
+	company.Name = input.Name
+	company.MaxLimit = input.MaxLimit
+	company.Address.StreetAddressLine1 = input.StreetAddressLine1
+	company.Address.StreetAddressLine2 = input.StreetAddressLine2
+	company.Address.StreetAddressLine3 = input.StreetAddressLine3
+	company.Address.ZipCode = input.ZipCode
+	company.UpdatedAt = time.Now().Unix()
 
-	return database.DB.Save(&c).First(&c).Error
+	return company, database.DB.Save(&company).First(&company).Error
 }
 
 // Delete company model.
-func (c *Company) DeleteCompany(companyId string) error {
+func DeleteCompany(companyId string) error {
 
 	// First check to see that this company exists.
-	err := c.GetCompanyByID(companyId)
+	company, err := getCompanyByID(companyId)
 
 	if err != nil {
 		return err
 	}
 
-	return database.DB.Delete(&c).Error
+	return database.DB.Delete(&company).Error
 }
 
 // Get Company from DB.
-func (c *Company) GetCompanyByID(id string) error {
-	return database.DB.Where("id = ?", id).Preload("Address").First(&c).Error
+func getCompanyByID(id string) (models.Company, error) {
+	var company models.Company
+	return company, database.DB.Where("id = ?", id).Preload("Address").First(&company).Error
 }
 
 // Get Company from DB.
-func (c *Company) CheckCompanyOwners(companyId int) (bool, error) {
+func CheckCompanyOwners(companyId int) (bool, error) {
 	var numRows = 0
 	sql := `SELECT COUNT(*) FROM "user" WHERE company_id = ? AND role_id = 1`
 
@@ -128,7 +120,8 @@ func (c *Company) CheckCompanyOwners(companyId int) (bool, error) {
 	return numRows > 1, res.Error
 }
 
-func (cl *CompanyLeads) GetCompanyLeads(companyId string, qs types.CompanyLeadsQS) error {
+func GetCompanyLeads(companyId string, qs types.CompanyLeadsQS) ([]CompanyLead, error) {
+	var companyLeads []CompanyLead
 
 	sql := `
 	SELECT l.email, l.company_id, l.first_name, l.last_name, l.phone_number, l.budget, l.created_at, 
@@ -161,7 +154,7 @@ func (cl *CompanyLeads) GetCompanyLeads(companyId string, qs types.CompanyLeadsQ
 	OFFSET ?
 	LIMIT ?;`
 
-	return database.DB.Raw(sql, companyId, qs.StartDate/1000, qs.EndDate/1000, qs.Service, qs.ZipCode, qs.Offset, qs.Limit).Scan(&cl).Error
+	return companyLeads, database.DB.Raw(sql, companyId, qs.StartDate/1000, qs.EndDate/1000, qs.Service, qs.ZipCode, qs.Offset, qs.Limit).Scan(&companyLeads).Error
 }
 
 // Get Company from DB.
@@ -177,11 +170,13 @@ func FindCompanyIDByZipCodeAndService(zipCode string, serviceID int) (int, error
 	GROUP BY csl.zip_code, csl.service_id, c.id;
 	`
 
-	res := database.DB.Where(sql, zipCode, serviceID).First(&companyId)
+	err := database.DB.Where(sql, zipCode, serviceID).First(&companyId).Error
 
-	return companyId, res.Error
+	return companyId, err
 }
 
-func (l *Leads) GetCompanyLeadsByDate(date, company string) error {
-	return database.DB.Where("created_at < ? AND company_id = ?", date, company).Preload("Address.City").Preload("Address.State").Preload("Address.Country").Preload("Service").Find(&l).Error
+func GetCompanyLeadsByDate(date, company string) ([]models.Lead, error) {
+	var leads []models.Lead
+	err := database.DB.Where("created_at < ? AND company_id = ?", date, company).Preload("Address.City").Preload("Address.State").Preload("Address.Country").Preload("Service").Find(&leads).Error
+	return leads, err
 }
