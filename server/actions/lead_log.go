@@ -8,13 +8,7 @@ import (
 	"github.com/davidalvarez305/home_services/server/models"
 )
 
-type LeadLog struct {
-	*models.LeadLog
-}
-
-type LeadLogs []*models.LeadLog
-
-func (l *LeadLog) Save(action string, leadId string) error {
+func SaveLeadLog(action string, leadId string) error {
 
 	lead, err := strconv.Atoi(leadId)
 
@@ -22,15 +16,17 @@ func (l *LeadLog) Save(action string, leadId string) error {
 		return err
 	}
 
-	l.LeadLog = &models.LeadLog{
+	leadLog := models.LeadLog{
 		Action:    action,
 		CreatedAt: time.Now().Unix(),
 		LeadID:    lead,
 	}
 
-	return database.DB.Save(&l).Error
+	return database.DB.Save(&leadLog).Error
 }
 
-func (logs *LeadLogs) Get(leadId string) error {
-	return database.DB.Where("lead_id = ?", leadId).Find(&logs).Error
+func GetLeadLogs(leadId string) ([]models.LeadLog, error) {
+	var leadLogs []models.LeadLog
+	err := database.DB.Where("lead_id = ?", leadId).Find(&leadLogs).Error
+	return leadLogs, err
 }
