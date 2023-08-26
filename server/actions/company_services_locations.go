@@ -7,8 +7,6 @@ import (
 	"github.com/davidalvarez305/home_services/server/models"
 )
 
-type CompanyServicesLocations []*models.CompanyServicesLocations
-
 type CompanyServiceByArea struct {
 	ID        int    `json:"id"`
 	ServiceID int    `json:"service_id"`
@@ -18,9 +16,9 @@ type CompanyServiceByArea struct {
 	City      string `json:"city"`
 }
 
-type CompanyServicesByArea []*CompanyServiceByArea
+func GetCompanyServiceAreas(companyId string) ([]CompanyServiceByArea, error) {
+	var c []CompanyServiceByArea
 
-func (c *CompanyServicesByArea) GetCompanyServiceAreas(companyId string) error {
 	sql := `
 	SELECT csl.id AS id, s.id AS service_id, s.service AS service, z.zip_code AS zip_code, c.id AS city_id, c.city AS city
 	FROM company_services_locations AS csl
@@ -31,18 +29,21 @@ func (c *CompanyServicesByArea) GetCompanyServiceAreas(companyId string) error {
 	LEFT JOIN service AS s
 	ON s.id = csl.service_id
 	WHERE csl.company_id = ?`
-	return database.DB.Raw(sql, companyId).Scan(&c).Error
+
+	err := database.DB.Raw(sql, companyId).Scan(&c).Error
+	return c, err
 }
 
 // Create service areas only. Doesn't return anything.
-func (c *CompanyServicesLocations) CreateCompanyServiceAreas() error {
-	return database.DB.Save(&c).Error
+func CreateCompanyServiceAreas() ([]models.CompanyServicesLocations, error) {
+	var c []models.CompanyServicesLocations
+	err := database.DB.Save(&c).Error
+	return c, err
 }
 
-func (c *CompanyServicesLocations) CheckPermissions(companyId string, user *User) bool {
-
+func CheckPermissions(c []models.CompanyServicesLocations, companyId string, user models.User) bool {
 	// Check that the services are all being added to the company from the URL params
-	for _, service := range *c {
+	for _, service := range c {
 		if fmt.Sprintf("%+v", service.CompanyID) != companyId {
 			return false
 		}
@@ -61,6 +62,6 @@ func (c *CompanyServicesLocations) CheckPermissions(companyId string, user *User
 }
 
 // Deletes a single location
-func (c *CompanyServicesLocations) DeleteCompanyServiceAreas() error {
+func DeleteCompanyServiceAreas(c models.CompanyServicesLocations) error {
 	return database.DB.Delete(&c).Error
 }
