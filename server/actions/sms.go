@@ -45,7 +45,7 @@ type TwillioWebhookRequestBody struct {
 	MediaUrl10          string `json:"MediaUrl10"`
 }
 
-func (msg *TwillioWebhookRequestBody) SendSMS(sms string) error {
+func SendSMS(sms string, msg TwillioWebhookRequestBody) error {
 	accountSid := os.Getenv("TWILIO_ACCOUNT_SID")
 	authToken := os.Getenv("TWILIO_AUTH_TOKEN")
 	client := twilio.NewRestClientWithParams(twilio.ClientParams{
@@ -63,7 +63,7 @@ func (msg *TwillioWebhookRequestBody) SendSMS(sms string) error {
 	return err
 }
 
-func (msg *TwillioWebhookRequestBody) UploadImagesFromMMS(l *Lead) error {
+func UploadImagesFromMMS(l models.Lead, msg TwillioWebhookRequestBody) error {
 	var uploadImages []string
 
 	images := []string{msg.MediaUrl0, msg.MediaUrl1, msg.MediaUrl2, msg.MediaUrl3, msg.MediaUrl4, msg.MediaUrl5, msg.MediaUrl6, msg.MediaUrl7, msg.MediaUrl8, msg.MediaUrl9, msg.MediaUrl10}
@@ -110,14 +110,14 @@ func (msg *TwillioWebhookRequestBody) UploadImagesFromMMS(l *Lead) error {
 		return errors.New("no images sent in message")
 	}
 
-	var leadPhotos LeadPhotos
+	var leadPhotos []models.LeadPhoto
 
 	for _, img := range uploadImages {
-		leadPhotos = append(leadPhotos, &models.LeadPhoto{
+		leadPhotos = append(leadPhotos, models.LeadPhoto{
 			ImageURL: img,
 			LeadID:   l.ID,
 		})
 	}
 
-	return leadPhotos.Save()
+	return SaveLeadPhotos(leadPhotos)
 }
