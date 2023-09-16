@@ -13,13 +13,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Lead struct {
-	*models.Lead
-}
-
-type Leads []*models.Lead
-
-type LeadLogin struct {
+type LeadLoginInput struct {
 	Email string `json:"email"`
 }
 
@@ -48,20 +42,23 @@ type LeadDetails struct {
 	Budget             int    `json:"budget"`
 }
 
-func (l *Lead) Save() error {
-	return database.DB.Save(&l).First(&l).Error
+func SaveLead(lead models.Lead) error {
+	return database.DB.Save(&lead).First(&lead).Error
 }
 
-func (l *Lead) Delete(leadId string) error {
-	return database.DB.Where("id = ?", leadId).Delete(&l).Error
+func DeleteLead(leadId string) error {
+	var lead models.Lead
+	return database.DB.Where("id = ?", leadId).Find(&lead).Delete(&lead).Error
 }
 
-func (l *Lead) GetLead(leadId string) error {
-	return database.DB.Where("id = ?", leadId).First(&l).Error
+func GetLead(leadId string) (models.Lead, error) {
+	var lead models.Lead
+	err := database.DB.Where("id = ?", leadId).First(&lead).Error
+	return lead, err
 }
 
-func (ld *LeadDetails) GetLeadDetails(uuid string) error {
-
+func GetLeadDetails(uuid string) (LeadDetails, error) {
+	var leadDetails LeadDetails
 	sql := `
 	SELECT l.id, l.email, l.uuid, l.company_id, l.first_name, l.last_name, l.phone_number, l.budget, l.created_at, 
 	a.street_address_line1, a.street_address_line2, a.street_address_line3, a.zip_code,
@@ -86,43 +83,51 @@ func (ld *LeadDetails) GetLeadDetails(uuid string) error {
 	c.city, c.id, s.id, s.state, l.id, l.email, l.uuid, l.company_id, l.first_name, l.last_name,
 	l.phone_number, a.zip_code, l.created_at, l.budget, ctry.country, ctry.id;`
 
-	return database.DB.Raw(sql, uuid).First(&ld).Error
+	err := database.DB.Raw(sql, uuid).First(&leadDetails).Error
+
+	return leadDetails, err
 }
 
-func (l *Lead) GetLeadByUUID(uuid string) error {
-	return database.DB.Where("uuid = ?", uuid).First(&l).Error
+func GetLeadByUUID(uuid string) (models.Lead, error) {
+	var lead models.Lead
+	err := database.DB.Where("uuid = ?", uuid).First(&lead).Error
+	return lead, err
 }
 
-func (l *Lead) GetLeadByEmail(email string) error {
-	return database.DB.Where("email = ?", email).First(&l).Error
+func GetLeadByEmail(email string) (models.Lead, error) {
+	var lead models.Lead
+	err := database.DB.Where("email = ?", email).First(&lead).Error
+	return lead, err
 }
 
-func (leads *Leads) GetLeadsByDates(companyId int, from, to int64) error {
-	return database.DB.Where("company_id = ? AND created_at > ? AND created_at < ?", companyId, from, to).Find(&leads).Error
+func GetLeadsByDates(companyId int, from, to int64) ([]models.Lead, error) {
+	var leads []models.Lead
+	err := database.DB.Where("company_id = ? AND created_at > ? AND created_at < ?", companyId, from, to).Find(&leads).Error
+	return leads, err
 }
 
 // Grabs userId from session, and then performs select query from the database.
-func (ld *LeadDetails) GetLeadFromSession(c *fiber.Ctx) error {
+func GetLeadFromSession(c *fiber.Ctx) (LeadDetails, error) {
+	var leadDetails LeadDetails
 	sess, err := sessions.Sessions.Get(c)
 
 	if err != nil {
-		return err
+		return leadDetails, err
 	}
 
 	leadUUID := sess.Get("lead_uuid")
 
 	if leadUUID == nil {
-		return err
+		return leadDetails, err
 	}
 
-	err = ld.GetLeadDetails(fmt.Sprintf("%v", leadUUID))
+	leadDetails, err = GetLeadDetails(fmt.Sprintf("%v", leadUUID))
 
-	return err
+	return leadDetails, err
 }
 
-func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
-
-	l.Lead = &models.Lead{
+func CreateLead(input *types.CreateLeadInput) (models.Lead, error) {
+	var lead = models.Lead{
 		FirstName:   input.FirstName,
 		LastName:    input.LastName,
 		UUID:        uuid.New().String(),
@@ -131,8 +136,8 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 		CreatedAt:   time.Now().Unix(),
 	}
 
-	l.Lead.LeadMarketing = &models.LeadMarketing{
-		LeadID:       l.Lead.ID,
+	lead.LeadMarketing = &models.LeadMarketing{
+		LeadID:       lead.ID,
 		Source:       input.Source,
 		Medium:       input.Medium,
 		LeadChannel:  input.LeadChannel,
@@ -150,27 +155,25 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 		AdHeadline:   input.AdHeadline,
 	}
 
-	z := &ZipCode{}
-
-	err := z.GetZipCode(input.ZipCode)
+	zip, err := GetZipCode(input.ZipCode)
 
 	if err != nil {
-		return err
+		return lead, err
 	}
 
 	// Add address for this lead
-	l.Address = &models.Address{
+	lead.Address = &models.Address{
 		StreetAddressLine1: input.StreetAddressLine1,
 		StreetAddressLine2: input.StreetAddressLine2,
 		StreetAddressLine3: input.StreetAddressLine3,
-		CityID:             z.CityID,
-		StateID:            z.StateID,
-		CountryID:          z.CountryID,
+		CityID:             zip.CityID,
+		StateID:            zip.StateID,
+		CountryID:          zip.CountryID,
 		ZipCode:            input.ZipCode,
 	}
 
-	l.ServiceID = input.Service
-	l.Budget = input.Budget
+	lead.ServiceID = input.Service
+	lead.Budget = input.Budget
 
 	// Assign lead
 	companyId, err := FindCompanyIDByZipCodeAndService(input.ZipCode, input.Service)
@@ -179,21 +182,25 @@ func (l *Lead) CreateLead(input *types.CreateLeadInput) error {
 		fmt.Printf("%+v\n", "Company not found.")
 	}
 
-	l.Lead.CompanyID = companyId
+	lead.CompanyID = companyId
 
-	return database.DB.Save(&l).First(&l).Error
+	var createdLead models.Lead
+
+	err = database.DB.Save(&lead).First(&createdLead).Error
+
+	return createdLead, err
 }
 
-func (l *Lead) Login(input *LeadLogin, c *fiber.Ctx) error {
+func LeadLogin(input *LeadLoginInput, c *fiber.Ctx) error {
 
 	// Find Lead by UUID
-	err := l.GetLeadByEmail(input.Email)
+	lead, err := GetLeadByEmail(input.Email)
 
 	if err != nil {
 		return err
 	}
 
-	err = l.GenerateLeadToken()
+	_, err = GenerateLeadToken(lead)
 
 	if err != nil {
 		return err
@@ -203,7 +210,7 @@ func (l *Lead) Login(input *LeadLogin, c *fiber.Ctx) error {
 }
 
 // Destroy session.
-func (l *Lead) LeadLogout(c *fiber.Ctx) error {
+func LeadLogout(c *fiber.Ctx) error {
 	sess, err := sessions.Sessions.Get(c)
 
 	if err != nil {
@@ -215,36 +222,17 @@ func (l *Lead) LeadLogout(c *fiber.Ctx) error {
 	return err
 }
 
-func (l *Lead) RecoverUUIDCode(uuid string) error {
+func RecoverUUIDCode(uuid string) error {
+	var lead models.Lead
 
-	err := database.DB.Where("uuid = ?", uuid).First(&l).Error
+	err := database.DB.Where("uuid = ?", uuid).First(&lead).Error
 
 	if err != nil {
 		return err
 	}
 
 	title := "Your UUID Recovery Request"
-	message := fmt.Sprintf("Your UUID Is: %s", l.UUID)
-	err = utils.SendGmail(message, l.Email, title)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// Generate lead token that's used for confirming users' login request.
-func (lead *Lead) GenerateLeadToken() error {
-	lc := &LeadCode{}
-	err := lc.GenerateLoginCode(lead.ID)
-
-	if err != nil {
-		return err
-	}
-
-	title := "Login Account Code"
-	message := fmt.Sprintf("Enter this code: %s", lc.Code)
+	message := fmt.Sprintf("Your UUID Is: %s", lead.UUID)
 	err = utils.SendGmail(message, lead.Email, title)
 
 	if err != nil {
@@ -254,10 +242,33 @@ func (lead *Lead) GenerateLeadToken() error {
 	return nil
 }
 
-func (l *Lead) GetLeadByPhoneNumber(phoneNumber string) error {
-	return database.DB.Where("phone_number = ?", phoneNumber[2:]).First(&l).Error
+// Generate lead token that's used for confirming users' login request.
+func GenerateLeadToken(lead models.Lead) (models.LeadCode, error) {
+	leadCode, err := GenerateLoginLeadCode(lead.ID)
+
+	if err != nil {
+		return leadCode, err
+	}
+
+	title := "Login Account Code"
+	message := fmt.Sprintf("Enter this code: %s", leadCode.Code)
+	err = utils.SendGmail(message, lead.Email, title)
+
+	if err != nil {
+		return leadCode, err
+	}
+
+	return leadCode, err
 }
 
-func (l *Lead) GetLeadWithAddress(id string) error {
-	return database.DB.Where("id = ?", id).Preload("Address").Find(&l).Error
+func GetLeadByPhoneNumber(phoneNumber string) (models.Lead, error) {
+	var lead models.Lead
+	err := database.DB.Where("phone_number = ?", phoneNumber[2:]).First(&lead).Error
+	return lead, err
+}
+
+func GetLeadWithAddress(id string) (models.Lead, error) {
+	var lead models.Lead
+	err := database.DB.Where("id = ?", id).Preload("Address").Find(&lead).Error
+	return lead, err
 }
