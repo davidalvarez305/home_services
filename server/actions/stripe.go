@@ -13,7 +13,7 @@ import (
 	"github.com/stripe/stripe-go/v74/invoiceitem"
 )
 
-func (company *Company) CreateStripeCustomer(owner models.User) error {
+func CreateStripeCustomer(owner models.User, company models.Company) error {
 
 	stripe.Key = os.Getenv("STRIPE_SECRET_KEY")
 
@@ -36,8 +36,8 @@ func (company *Company) CreateStripeCustomer(owner models.User) error {
 	return nil
 }
 
-func CreateInvoice(company *Company) (*Invoice, error) {
-	inv := &Invoice{}
+func CreateInvoice(company *models.Company) (models.Invoice, error) {
+	var inv models.Invoice
 	stripe.Key = os.Getenv("STRIPE_SECRET_KEY")
 
 	customFields := []*stripe.InvoiceCustomFieldParams{}
@@ -66,19 +66,16 @@ func CreateInvoice(company *Company) (*Invoice, error) {
 		return inv, err
 	}
 
-	// Get Invoice Leads
-	leads := &Leads{}
-
 	begin := now.BeginningOfMonth().Unix()
 	end := now.EndOfMonth().Unix()
 
-	err = leads.GetLeadsByDates(company.ID, begin, end)
+	leads, err := GetLeadsByDates(company.ID, begin, end)
 
 	if err != nil {
 		return inv, err
 	}
 
-	amountDue := len(*leads) * company.PriceAgreement * 100
+	amountDue := len(leads) * company.PriceAgreement * 100
 
 	item := &stripe.InvoiceItemParams{
 		Customer: stripe.String(company.StripeCustomerID),
@@ -93,7 +90,7 @@ func CreateInvoice(company *Company) (*Invoice, error) {
 		return inv, err
 	}
 
-	i := models.Invoice{
+	inv = models.Invoice{
 		InvoiceID:              in.ID,
 		InvoiceAmount:          int(in.AmountDue),
 		InvoiceDueDate:         thirtydaysFromNow,
@@ -107,13 +104,11 @@ func CreateInvoice(company *Company) (*Invoice, error) {
 		return inv, err
 	}
 
-	inv.Invoice = &i
-
-	for _, lead := range *leads {
-		inv.Lead = append(inv.Lead, lead)
+	for _, lead := range leads {
+		inv.Lead = append(inv.Lead, &lead)
 	}
 
-	err = inv.Save()
+	err = SaveInvoice(inv)
 
 	if err != nil {
 		return inv, err
