@@ -69,15 +69,7 @@ func CreateCompany(c *fiber.Ctx) error {
 }
 
 func GetUsersByCompany(c *fiber.Ctx) error {
-	id := c.Params("id")
-
-	if len(id) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Company ID not found in params.",
-		})
-	}
-
-	companyId, err := strconv.Atoi(id)
+	companyId, err := c.ParamsInt("id")
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -530,12 +522,6 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 func GetCompanyServices(c *fiber.Ctx) error {
 	companyId := c.Params("id")
 
-	if len(companyId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Company ID not found in URL params.",
-		})
-	}
-
 	services, err := actions.GetCompanyServiceAreas(companyId)
 
 	if err != nil {
@@ -679,13 +665,6 @@ func GetCompanyLeads(c *fiber.Ctx) error {
 	}
 
 	companyId := c.Params("id")
-
-	if len(companyId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Company ID not found in URL params.",
-		})
-	}
-
 	service_id := c.Query("service_id")
 	zip_code := c.Query("zip_code")
 
@@ -713,12 +692,6 @@ func GetCompanyLeads(c *fiber.Ctx) error {
 func GetCompany(c *fiber.Ctx) error {
 	companyId := c.Params("id")
 
-	if companyId == "" {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "No company found in params.",
-		})
-	}
-
 	var company models.Company
 
 	err := database.DB.Where("id = ?", companyId).First(&company).Error
@@ -736,12 +709,6 @@ func GetCompany(c *fiber.Ctx) error {
 
 func GetCompanyInvoices(c *fiber.Ctx) error {
 	companyId := c.Params("id")
-
-	if companyId == "" {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "No company found in params.",
-		})
-	}
 
 	invoices, err := actions.GetCompanyInvoices(companyId)
 
@@ -766,12 +733,6 @@ func GetCompanyLeadsByDate(c *fiber.Ctx) error {
 	}
 
 	companyId := c.Params("id")
-
-	if len(companyId) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Company ID not found in URL params.",
-		})
-	}
 
 	leads, err := actions.GetCompanyLeadsByDate(date, companyId)
 

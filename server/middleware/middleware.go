@@ -27,30 +27,31 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	return c.Next()
 }
 
-func CanEditCompanyResources(fn fiber.Handler) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		user, err := actions.GetUserFromSession(c)
+// Verify that user can mutate a company's resources
+// Step 1: can access company resources
+// Step 2: has correct permissions to mutate company resources
+func canMutateCompanyResources(c *fiber.Ctx) error {
+	user, err := actions.GetUserFromSession(c)
 
-		if err != nil {
-			return c.Status(403).JSON(fiber.Map{
-				"data": "Not authenticated.",
-			})
-		}
-
-		if user.RoleID != 0 {
-			return c.Status(400).JSON(fiber.Map{
-				"data": "Cannot be assigned to more than one company.",
-			})
-		}
-
-		if user.AccountStatusID != 1 {
-			return c.Status(403).JSON(fiber.Map{
-				"data": "Account status ID not active.",
-			})
-		}
-
-		return fn(c)
+	if err != nil {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Not authenticated.",
+		})
 	}
+
+	if user.AccountStatusID != 1 {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Account status ID not active.",
+		})
+	}
+
+	if user.RoleID != 1 {
+		return c.Status(403).JSON(fiber.Map{
+			"data": "Not enough permissions to mutate company resources",
+		})
+	}
+
+	return c.Next()
 }
 
 // Verify that user can access a company's resources
@@ -60,12 +61,18 @@ func CompanyResourceAccessRestriction(fn fiber.Handler) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		path := c.OriginalURL()
 
+		method := c.Method()
+
 		if !strings.Contains(path, "company") {
 			return fn(c)
 		}
 
-		if os.Getenv("PRODUCTION") == "0" {
-			return fn(c)
+		if len(os.Getenv("PRODUCTION")) == 0 {
+			if method == "GET" {
+				return fn(c)
+			}
+
+			return canMutateCompanyResources(c)
 		}
 
 		sessionUser, err := actions.GetUserFromSession(c)
@@ -87,14 +94,23 @@ func CompanyResourceAccessRestriction(fn fiber.Handler) fiber.Handler {
 		companyUsers, err := actions.GetUsersByCompany(companyId)
 
 		// If the user is found here, everything should work as normal.
+		found := false
 		for _, user := range companyUsers {
 			if user.ID == sessionUser.ID {
-				return fn(c)
+				found = true
 			}
 		}
 
-		return c.Status(403).JSON(fiber.Map{
-			"data": "Not allowed to access these resources.",
-		})
+		if !found {
+			return c.Status(403).JSON(fiber.Map{
+				"data": "Not allowed to access these resources.",
+			})
+		}
+
+		if method == "GET" {
+			return fn(c)
+		}
+
+		return canMutateCompanyResources(c)
 	}
 }

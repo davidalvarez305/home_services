@@ -13,11 +13,11 @@ func Company(router fiber.Router) {
 	// Manage Company
 	company.Post("/", handlers.CreateCompany)
 	company.Get("/:id", middleware.CompanyResourceAccessRestriction(handlers.GetCompany))
-	company.Put("/:id", handlers.UpdateCompany)
+	company.Put("/:id", middleware.CompanyResourceAccessRestriction(handlers.UpdateCompany))
 	company.Delete("/:id", handlers.DeleteCompany)
 
 	// Manage Company Users
-	company.Get("/:id/user", handlers.GetUsersByCompany)
+	company.Get("/:id/user", middleware.CompanyResourceAccessRestriction(handlers.GetUsersByCompany))
 	company.Put("/:id/user", handlers.UpdateCompanyUsers)
 	company.Delete("/:id/user/:userId", handlers.RemoveUserFromCompany)
 	company.Post("/:id/user/invite", handlers.InviteUserToCompany)
@@ -28,13 +28,13 @@ func Company(router fiber.Router) {
 	company.Delete("/:id/location", handlers.DeleteCompanyLocation)
 
 	// Manage Company Services
-	company.Get("/:id/service", handlers.GetCompanyServices)
+	company.Get("/:id/service", middleware.CompanyResourceAccessRestriction(handlers.GetCompanyServices))
 	company.Post("/:id/service", handlers.CreateCompanyServices)
 
 	// Manage Company Invoices
-	company.Get("/:id/invoice", handlers.GetCompanyInvoices)
+	company.Get("/:id/invoice", middleware.CompanyResourceAccessRestriction(handlers.GetCompanyInvoices))
 
 	// Manage Leads Assigned to Company
-	company.Get("/:id/leads/:date", handlers.GetCompanyLeadsByDate)
-	company.Get("/:id/leads", handlers.GetCompanyLeads)
+	company.Get("/:id/leads/:date", middleware.CompanyResourceAccessRestriction(handlers.GetCompanyLeadsByDate))
+	company.Get("/:id/leads", middleware.CompanyResourceAccessRestriction(handlers.GetCompanyLeads))
 }
