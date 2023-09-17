@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/davidalvarez305/home_services/server/handlers"
+	"github.com/davidalvarez305/home_services/server/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,7 +12,7 @@ func Company(router fiber.Router) {
 
 	// Manage Company
 	company.Post("/", handlers.CreateCompany)
-	company.Get("/:id", handlers.GetCompany)
+	company.Get("/:id", middleware.CompanyResourceAccessRestriction(handlers.GetCompany))
 	company.Put("/:id", handlers.UpdateCompany)
 	company.Delete("/:id", handlers.DeleteCompany)
 
