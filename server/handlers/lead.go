@@ -16,8 +16,6 @@ import (
 
 func CreateLead(c *fiber.Ctx) error {
 	var input types.CreateLeadInput
-	lead := &actions.Lead{}
-	leadLog := &actions.LeadLog{}
 
 	err := c.BodyParser(&input)
 
@@ -27,7 +25,7 @@ func CreateLead(c *fiber.Ctx) error {
 		})
 	}
 
-	err = lead.CreateLead(&input)
+	lead, err := actions.CreateLead(&input)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -45,13 +43,13 @@ func CreateLead(c *fiber.Ctx) error {
 	}
 
 	// This is kind of ugly...might need to rework later.
-	sms := &actions.TwillioWebhookRequestBody{}
+	var sms actions.TwillioWebhookRequestBody
 
 	sms.From = input.PhoneNumber
 
 	initialMsg := fmt.Sprintf("Welcome %s, this is just a welcome message and as a bonus, you can send images through here, and they'll be added to your account!", lead.FirstName)
 
-	err = sms.SendSMS(initialMsg)
+	err = actions.SendSMS(initialMsg, sms)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -60,7 +58,7 @@ func CreateLead(c *fiber.Ctx) error {
 	}
 
 	// Log activity
-	err = leadLog.Save("Lead created.", fmt.Sprintf("%+v", lead.ID))
+	err = actions.SaveLeadLog("Lead created.", fmt.Sprintf("%+v", lead.ID))
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -74,9 +72,7 @@ func CreateLead(c *fiber.Ctx) error {
 }
 
 func GetLeadFromSession(c *fiber.Ctx) error {
-	lead := &actions.LeadDetails{}
-
-	err := lead.GetLeadFromSession(c)
+	lead, err := actions.GetLeadFromSession(c)
 
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{
@@ -90,8 +86,7 @@ func GetLeadFromSession(c *fiber.Ctx) error {
 }
 
 func LeadLogin(c *fiber.Ctx) error {
-	lead := &actions.Lead{}
-	var input actions.LeadLogin
+	var input actions.LeadLoginInput
 
 	err := c.BodyParser(&input)
 
@@ -101,7 +96,7 @@ func LeadLogin(c *fiber.Ctx) error {
 		})
 	}
 
-	err = lead.Login(&input, c)
+	err = actions.LeadLogin(&input, c)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -123,11 +118,8 @@ func CheckLoginCode(c *fiber.Ctx) error {
 		})
 	}
 
-	// Initialize Structs
-	lc := &actions.LeadCode{}
-
 	// Retrieve Token from DB
-	err := lc.GetLoginCode(code)
+	lc, err := actions.GetLoginLeadCode(code)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -145,7 +137,7 @@ func CheckLoginCode(c *fiber.Ctx) error {
 	}
 
 	// Delete Token
-	err = lc.DeleteCode()
+	err = actions.DeleteLeadCode(lc)
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
@@ -172,9 +164,7 @@ func CheckLoginCode(c *fiber.Ctx) error {
 		})
 	}
 
-	ld := &actions.LeadDetails{}
-
-	err = ld.GetLeadDetails(lc.Lead.UUID)
+	ld, err := actions.GetLeadDetails(lc.Lead.UUID)
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
@@ -189,7 +179,6 @@ func CheckLoginCode(c *fiber.Ctx) error {
 
 func DeleteLead(c *fiber.Ctx) error {
 	leadId := c.Params("id")
-	lead := &actions.Lead{}
 
 	if len(leadId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
@@ -197,7 +186,7 @@ func DeleteLead(c *fiber.Ctx) error {
 		})
 	}
 
-	err := lead.Delete(leadId)
+	err := actions.DeleteLead(leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -211,9 +200,7 @@ func DeleteLead(c *fiber.Ctx) error {
 }
 
 func LeadLogout(c *fiber.Ctx) error {
-	lead := &actions.Lead{}
-
-	err := lead.LeadLogout(c)
+	err := actions.LeadLogout(c)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -229,7 +216,6 @@ func LeadLogout(c *fiber.Ctx) error {
 func UpdateLead(c *fiber.Ctx) error {
 	var input types.UpdateLeadInput
 	leadId := c.Params("id")
-	leadLog := &actions.LeadLog{}
 
 	if len(leadId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
@@ -245,9 +231,7 @@ func UpdateLead(c *fiber.Ctx) error {
 		})
 	}
 
-	l := &actions.Lead{}
-
-	err = l.GetLeadWithAddress(leadId)
+	l, err := actions.GetLeadWithAddress(leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -266,7 +250,7 @@ func UpdateLead(c *fiber.Ctx) error {
 	l.ServiceID = input.Service
 	l.Budget = input.Budget
 
-	err = l.Save()
+	err = actions.SaveLead(l)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -275,7 +259,7 @@ func UpdateLead(c *fiber.Ctx) error {
 	}
 
 	// Log activity
-	err = leadLog.Save("Lead details updated.", leadId)
+	err = actions.SaveLeadLog("Lead details updated.", leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -283,9 +267,7 @@ func UpdateLead(c *fiber.Ctx) error {
 		})
 	}
 
-	lead := &actions.LeadDetails{}
-
-	err = lead.GetLeadDetails(l.UUID)
+	lead, err := actions.GetLeadDetails(l.UUID)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -300,7 +282,6 @@ func UpdateLead(c *fiber.Ctx) error {
 
 func AddLeadPhotos(c *fiber.Ctx) error {
 	leadId := c.Params("id")
-	leadLog := &actions.LeadLog{}
 
 	if len(leadId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
@@ -333,16 +314,16 @@ func AddLeadPhotos(c *fiber.Ctx) error {
 	}
 
 	// Append the URLs from the S3 bucket and save
-	var photos actions.LeadPhotos
+	var photos []models.LeadPhoto
 	for _, photo := range clientImages {
 		p := models.LeadPhoto{
 			ImageURL: photo,
 			LeadID:   lead,
 		}
-		photos = append(photos, &p)
+		photos = append(photos, p)
 	}
 
-	err = photos.Save()
+	err = actions.SaveLeadPhotos(photos)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -351,7 +332,7 @@ func AddLeadPhotos(c *fiber.Ctx) error {
 	}
 
 	// Log activity
-	err = leadLog.Save("Quote photos added.", leadId)
+	err = actions.SaveLeadLog("Quote photos added.", leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -367,8 +348,6 @@ func AddLeadPhotos(c *fiber.Ctx) error {
 func DeleteLeadPhoto(c *fiber.Ctx) error {
 	leadId := c.Params("id")
 	imageUrl := c.Params("imageUrl")
-	leadPhoto := &actions.LeadPhoto{}
-	leadLog := &actions.LeadLog{}
 
 	if len(leadId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
@@ -382,7 +361,7 @@ func DeleteLeadPhoto(c *fiber.Ctx) error {
 		})
 	}
 
-	err := leadPhoto.DeleteLeadPhoto(imageUrl)
+	err := actions.DeleteLeadPhoto(imageUrl)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -390,9 +369,7 @@ func DeleteLeadPhoto(c *fiber.Ctx) error {
 		})
 	}
 
-	photos := &actions.PhotoURLs{}
-
-	err = photos.GetPhotoURLsByLeadID(leadId)
+	photos, err := actions.GetPhotoURLsByLeadID(leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -401,7 +378,7 @@ func DeleteLeadPhoto(c *fiber.Ctx) error {
 	}
 
 	// Log activity
-	err = leadLog.Save("Lead photos deleted.", leadId)
+	err = actions.SaveLeadLog("Lead photos deleted.", leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -422,7 +399,6 @@ func CreateLog(c *fiber.Ctx) error {
 	var input CreateLogInput
 
 	leadId := c.Params("id")
-	leadLog := &actions.LeadLog{}
 
 	if len(leadId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
@@ -430,7 +406,7 @@ func CreateLog(c *fiber.Ctx) error {
 		})
 	}
 
-	err := leadLog.Save(input.Action, leadId)
+	err := actions.SaveLeadLog(input.Action, leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -445,7 +421,6 @@ func CreateLog(c *fiber.Ctx) error {
 
 func GetLogsByLead(c *fiber.Ctx) error {
 	leadId := c.Params("id")
-	logs := &actions.LeadLogs{}
 
 	if len(leadId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
@@ -453,7 +428,7 @@ func GetLogsByLead(c *fiber.Ctx) error {
 		})
 	}
 
-	err := logs.Get(leadId)
+	logs, err := actions.GetLeadLogs(leadId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
