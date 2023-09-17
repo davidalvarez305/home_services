@@ -1,8 +1,6 @@
 package actions
 
 import (
-	"fmt"
-
 	"github.com/davidalvarez305/home_services/server/database"
 	"github.com/davidalvarez305/home_services/server/models"
 )
@@ -37,26 +35,6 @@ func GetCompanyServiceAreas(companyId string) ([]CompanyServiceByArea, error) {
 // Create service areas only. Doesn't return anything.
 func CreateCompanyServiceAreas(c []models.CompanyServicesLocations) error {
 	return database.DB.Save(&c).Error
-}
-
-func CheckPermissions(c []models.CompanyServicesLocations, companyId string, user models.User) bool {
-	// Check that the services are all being added to the company from the URL params
-	for _, service := range c {
-		if fmt.Sprintf("%+v", service.CompanyID) != companyId {
-			return false
-		}
-	}
-
-	// Check that user's company is the same as the company in the URL params
-	if fmt.Sprintf("%+v", user.CompanyID) != companyId {
-		return false
-	}
-
-	if user.RoleID != 1 || user.AccountStatusID != 1 {
-		return false
-	}
-
-	return true
 }
 
 // Deletes a single location

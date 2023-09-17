@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"mime/multipart"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/database"
@@ -213,25 +212,6 @@ func GetUsersByCompany(companyId int) ([]models.User, error) {
 	var users []models.User
 	err := database.DB.Where("company_id = ?", companyId).Find(&users).Error
 	return users, err
-}
-
-// Check that user can mutate company attributes
-func CheckUserPermission(c *fiber.Ctx, companyId string) (bool, error) {
-
-	cId, err := strconv.Atoi(companyId)
-
-	if err != nil {
-		return false, err
-	}
-
-	user, err := GetUserFromSession(c)
-
-	if err != nil {
-		return false, err
-	}
-
-	// Assert that (A) the user is an owner, and (B) that the company being updated belongs to that user.
-	return user.RoleID == 1 && user.CompanyID == cId, nil
 }
 
 // Set company and role ID's to zero
