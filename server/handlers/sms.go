@@ -8,7 +8,7 @@ import (
 )
 
 func HandleIncomingMMS(c *fiber.Ctx) error {
-	input := &actions.TwillioWebhookRequestBody{}
+	var input actions.TwillioWebhookRequestBody
 
 	err := c.BodyParser(input)
 
@@ -18,9 +18,7 @@ func HandleIncomingMMS(c *fiber.Ctx) error {
 		})
 	}
 
-	lead := &actions.Lead{}
-
-	err = lead.GetLeadByPhoneNumber(input.From)
+	lead, err := actions.GetLeadByPhoneNumber(input.From)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -28,7 +26,7 @@ func HandleIncomingMMS(c *fiber.Ctx) error {
 		})
 	}
 
-	err = input.UploadImagesFromMMS(lead)
+	err = actions.UploadImagesFromMMS(lead, input)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -36,7 +34,7 @@ func HandleIncomingMMS(c *fiber.Ctx) error {
 		})
 	}
 
-	err = input.SendSMS("Your images have been uploaded successfully! 📷")
+	err = actions.SendSMS("Your images have been uploaded successfully! 📷", input)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -44,9 +42,7 @@ func HandleIncomingMMS(c *fiber.Ctx) error {
 		})
 	}
 
-	leadLog := &actions.LeadLog{}
-
-	err = leadLog.Save("Images added through text.", fmt.Sprintf("%+v", lead.ID))
+	err = actions.SaveLeadLog("Images added through text.", fmt.Sprintf("%+v", lead.ID))
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

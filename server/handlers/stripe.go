@@ -92,10 +92,7 @@ func HandleStripeWebhooks(c *fiber.Ctx) error {
 		emailMsg = fmt.Sprintf("Payment action required for Invoice ID: %+v", invoice.ID)
 	}
 
-	// Fetch invoice
-	inv := &actions.Invoice{}
-
-	err = inv.GetInvoiceByInvoiceID(invoice.ID)
+	inv, err := actions.GetInvoiceByInvoiceID(invoice.ID)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -105,7 +102,7 @@ func HandleStripeWebhooks(c *fiber.Ctx) error {
 
 	// Save invoice status
 	inv.InvoicePaymentStatusID = paymentStatusID
-	err = inv.Save()
+	err = actions.SaveInvoice(inv)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -113,10 +110,7 @@ func HandleStripeWebhooks(c *fiber.Ctx) error {
 		})
 	}
 
-	// Create log
-	log := &actions.CompanyLog{}
-
-	err = log.Save(logMessage, fmt.Sprintf("%+v", inv.CompanyID))
+	err = actions.SaveCompanyLog(logMessage, fmt.Sprintf("%+v", inv.CompanyID))
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
