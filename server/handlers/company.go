@@ -7,13 +7,14 @@ import (
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/actions"
+	"github.com/davidalvarez305/home_services/server/database"
+	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/davidalvarez305/home_services/server/types"
 	"github.com/gofiber/fiber/v2"
 )
 
 func CreateCompany(c *fiber.Ctx) error {
-	input := &types.CreateCompanyInput{}
-	user := &actions.User{}
+	var input types.CreateCompanyInput
 	err := c.BodyParser(&input)
 
 	if err != nil {
@@ -22,7 +23,7 @@ func CreateCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err = user.GetUserFromSession(c)
+	user, err := actions.GetUserFromSession(c)
 
 	if err != nil {
 		return c.Status(403).JSON(fiber.Map{
@@ -42,11 +43,11 @@ func CreateCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	company := &actions.Company{}
+	var company models.Company
 
 	company.Name = input.Name
 
-	err = company.CreateStripeCustomer(user)
+	err = actions.CreateStripeCustomer(user, company)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -54,7 +55,7 @@ func CreateCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err = company.CreateCompany(input, user)
+	createdCompany, err := actions.CreateCompany(input, user)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -63,13 +64,11 @@ func CreateCompany(c *fiber.Ctx) error {
 	}
 
 	return c.Status(201).JSON(fiber.Map{
-		"data": company,
+		"data": createdCompany,
 	})
 }
 
 func GetUsersByCompany(c *fiber.Ctx) error {
-	usersByCompany := &actions.Users{}
-
 	id := c.Params("id")
 
 	if len(id) == 0 {
@@ -86,7 +85,7 @@ func GetUsersByCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err = usersByCompany.GetUsersByCompany(companyId)
+	usersByCompany, err := actions.GetUsersByCompany(companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -100,8 +99,6 @@ func GetUsersByCompany(c *fiber.Ctx) error {
 }
 
 func InviteUserToCompany(c *fiber.Ctx) error {
-	user := &actions.User{}
-
 	type InviteUserInput struct {
 		Email string `json:"email"`
 	}
@@ -124,7 +121,7 @@ func InviteUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err = user.GetUserFromSession(c)
+	user, err := actions.GetUserFromSession(c)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -133,7 +130,7 @@ func InviteUserToCompany(c *fiber.Ctx) error {
 	}
 
 	// Check user permissions
-	canInvite := user.CheckInvitePermissions(companyId, input.Email)
+	canInvite := actions.CheckInvitePermissions(user, companyId, input.Email)
 
 	if !canInvite {
 		return c.Status(400).JSON(fiber.Map{
@@ -155,7 +152,7 @@ func InviteUserToCompany(c *fiber.Ctx) error {
 }
 
 func AddNewUserToCompany(c *fiber.Ctx) error {
-	user := &actions.User{}
+	var addUserInput models.User
 
 	// Check if user has code coming from /invite/:code
 	code := c.Params("code")
@@ -174,7 +171,7 @@ func AddNewUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err := c.BodyParser(&user)
+	err := c.BodyParser(&addUserInput)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -182,10 +179,7 @@ func AddNewUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	// Fetch company token
-	companyToken := &actions.CompanyToken{}
-
-	err = companyToken.GetCompanyToken(code)
+	companyToken, err := actions.GetCompanyToken(code)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -194,7 +188,7 @@ func AddNewUserToCompany(c *fiber.Ctx) error {
 	}
 
 	// Check that user from session's e-mail and user from token's e-mail are the same
-	canAccept := user.CheckCanAcceptInvitation(companyId, companyToken)
+	canAccept := actions.CheckCanAcceptInvitation(addUserInput, companyId, companyToken)
 
 	if !canAccept {
 		return c.Status(400).JSON(fiber.Map{
@@ -202,11 +196,11 @@ func AddNewUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	user.RoleID = 2 // Role 2 is "employee".
-	user.CompanyID = companyToken.CompanyID
+	addUserInput.RoleID = 2 // Role 2 is "employee".
+	addUserInput.CompanyID = companyToken.CompanyID
 
 	// Create with client input
-	err = user.CreateUser()
+	createdUser, err := actions.CreateUser(addUserInput)
 
 	if err != nil {
 
@@ -221,7 +215,7 @@ func AddNewUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err = companyToken.DeleteCompanyToken()
+	err = actions.DeleteCompanyToken(companyToken)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -230,14 +224,12 @@ func AddNewUserToCompany(c *fiber.Ctx) error {
 	}
 
 	return c.Status(201).JSON(fiber.Map{
-		"data": user,
+		"data": createdUser,
 	})
 }
 
 func UpdateCompany(c *fiber.Ctx) error {
 	input := &types.CreateCompanyInput{}
-	company := &actions.Company{}
-	user := &actions.User{}
 
 	companyId := c.Params("id")
 
@@ -255,7 +247,7 @@ func UpdateCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	hasPermission, err := user.CheckUserPermission(c, companyId)
+	hasPermission, err := actions.CheckUserPermission(c, companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -270,7 +262,7 @@ func UpdateCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err = company.UpdateCompany(companyId, input)
+	updatedCompany, err := actions.UpdateCompany(companyId, input)
 
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{
@@ -279,14 +271,11 @@ func UpdateCompany(c *fiber.Ctx) error {
 	}
 
 	return c.Status(201).JSON(fiber.Map{
-		"data": company,
+		"data": updatedCompany,
 	})
 }
 
 func DeleteCompany(c *fiber.Ctx) error {
-	company := &actions.Company{}
-	user := &actions.User{}
-
 	companyId := c.Params("id")
 
 	if len(companyId) == 0 {
@@ -295,7 +284,7 @@ func DeleteCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	hasPermission, err := user.CheckUserPermission(c, companyId)
+	hasPermission, err := actions.CheckUserPermission(c, companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -310,7 +299,7 @@ func DeleteCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err = company.DeleteCompany(companyId)
+	err = actions.DeleteCompany(companyId)
 
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{
@@ -325,8 +314,6 @@ func DeleteCompany(c *fiber.Ctx) error {
 
 // Update a user's CompanyID & RoleID, then return all users that belong to a company.
 func RemoveUserFromCompany(c *fiber.Ctx) error {
-	companyOwner := &actions.User{}
-	userToUpdate := &actions.User{}
 	companyId := c.Params("id")
 
 	if len(companyId) == 0 {
@@ -343,7 +330,7 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	hasPermission, err := companyOwner.CheckUserPermission(c, companyId)
+	hasPermission, err := actions.CheckUserPermission(c, companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -359,8 +346,7 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 	}
 
 	// Ensure that there must always be one owner
-	companyOwners := &actions.Users{}
-	err = companyOwners.GetCompanyOwners(companyId)
+	companyOwners, err := actions.GetCompanyOwners(companyId)
 
 	if err != nil {
 		return c.Status(403).JSON(fiber.Map{
@@ -369,28 +355,26 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 	}
 
 	var count = 0
-	for _, user := range *companyOwners {
+	for _, user := range companyOwners {
 		if user.RoleID == 1 {
 			count += 1
 		}
 	}
 
 	// If this logic is correct, the count will never be zero, so it's safe to index the ID below.
-	if count <= 1 && userId == fmt.Sprintf("%+v", (*companyOwners)[0].ID) {
+	if count <= 1 && userId == fmt.Sprintf("%+v", (companyOwners)[0].ID) {
 		return c.Status(403).JSON(fiber.Map{
 			"data": "Invalid action. This would remove all owners from the company.",
 		})
 	}
 
-	err = userToUpdate.RemoveUserFromCompany(companyId, userId)
+	err = actions.RemoveUserFromCompany(companyId, userId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"data": "Could not remove user from company.",
 		})
 	}
-
-	users := &actions.Users{}
 
 	id, err := strconv.Atoi(companyId)
 
@@ -400,7 +384,7 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err = users.GetUsersByCompany(id)
+	companyUsers, err := actions.GetUsersByCompany(id)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -409,14 +393,12 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{
-		"data": users,
+		"data": companyUsers,
 	})
 }
 
 func UpdateCompanyUsers(c *fiber.Ctx) error {
-	input := &actions.Users{}
-	companyOwner := &actions.User{}
-	usersToUpdate := &actions.Users{}
+	var input []models.User
 	companyId := c.Params("id")
 
 	if len(companyId) == 0 {
@@ -433,7 +415,7 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 		})
 	}
 
-	hasPermission, err := companyOwner.CheckUserPermission(c, companyId)
+	hasPermission, err := actions.CheckUserPermission(c, companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -451,7 +433,7 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 	// Ensure that there must always be one owner
 	// This action presumes that all the company's users will be coming from the client on every request.
 	var count = 0
-	for _, user := range *input {
+	for _, user := range input {
 
 		if user.RoleID == 1 {
 			count += 1
@@ -464,7 +446,7 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 		})
 	}
 
-	err = usersToUpdate.UpdateCompanyUsers(companyId, input)
+	updatedUsers, err := actions.UpdateCompanyUsers(companyId, input)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -473,13 +455,11 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{
-		"data": usersToUpdate,
+		"data": updatedUsers,
 	})
 }
 
 func AddExistingUserToCompany(c *fiber.Ctx) error {
-	user := &actions.User{}
-
 	code := c.Params("code")
 
 	if len(code) == 0 {
@@ -496,7 +476,7 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err := user.GetUserFromSession(c)
+	user, err := actions.GetUserFromSession(c)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -504,10 +484,7 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	// Fetch company token
-	companyToken := &actions.CompanyToken{}
-
-	err = companyToken.GetCompanyToken(code)
+	companyToken, err := actions.GetCompanyToken(code)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -515,7 +492,7 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	canAccept := user.CheckCanAcceptInvitation(companyId, companyToken)
+	canAccept := actions.CheckCanAcceptInvitation(user, companyId, companyToken)
 
 	if !canAccept {
 		return c.Status(400).JSON(fiber.Map{
@@ -529,7 +506,7 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 	user.UpdatedAt = time.Now().Unix()
 
 	// Create with client input
-	err = user.Save()
+	updatedUser, err := actions.SaveUser(user)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -537,7 +514,7 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	err = companyToken.DeleteCompanyToken()
+	err = actions.DeleteCompanyToken(companyToken)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -546,13 +523,11 @@ func AddExistingUserToCompany(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{
-		"data": user,
+		"data": updatedUser,
 	})
 }
 
 func GetCompanyServices(c *fiber.Ctx) error {
-	services := &actions.CompanyServicesByArea{}
-
 	companyId := c.Params("id")
 
 	if len(companyId) == 0 {
@@ -561,7 +536,7 @@ func GetCompanyServices(c *fiber.Ctx) error {
 		})
 	}
 
-	err := services.GetCompanyServiceAreas(companyId)
+	services, err := actions.GetCompanyServiceAreas(companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -575,7 +550,7 @@ func GetCompanyServices(c *fiber.Ctx) error {
 }
 
 func CreateCompanyServices(c *fiber.Ctx) error {
-	services := &actions.CompanyServicesLocations{}
+	var services []models.CompanyServicesLocations
 
 	companyId := c.Params("id")
 
@@ -584,9 +559,8 @@ func CreateCompanyServices(c *fiber.Ctx) error {
 			"data": "Company ID not found in URL params.",
 		})
 	}
-	user := &actions.User{}
 
-	err := user.GetUserFromSession(c)
+	user, err := actions.GetUserFromSession(c)
 
 	if err != nil {
 		return c.Status(403).JSON(fiber.Map{
@@ -603,7 +577,7 @@ func CreateCompanyServices(c *fiber.Ctx) error {
 	}
 
 	// Check Permissions
-	canCreate := services.CheckPermissions(companyId, user)
+	canCreate := actions.CheckPermissions(services, companyId, user)
 
 	if !canCreate {
 		return c.Status(403).JSON(fiber.Map{
@@ -611,7 +585,7 @@ func CreateCompanyServices(c *fiber.Ctx) error {
 		})
 	}
 
-	err = services.CreateCompanyServiceAreas()
+	err = actions.CreateCompanyServiceAreas(services)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -619,9 +593,7 @@ func CreateCompanyServices(c *fiber.Ctx) error {
 		})
 	}
 
-	updatedServices := &actions.CompanyServicesByArea{}
-
-	err = updatedServices.GetCompanyServiceAreas(companyId)
+	updatedServices, err := actions.GetCompanyServiceAreas(companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -635,7 +607,7 @@ func CreateCompanyServices(c *fiber.Ctx) error {
 }
 
 func DeleteCompanyLocation(c *fiber.Ctx) error {
-	locations := &actions.CompanyServicesLocations{}
+	var locations models.CompanyServicesLocations
 
 	companyId := c.Params("id")
 
@@ -644,9 +616,8 @@ func DeleteCompanyLocation(c *fiber.Ctx) error {
 			"data": "Company ID not found in URL params.",
 		})
 	}
-	user := &actions.User{}
 
-	err := user.GetUserFromSession(c)
+	user, err := actions.GetUserFromSession(c)
 
 	if err != nil {
 		return c.Status(403).JSON(fiber.Map{
@@ -675,7 +646,7 @@ func DeleteCompanyLocation(c *fiber.Ctx) error {
 		})
 	}
 
-	err = locations.DeleteCompanyServiceAreas()
+	err = actions.DeleteCompanyServiceAreas(locations)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -683,9 +654,7 @@ func DeleteCompanyLocation(c *fiber.Ctx) error {
 		})
 	}
 
-	updatedServices := &actions.CompanyServicesByArea{}
-
-	err = updatedServices.GetCompanyServiceAreas(companyId)
+	updatedCompanyServiceAreas, err := actions.GetCompanyServiceAreas(companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -694,13 +663,11 @@ func DeleteCompanyLocation(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{
-		"data": updatedServices,
+		"data": updatedCompanyServiceAreas,
 	})
 }
 
 func GetCompanyLeads(c *fiber.Ctx) error {
-	leads := &actions.CompanyLeads{}
-
 	var qs types.CompanyLeadsQS
 
 	err := c.QueryParser(&qs)
@@ -730,7 +697,7 @@ func GetCompanyLeads(c *fiber.Ctx) error {
 		qs.ZipCode = zip_code
 	}
 
-	err = leads.GetCompanyLeads(companyId, qs)
+	leads, err := actions.GetCompanyLeads(companyId, qs)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -752,9 +719,9 @@ func GetCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	company := &actions.Company{}
+	var company models.Company
 
-	err := company.GetCompanyByID(companyId)
+	err := database.DB.Where("id = ?", companyId).First(&company).Error
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -776,9 +743,7 @@ func GetCompanyInvoices(c *fiber.Ctx) error {
 		})
 	}
 
-	invoices := &actions.Invoices{}
-
-	err := invoices.GetCompanyInvoices(companyId)
+	invoices, err := actions.GetCompanyInvoices(companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -792,8 +757,6 @@ func GetCompanyInvoices(c *fiber.Ctx) error {
 }
 
 func GetCompanyLeadsByDate(c *fiber.Ctx) error {
-	leads := &actions.Leads{}
-
 	date := c.Params("date")
 
 	if len(date) == 0 {
@@ -810,7 +773,7 @@ func GetCompanyLeadsByDate(c *fiber.Ctx) error {
 		})
 	}
 
-	err := leads.GetCompanyLeadsByDate(date, companyId)
+	leads, err := actions.GetCompanyLeadsByDate(date, companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

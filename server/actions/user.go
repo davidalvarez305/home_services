@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/davidalvarez305/home_services/server/database"
@@ -215,7 +216,7 @@ func GetUsersByCompany(companyId int) ([]models.User, error) {
 }
 
 // Check that user can mutate company attributes
-/* func (user *User) CheckUserPermission(c *fiber.Ctx, companyId string) (bool, error) {
+func CheckUserPermission(c *fiber.Ctx, companyId string) (bool, error) {
 
 	cId, err := strconv.Atoi(companyId)
 
@@ -223,7 +224,7 @@ func GetUsersByCompany(companyId int) ([]models.User, error) {
 		return false, err
 	}
 
-	err = user.GetUserFromSession(c)
+	user, err := GetUserFromSession(c)
 
 	if err != nil {
 		return false, err
@@ -231,7 +232,7 @@ func GetUsersByCompany(companyId int) ([]models.User, error) {
 
 	// Assert that (A) the user is an owner, and (B) that the company being updated belongs to that user.
 	return user.RoleID == 1 && user.CompanyID == cId, nil
-} */
+}
 
 // Set company and role ID's to zero
 func RemoveUserFromCompany(companyId, userId string) error {
@@ -266,13 +267,13 @@ func RemoveUserFromCompany(companyId, userId string) error {
 }
 
 // Set company and role ID's to zero
-func UpdateCompanyUsers(companyId string, clientInput []models.User) error {
+func UpdateCompanyUsers(companyId string, clientInput []models.User) ([]models.User, error) {
 	var users []models.User
 
-	res := database.DB.Where("company_id = ?", companyId).Find(&users)
+	err := database.DB.Where("company_id = ?", companyId).Find(&users).Error
 
-	if res.Error != nil {
-		return res.Error
+	if err != nil {
+		return users, err
 	}
 
 	// Match client input users to DB users and adjust RoleID & AccountStatusID based on the form values
@@ -286,7 +287,11 @@ func UpdateCompanyUsers(companyId string, clientInput []models.User) error {
 		}
 	}
 
-	return database.DB.Where("company_id = ?", companyId).Save(&users).Find(&users).Error
+	var updatedUsers []models.User
+
+	err = database.DB.Where("company_id = ?", companyId).Save(&users).Find(&updatedUsers).Error
+
+	return updatedUsers, err
 }
 
 // Check for user invite permissions

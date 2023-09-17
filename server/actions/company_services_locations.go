@@ -35,10 +35,8 @@ func GetCompanyServiceAreas(companyId string) ([]CompanyServiceByArea, error) {
 }
 
 // Create service areas only. Doesn't return anything.
-func CreateCompanyServiceAreas() ([]models.CompanyServicesLocations, error) {
-	var c []models.CompanyServicesLocations
-	err := database.DB.Save(&c).Error
-	return c, err
+func CreateCompanyServiceAreas(c []models.CompanyServicesLocations) error {
+	return database.DB.Save(&c).Error
 }
 
 func CheckPermissions(c []models.CompanyServicesLocations, companyId string, user models.User) bool {

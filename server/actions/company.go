@@ -38,7 +38,7 @@ func Save(c models.Company) error {
 }
 
 // Create and return company model.
-func CreateCompany(input *types.CreateCompanyInput, user models.User) (models.Company, error) {
+func CreateCompany(input types.CreateCompanyInput, user models.User) (models.Company, error) {
 	user.RoleID = 2
 	user.UpdatedAt = time.Now().Unix()
 
