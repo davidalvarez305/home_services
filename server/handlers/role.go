@@ -6,9 +6,7 @@ import (
 )
 
 func GetAllRoles(c *fiber.Ctx) error {
-	roles := &actions.Roles{}
-
-	err := roles.GetAll()
+	roles, err := actions.GetAll()
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

@@ -6,8 +6,6 @@ import (
 )
 
 func GetAllLocations(c *fiber.Ctx) error {
-	locations := &actions.Locations{}
-
 	stateId := c.Query("stateId")
 
 	if len(stateId) == 0 {
@@ -16,7 +14,7 @@ func GetAllLocations(c *fiber.Ctx) error {
 		})
 	}
 
-	err := locations.GetAllLocations(stateId)
+	locations, err := actions.GetAllLocations(stateId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -30,9 +28,7 @@ func GetAllLocations(c *fiber.Ctx) error {
 }
 
 func GetAllStates(c *fiber.Ctx) error {
-	states := &actions.States{}
-
-	err := states.GetAllStates()
+	states, err := actions.GetAllStates()
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

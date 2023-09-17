@@ -6,9 +6,7 @@ import (
 )
 
 func GetAllServices(c *fiber.Ctx) error {
-	services := &actions.Services{}
-
-	err := services.GetAllServices()
+	services, err := actions.GetAllServices()
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
