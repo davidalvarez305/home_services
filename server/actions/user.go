@@ -23,7 +23,7 @@ func SaveUser(user models.User) (models.User, error) {
 }
 
 // Destroy session.
-func Logout(c *fiber.Ctx) error {
+func UserLogout(c *fiber.Ctx) error {
 	sess, err := sessions.Sessions.Get(c)
 
 	if err != nil {
@@ -310,11 +310,11 @@ func CheckInvitePermissions(user models.User, companyId string, clientEmail stri
 	return true
 }
 
-func CheckCanAcceptInvitation(user models.User, companyId string, companyToken *CompanyToken) bool {
+func CheckCanAcceptInvitation(user models.User, companyId string, companyToken models.CompanyToken) bool {
 
 	// Token expires after 5 minutes.
 	if time.Now().Unix()-companyToken.CreatedAt > 300 {
-		err := companyToken.DeleteCompanyToken()
+		err := DeleteCompanyToken(companyToken)
 		if err != nil {
 			return false
 		}
