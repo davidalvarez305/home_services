@@ -86,8 +86,7 @@ func InviteUserToCompany(companyId int, email string) error {
 	}
 
 	// Generate a company token
-	companyToken := &CompanyToken{}
-	err = companyToken.GenerateCompanyToken(companyId, email)
+	companyToken, err := GenerateCompanyToken(companyId, email)
 
 	if err != nil {
 		return err
