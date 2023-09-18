@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/davidalvarez305/home_services/server/handlers"
+	"github.com/davidalvarez305/home_services/server/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -16,10 +17,10 @@ func User(router fiber.Router) {
 	user.Get("/", handlers.GetUser)
 
 	// Login required
-	user.Put("/", handlers.UpdateUser)
-	user.Delete("/", handlers.DeleteUser)
-	user.Post("/logout", handlers.Logout)
-	user.Put("/change-picture", handlers.ChangeProfilePicture)
-	user.Get("/change-password", handlers.RequestChangePasswordCode)
-	user.Put("/change-password/:code", handlers.ChangePassword)
+	user.Put("/:id", middleware.AccessUserResources(handlers.UpdateUser))
+	user.Delete("/:id", middleware.AccessUserResources(handlers.DeleteUser))
+	user.Post("/:id/logout", middleware.AccessUserResources(handlers.Logout))
+	user.Put("/:id/change-picture", middleware.AccessUserResources(handlers.ChangeProfilePicture))
+	user.Get("/:id/change-password", middleware.AccessUserResources(handlers.RequestChangePasswordCode))
+	user.Put("/:id/change-password/:code", middleware.AccessUserResources(handlers.ChangePassword))
 }

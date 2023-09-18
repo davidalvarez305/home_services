@@ -114,3 +114,24 @@ func CompanyResourceAccessRestriction(fn fiber.Handler) fiber.Handler {
 		return canMutateCompanyResources(c)
 	}
 }
+
+func AccessUserResources(fn fiber.Handler) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		paramsId, err := c.ParamsInt("id")
+		userId, err := actions.GetUserIdFromSession(c)
+
+		if err != nil || userId == 0 {
+			return c.Status(401).JSON(fiber.Map{
+				"data": "Unauthorized.",
+			})
+		}
+
+		if paramsId != userId {
+			return c.Status(403).JSON(fiber.Map{
+				"data": "Not allowed to access another user's resources.",
+			})
+		}
+
+		return fn(c)
+	}
+}

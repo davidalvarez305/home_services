@@ -2,7 +2,6 @@ package actions
 
 import (
 	"github.com/davidalvarez305/home_services/server/database"
-	"github.com/davidalvarez305/home_services/server/models"
 )
 
 type Location struct {
@@ -39,10 +38,4 @@ func GetAllLocations(stateId string) ([]Location, error) {
 	`
 	err := database.DB.Raw(sql, stateId).Scan(&locations).Error
 	return locations, err
-}
-
-func GetAllStates() ([]models.State, error) {
-	var states []models.State
-	err := database.DB.Find(&states).Error
-	return states, err
 }

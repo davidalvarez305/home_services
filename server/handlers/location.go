@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"github.com/davidalvarez305/home_services/server/actions"
+	"github.com/davidalvarez305/home_services/server/database"
+	"github.com/davidalvarez305/home_services/server/models"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -28,7 +30,8 @@ func GetAllLocations(c *fiber.Ctx) error {
 }
 
 func GetAllStates(c *fiber.Ctx) error {
-	states, err := actions.GetAllStates()
+	var states []models.State
+	err := database.DB.Find(&states).Error
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

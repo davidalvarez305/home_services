@@ -65,8 +65,12 @@ func CreateUser(user models.User) (models.User, error) {
 }
 
 // Update and return updated user.
-func UpdateUser(body models.User) (models.User, error) {
-	var user models.User
+func UpdateUser(userId string, body models.User) (models.User, error) {
+	user, err := GetUserById(userId)
+
+	if err != nil {
+		return user, err
+	}
 
 	user.Username = body.Username
 	user.Email = body.Email
@@ -80,7 +84,7 @@ func UpdateUser(body models.User) (models.User, error) {
 }
 
 // Takes user ID as string value and returns the user from the database.
-func getUserById(userId string) (models.User, error) {
+func GetUserById(userId string) (models.User, error) {
 	var user models.User
 	err := database.DB.Where("id = ?", userId).First(&user).Error
 	return user, err
@@ -110,7 +114,7 @@ func GetUserFromSession(c *fiber.Ctx) (models.User, error) {
 
 	uId := fmt.Sprintf("%v", userId)
 
-	return getUserById(uId)
+	return GetUserById(uId)
 }
 
 // Create new session with user.

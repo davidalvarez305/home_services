@@ -84,6 +84,7 @@ func Login(c *fiber.Ctx) error {
 
 func UpdateUser(c *fiber.Ctx) error {
 	var body models.User
+	userId := c.Params("id")
 
 	err := c.BodyParser(&body)
 
@@ -91,15 +92,7 @@ func UpdateUser(c *fiber.Ctx) error {
 		return err
 	}
 
-	_, err = actions.GetUserFromSession(c)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": err.Error(),
-		})
-	}
-
-	updatedUser, err := actions.UpdateUser(body)
+	updatedUser, err := actions.UpdateUser(userId, body)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -113,11 +106,13 @@ func UpdateUser(c *fiber.Ctx) error {
 }
 
 func DeleteUser(c *fiber.Ctx) error {
-	user, err := actions.GetUserFromSession(c)
+	userId := c.Params("id")
+
+	user, err := actions.GetUserById(userId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": err.Error(),
+			"data": "User not found.",
 		})
 	}
 
@@ -125,7 +120,7 @@ func DeleteUser(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": err.Error(),
+			"data": "Error deleting user.",
 		})
 	}
 
@@ -148,6 +143,7 @@ func ChangePassword(c *fiber.Ctx) error {
 		NewPassword string `json:"newPassword"`
 	}
 	code := c.Params("code")
+	userId := c.Params("id")
 
 	if code == "" {
 		return c.Status(400).JSON(fiber.Map{
@@ -166,8 +162,7 @@ func ChangePassword(c *fiber.Ctx) error {
 		})
 	}
 
-	// Get User From Session
-	user, err := actions.GetUserFromSession(c)
+	user, err := actions.GetUserById(userId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -175,7 +170,6 @@ func ChangePassword(c *fiber.Ctx) error {
 		})
 	}
 
-	// Retrieve Token from DB
 	token, err := actions.GetToken(code, user.ID)
 
 	if err != nil {
@@ -217,11 +211,12 @@ func ChangePassword(c *fiber.Ctx) error {
 }
 
 func RequestChangePasswordCode(c *fiber.Ctx) error {
-	user, err := actions.GetUserFromSession(c)
+	userId := c.Params("id")
+	user, err := actions.GetUserById(userId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": err.Error(),
+			"data": "User was not found.",
 		})
 	}
 
@@ -229,7 +224,7 @@ func RequestChangePasswordCode(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"data": err.Error(),
+			"data": "Error requesting change password code.",
 		})
 	}
 
@@ -274,13 +269,16 @@ func ForgotPassword(c *fiber.Ctx) error {
 }
 
 func ChangeProfilePicture(c *fiber.Ctx) error {
+	userId := c.Params("id")
 	file, err := c.FormFile("image")
 
 	if err != nil {
-		return err
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Could not retrieve file from request.",
+		})
 	}
 
-	user, err := actions.GetUserFromSession(c)
+	user, err := actions.GetUserById(userId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
