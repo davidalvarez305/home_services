@@ -218,18 +218,18 @@ func GetUsersByCompany(companyId int) ([]models.User, error) {
 func RemoveUserFromCompany(companyId, userId string) error {
 	var user models.User
 
-	result := database.DB.Where("id = ? AND company_id = ?", userId, companyId).First(&user)
+	err := database.DB.Where("id = ? AND company_id = ?", userId, companyId).First(&user).Error
 
-	if result.Error != nil {
-		return result.Error
+	if err != nil {
+		return err
 	}
 
 	// Fetch company to ensure that there's at least another owner.
 	var companyOwners []models.User
-	res := database.DB.Where("company_id = ? AND role_id = 1", companyId).Find(&companyOwners)
+	err = database.DB.Where("company_id = ? AND role_id = 1", companyId).Find(&companyOwners).Error
 
-	if res.Error != nil {
-		return res.Error
+	if err != nil {
+		return err
 	}
 
 	if len(companyOwners) < 2 {
@@ -241,58 +241,32 @@ func RemoveUserFromCompany(companyId, userId string) error {
 	user.RoleID = 0
 	user.UpdatedAt = time.Now().Unix()
 
-	_, err := SaveUser(user)
+	_, err = SaveUser(user)
 
 	return err
 }
 
 // Set company and role ID's to zero
-func UpdateCompanyUsers(companyId string, clientInput []models.User) ([]models.User, error) {
-	var users []models.User
+func UpdateCompanyUser(companyId, userId string, clientInput models.User) ([]models.User, error) {
+	var user models.User
+	var updatedUsers []models.User
 
-	err := database.DB.Where("company_id = ?", companyId).Find(&users).Error
+	err := database.DB.Where("company_id = ? AND id = ?", companyId, userId).Find(&user).Error
 
 	if err != nil {
-		return users, err
+		return updatedUsers, err
 	}
 
 	// Match client input users to DB users and adjust RoleID & AccountStatusID based on the form values
-	for _, user := range users {
-		for _, input := range clientInput {
-			if input.ID == user.ID {
-				user.RoleID = input.RoleID
-				user.AccountStatusID = input.AccountStatusID
-				user.UpdatedAt = time.Now().Unix()
-			}
-		}
+	if clientInput.ID == user.ID {
+		user.RoleID = clientInput.RoleID
+		user.AccountStatusID = clientInput.AccountStatusID
+		user.UpdatedAt = time.Now().Unix()
 	}
 
-	var updatedUsers []models.User
-
-	err = database.DB.Where("company_id = ?", companyId).Save(&users).Find(&updatedUsers).Error
+	err = database.DB.Save(&user).Where("company_id = ? AND id = ?", companyId, userId).Find(&updatedUsers).Error
 
 	return updatedUsers, err
-}
-
-// Check for user invite permissions
-func CheckInvitePermissions(user models.User, companyId string, clientEmail string) bool {
-
-	// Check that user has permission to invite
-	if user.RoleID != 1 {
-		return false
-	}
-
-	// Check that user company && companyId from URL are EQUAL
-	if companyId != fmt.Sprintf("%+v", user.CompanyID) {
-		return false
-	}
-
-	// User cannot invite themselves
-	if user.Email == clientEmail {
-		return false
-	}
-
-	return true
 }
 
 func CheckCanAcceptInvitation(user models.User, companyId string, companyToken models.CompanyToken) bool {

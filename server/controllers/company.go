@@ -17,7 +17,8 @@ func Company(router fiber.Router) {
 
 	// Manage Company Users
 	company.Get("/:id/user", middleware.CompanyResourceAccessRestriction(handlers.GetUsersByCompany))
-	company.Put("/:id/user", middleware.CompanyResourceAccessRestriction(handlers.UpdateCompanyUsers))
+
+	company.Put("/:id/user/:userId", middleware.CompanyResourceAccessRestriction(handlers.UpdateCompanyUsers))
 	company.Delete("/:id/user/:userId", middleware.CompanyResourceAccessRestriction(handlers.RemoveUserFromCompany))
 	company.Post("/:id/user/invite", middleware.CompanyResourceAccessRestriction(handlers.InviteUserToCompany))
 	company.Post("/:id/user/invite/:code", middleware.CompanyResourceAccessRestriction(handlers.AddNewUserToCompany))

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -95,11 +94,17 @@ func InviteUserToCompany(c *fiber.Ctx) error {
 		Email string `json:"email"`
 	}
 
-	companyId := c.Params("id")
+	companyId, err := c.ParamsInt("id")
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"data": "Invalid company ID in URL params.",
+		})
+	}
 
 	var input InviteUserInput
 
-	err := c.BodyParser(&input)
+	err = c.BodyParser(&input)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -107,24 +112,7 @@ func InviteUserToCompany(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := actions.GetUserFromSession(c)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not identify you.",
-		})
-	}
-
-	// Check user permissions
-	canInvite := actions.CheckInvitePermissions(user, companyId, input.Email)
-
-	if !canInvite {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Cannot invite that user.",
-		})
-	}
-
-	err = actions.InviteUserToCompany(user.CompanyID, input.Email)
+	err = actions.InviteUserToCompany(companyId, input.Email)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -258,29 +246,7 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 	companyId := c.Params("id")
 	userId := c.Params("userId")
 
-	companyOwners, err := actions.GetCompanyOwners(companyId)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Failed to query company owners.",
-		})
-	}
-
-	var count = 0
-	for _, user := range companyOwners {
-		if user.RoleID == 1 {
-			count += 1
-		}
-	}
-
-	// If this logic is correct, the count will never be zero, so it's safe to index the ID below.
-	if count <= 1 && userId == fmt.Sprintf("%+v", (companyOwners)[0].ID) {
-		return c.Status(403).JSON(fiber.Map{
-			"data": "Invalid action. This would remove all owners from the company.",
-		})
-	}
-
-	err = actions.RemoveUserFromCompany(companyId, userId)
+	err := actions.RemoveUserFromCompany(companyId, userId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -310,8 +276,9 @@ func RemoveUserFromCompany(c *fiber.Ctx) error {
 }
 
 func UpdateCompanyUsers(c *fiber.Ctx) error {
-	var input []models.User
+	var input models.User
 	companyId := c.Params("id")
+	userId := c.Params("userId")
 
 	err := c.BodyParser(&input)
 
@@ -321,29 +288,7 @@ func UpdateCompanyUsers(c *fiber.Ctx) error {
 		})
 	}
 
-	if len(input) == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Bad input sent from client.",
-		})
-	}
-
-	// Ensure that there must always be one owner
-	// This action presumes that all the company's users will be coming from the client on every request.
-	var count = 0
-	for _, user := range input {
-
-		if user.RoleID == 1 {
-			count += 1
-		}
-	}
-
-	if count == 0 {
-		return c.Status(400).JSON(fiber.Map{
-			"data": "Invalid action. There must always be one owner.",
-		})
-	}
-
-	updatedUsers, err := actions.UpdateCompanyUsers(companyId, input)
+	updatedUsers, err := actions.UpdateCompanyUser(companyId, userId, input)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
