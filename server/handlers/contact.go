@@ -7,7 +7,7 @@ import (
 )
 
 func ContactForm(c *fiber.Ctx) error {
-	form := &types.ContactForm{}
+	var form types.ContactForm
 
 	err := c.BodyParser(&form)
 
