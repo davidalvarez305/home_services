@@ -414,19 +414,16 @@ func CreateCompanyServices(c *fiber.Ctx) error {
 }
 
 func DeleteCompanyLocation(c *fiber.Ctx) error {
-	var locations models.CompanyServicesLocations
-
 	companyId := c.Params("id")
+	locationId := c.Params("locationId")
 
-	err := c.BodyParser(&locations)
-
-	if err != nil {
+	if len(locationId) == 0 {
 		return c.Status(400).JSON(fiber.Map{
-			"data": "Could not parse client input.",
+			"data": "No zip code found in URL params.",
 		})
 	}
 
-	err = actions.DeleteCompanyServiceAreas(locations)
+	err := actions.DeleteCompanyServiceAreas(locationId, companyId)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

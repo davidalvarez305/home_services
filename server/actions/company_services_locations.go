@@ -38,6 +38,14 @@ func CreateCompanyServiceAreas(c []models.CompanyServicesLocations) error {
 }
 
 // Deletes a single location
-func DeleteCompanyServiceAreas(c models.CompanyServicesLocations) error {
-	return database.DB.Delete(&c).Error
+func DeleteCompanyServiceAreas(locationId, companyId string) error {
+	var locations []models.CompanyServicesLocations
+
+	err := database.DB.Where("id = ? AND company_id = ?", locationId, companyId).Find(&locations).Error
+
+	if err != nil {
+		return err
+	}
+
+	return database.DB.Delete(&locations).Error
 }
