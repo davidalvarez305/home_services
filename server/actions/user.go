@@ -54,6 +54,10 @@ func CreateUser(user models.User) (models.User, error) {
 	user.CreatedAt = time.Now().Unix()
 	user.UpdatedAt = time.Now().Unix()
 	user.AccountStatusID = 2
+	user.RoleID = 2
+	user.CompanyID = nil
+
+	fmt.Printf("USER IS HERE: %+v\n", user)
 
 	createdUser, err := SaveUser(user)
 
@@ -118,9 +122,7 @@ func GetUserFromSession(c *fiber.Ctx) (models.User, error) {
 }
 
 // Create new session with user.
-func Login(c *fiber.Ctx) (models.User, error) {
-	var user models.User
-
+func Login(user models.User, c *fiber.Ctx) (models.User, error) {
 	userPassword := user.Password
 	result := database.DB.Where("email = ?", user.Email).First(&user)
 
@@ -241,7 +243,7 @@ func RemoveUserFromCompany(companyId, userId string) error {
 	}
 
 	// If user does not belong to a company, role_id is also null
-	user.CompanyID = 0
+	user.CompanyID = nil
 	user.RoleID = 0
 	user.UpdatedAt = time.Now().Unix()
 

@@ -22,7 +22,7 @@ func CreateUser(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
-			"data": err.Error(),
+			"data": "Failed to create user.",
 		})
 	}
 
@@ -69,7 +69,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := actions.Login(c)
+	user, err := actions.Login(loginInput, c)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
