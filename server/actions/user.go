@@ -48,11 +48,13 @@ func CreateUser(user models.User) (models.User, error) {
 		return user, err
 	}
 
+	rightNow := time.Now().Unix()
+
 	// Set user fields
 	user.Password = string(hashedPassword)
 	user.APIToken = utils.GenerateAPIToken(user.Email + user.Password)
-	user.CreatedAt = time.Now().Unix()
-	user.UpdatedAt = time.Now().Unix()
+	user.CreatedAt = rightNow
+	user.UpdatedAt = rightNow
 	user.AccountStatusID = 2
 	user.RoleID = 2
 	user.CompanyID = nil
